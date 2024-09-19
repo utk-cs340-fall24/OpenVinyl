@@ -5,7 +5,7 @@
 
 <div class="wrapper">
   <div class="your-music-wrapper">
-    now playing...
+    here is where your recently played music will appear
   </div>
   
   <div class="posts-wrapper">
