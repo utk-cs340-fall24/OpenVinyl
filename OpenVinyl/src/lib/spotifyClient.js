@@ -1,3 +1,4 @@
-import { SpotifyWebApi } from 'spotify-web-api-js';
+import SpotifyWebApi from 'spotify-web-api-js';
+import { supabase } from './supabaseClient';
 
-const spotify = new SpotifyWebApi();
+export const spotify = new SpotifyWebApi();
