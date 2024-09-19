@@ -1,6 +1,11 @@
+import { supabase } from "$lib/supabaseClient";
 import { SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET } from '$env/static/private';
 
+
 export async function load() {
+  const { data } = await supabase.from("posts_dummy").select();
+ 
+
     const response = await fetch('https://accounts.spotify.com/api/token', {
         method: 'POST',
         headers: {
@@ -22,5 +27,9 @@ export async function load() {
       const token = data.access_token;
       console.log(token);
       const s = "tests";
-      return { s };
+  return {
+    posts_dummy: data ?? [],
+    s
+  };
+
 }

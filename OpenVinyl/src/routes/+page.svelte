@@ -1,23 +1,45 @@
-<script type="js">
-  export let token = "juice";
-  export let s;
-  console.log("got token: ",token);
-  $: {
-		console.log(`multiple statements can be combined`);
-		console.log(`the current title is ${s}`);
-	}
+<script>
+  import AddPost from '$lib/addPost.svelte';
+  import Post from '$lib/post.svelte';
+  
+  export let data;
+  console.log(data);
 </script>
 
-<div style="margin: 100px">
-  {#if token}
-  <p>Token: {token}</p>
-{:else}
-  <p>Loading...</p>
-{/if}
-</div>
+<div class="wrapper">
+  <div class="your-music-wrapper">
+    here is where your recently played music will appear
+  </div>
+  
+  <div class="posts-wrapper">
+    {#each data.posts_dummy as post}
+      <Post username="{post.profile_id}" rating="{post.rating}" desc="{post.song_id}"></Post>
+    {/each}
 
+
+    <h2>Load more...</h2>
+  </div>
+</div>
+  
 <style>
-  div{
-    height: 200vh;
+  .wrapper{
+    display:flex;
+
+  }
+  .posts-wrapper{
+    padding-top:100px;
+    display: inline-block;
+    width: 70vw;
+  }
+  .your-music-wrapper{
+    display:inline-block;
+    width:15vw;
+    height:80vh;
+    background-color: #787878;
+    margin:10px;
+    margin-top: 150px;
+  }
+  h2{
+    text-align:center;
   }
 </style>
