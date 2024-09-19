@@ -1,5 +1,4 @@
-import { supabase } from './supabaseClient';
-
+import { supabase } from "./supabaseClient";
 
 async function createPost(profile_id, title, content, song_id, rating) {
   try {
@@ -15,6 +14,24 @@ async function createPost(profile_id, title, content, song_id, rating) {
       return { success: false, error: error.message };
     }
     console.log("Data inserted successfully:", data);
+    return { success: true, data };
+  } catch (err) {
+    console.error("Unexpected error:", err);
+    return { success: false, error: err.message };
+  }
+}
+
+async function updateUsername(profile_id, username) {
+  try {
+    const { data, error } = await supabase
+      .from("public.profiles")
+      .update({username: username})
+      .eq("id", profile_id);
+    if (error) {
+      console.log("Error updating username: ", error);
+      return { success: false, error: error.message };
+    }
+    console.log("Username updated successfully:", data);
     return { success: true, data };
   } catch (err) {
     console.error("Unexpected error:", err);
