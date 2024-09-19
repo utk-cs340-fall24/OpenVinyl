@@ -23,8 +23,8 @@ export async function load() {
         throw new Error('Failed to get Spotify token');
       }
     
-      const data = await response.json();
-      const token = data.access_token;
+      const tmp2 = await response.json();
+      const token = tmp2.access_token;
       console.log(token);
       const s = "tests";
   return {
