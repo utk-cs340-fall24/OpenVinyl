@@ -8,7 +8,7 @@ import { spotify } from "./spotifyClient";
  * song_id: required (song 'id' field from spotify api)
  * rating: required (int from 1 to 10 inclusive, no half scores yet)
  */
-async function createPost(profile_id, title, content, song_id, rating) {
+export async function createPost(profile_id, title, content, song_id, rating) {
   try {
     const { data, error } = await supabase.from("public.posts").insert({
       profile_id: profile_id,
@@ -32,7 +32,7 @@ async function createPost(profile_id, title, content, song_id, rating) {
  * profile_id: required
  * username: required 
  */
-async function updateUsername(profile_id, username) {
+export async function updateUsername(profile_id, username) {
   try {
     const { data, error } = await supabase
       .from("public.profiles")
@@ -54,7 +54,7 @@ async function updateUsername(profile_id, username) {
  * song_id: required (song 'id' field from spotify api)
  * Returns an array of recommended songs
  */
-async function getRecommendationsFromSong(song_id) {
+export async function getRecommendationsFromSong(song_id) {
   try {
     const { data } = spotify.getRecommendations({
       seed_tracks: song_id,
