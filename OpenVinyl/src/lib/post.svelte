@@ -1,10 +1,18 @@
+<script>
+	export let username;
+	export let rating;
+  export let desc;
+</script>
+
+
+
 <div class="wrapper">
   <div class="user-wrapper">
-    <h2>(pfp)  username</h2>
+    <h2>(pfp)  {username}</h2>
   </div>
   <div class="rating-wrapper">
-    <p>rating 1-10 ....</p>
-    <p>this is a post content</p>
+    <p>{rating}</p>
+    <p>{desc}</p>
   </div>
   <div class="img-wrapper">
     img

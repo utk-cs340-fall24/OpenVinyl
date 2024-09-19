@@ -1,6 +1,9 @@
 <script>
   import AddPost from '$lib/addPost.svelte';
   import Post from '$lib/post.svelte';
+  
+  export let data;
+  console.log(data);
 </script>
 
 <div class="wrapper">
@@ -9,12 +12,10 @@
   </div>
   
   <div class="posts-wrapper">
-    <Post></Post>
-    <Post></Post>
-    <Post></Post>
-    <Post></Post>
-    <Post></Post>
-    <Post></Post>
+    {#each data.posts_dummy as post}
+      <Post username="{post.profile_id}" rating="{post.rating}" desc="{post.song_id}"></Post>
+    {/each}
+
     <h2>Load more...</h2>
   </div>
 </div>
