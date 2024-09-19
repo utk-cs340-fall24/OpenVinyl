@@ -10,11 +10,12 @@ import { spotify } from "./spotifyClient";
  */
 export async function createPost(profile_id, title, content, song_id, rating) {
   try {
-    const { data, error } = await supabase.from("public.posts").insert({
+    //TODO: Change this back to public.posts
+    const { data, error } = await supabase.from("posts_dummy").insert({
       profile_id: profile_id,
       title: title,
       content: content,
-      song_id: song_id,
+      song_id: "2up3OPMp9Tb4dAKM2erWXQ",
       rating: rating,
     });
     if (error) {
