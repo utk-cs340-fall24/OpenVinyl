@@ -1,10 +1,12 @@
 <script>
   import Nav from '$lib/nav.svelte';
+  import Footer from '$lib/footer.svelte';
 </script>
 
 <div class="wrapper">
   <Nav />
   <slot></slot>
+  <Footer />
 </div>
 
 
