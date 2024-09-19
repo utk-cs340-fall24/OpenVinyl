@@ -16,6 +16,7 @@
       <Post username="{post.profile_id}" rating="{post.rating}" desc="{post.song_id}"></Post>
     {/each}
 
+
     <h2>Load more...</h2>
   </div>
 </div>
