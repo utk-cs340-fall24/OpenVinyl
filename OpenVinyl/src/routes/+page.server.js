@@ -1,0 +1,26 @@
+import { SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET } from '$env/static/private';
+
+export async function load() {
+    const response = await fetch('https://accounts.spotify.com/api/token', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Basic ' + btoa(SPOTIFY_CLIENT_ID + ':' + SPOTIFY_CLIENT_SECRET),
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+          'grant_type': 'client_credentials',
+        }),
+      });
+    
+      if (!response.ok) {
+        const error = await response.json();
+        console.error('Error fetching token:', error);
+        throw new Error('Failed to get Spotify token');
+      }
+    
+      const data = await response.json();
+      const token = data.access_token;
+      console.log(token);
+      const s = "tests";
+      return { s };
+}
