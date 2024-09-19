@@ -13,6 +13,8 @@
     <Post></Post>
     <Post></Post>
     <Post></Post>
+    <Post></Post>
+    <Post></Post>
     <h2>Load more...</h2>
   </div>
 </div>
