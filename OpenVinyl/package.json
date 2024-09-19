@@ -26,6 +26,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@supabase/supabase-js": "^2.45.4",
 		"spotify-web-api-js": "^1.5.2"
 	}
 }
