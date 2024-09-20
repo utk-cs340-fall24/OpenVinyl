@@ -1,5 +1,18 @@
 import { supabase } from "./supabaseClient";
-import { spotify } from "./spotifyClient";
+import { spotify, setAccessToken } from "./spotifyClient";
+
+export async function authenticateClientCredentials() {
+  try {
+    if (!spotify.getAccessToken()) {
+    const response = await fetch("/api/spotify/token");
+    const data = await response.json();
+    console.log("data here: ", data)
+      setAccessToken(data.access_token);
+    }
+  } catch (error) {
+    console.error("Error authenticating with client credentials:", error);
+  }
+}
 
 /*
  * profile_id: required

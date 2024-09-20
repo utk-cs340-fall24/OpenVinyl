@@ -3,20 +3,17 @@
 	export let rating;
   export let desc;
   export let song_id;
-  import { spotify } from "$lib/spotifyClient";
+  import { spotify, setAccessToken } from "$lib/spotifyClient";
   import { onMount } from 'svelte';
-
+  import { authenticateClientCredentials } from "$lib/utils";
+  
   let trackData;
-  let error;
-  let test;
   onMount(async () => {
     try {
+      await authenticateClientCredentials();
       trackData = await spotify.getTrack(song_id); 
-      test = await spotify.getNewReleases();
-      console.log(test);
     } catch (err) {
       console.error('Error fetching track data:', err);
-      error = 'Failed to fetch track data.';
     }
   });
 
@@ -35,9 +32,7 @@
   {#if trackData}
       <img class="img-wrapper" src={trackData.album.images[0].url} width="100" height="100" alt="albumImg">
     {/if}
-    {#if error}
-      <p>{error}</p>
-    {/if}
+    
 </div>
 
 <style>
