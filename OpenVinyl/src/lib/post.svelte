@@ -3,17 +3,14 @@
 	export let rating;
   export let desc;
   export let song_id;
-  import {spotify} from "$lib/spotifyClient";
+  import { spotify } from "$lib/spotifyClient";
   import { onMount } from 'svelte';
 
-  
-  // spotify.getTrack(song_id);
-  let trackData = {};
+  let trackData;
+  let error;
   onMount(async () => {
     try {
       trackData = await spotify.getTrack(song_id); 
-      console.log(trackData);
-
     } catch (err) {
       console.error('Error fetching track data:', err);
       error = 'Failed to fetch track data.';
@@ -32,9 +29,12 @@
     <p>{rating}</p>
     <p>{desc}</p>
   </div>
-  <div class="img-wrapper">
-    <img src="https://picsum.photos/200" width="100" height="100" alt="albumImg">
-  </div>
+  {#if trackData}
+      <img class="img-wrapper" src={trackData.album.images[0].url} width="100" height="100" alt="albumImg">
+    {/if}
+    {#if error}
+      <p>{error}</p>
+    {/if}
 </div>
 
 <style>
