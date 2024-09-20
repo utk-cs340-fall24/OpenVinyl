@@ -1,5 +1,6 @@
 
 <script>
+  import {spotify} from "$lib/spotifyClient";
   let boxes = [
     { id: 1, imageUrl: getRandomImage(), songId: "2up3OPMp9Tb4dAKM2erWXQ" },
     { id: 2, imageUrl: getRandomImage(), songId: "2up3OPMp9Tb4dAKM2erWXQ" },
@@ -11,8 +12,9 @@
     { id: 8, imageUrl: getRandomImage(), songId: "2up3OPMp9Tb4dAKM2erWXQ" },
     { id: 9, imageUrl: getRandomImage(), songId: "2up3OPMp9Tb4dAKM2erWXQ" }
   ];
+  let centerSongId = boxes[4].songId;
 
-
+  
   function onKeyDown(e) {
     console.log("keypress");
 
@@ -61,7 +63,13 @@
         }
         break;
     }
+    centerSongId = newBoxes[4].songId;
     boxes = newBoxes;
+  }
+  async function getSpotifyImage(songId="") {
+    let tset = await spotify.getTrack(songId);
+    console.log(test);
+    return test;
   }
   function getRandomImage() {
     let i = Math.random();
@@ -69,11 +77,11 @@
     
   }
   // Generate new box (could be based on recommendations or random)
-  function generateNewBox() {
+  function generateNewBox(songId) {
     return {
       id: Math.random(), // Use a random id for demo
-      imageUrl: getRandomImage(), // Placeholder for now
-      songId: "randomSongId" // Random songId for now
+      imageUrl: songId ? getSpotifyImage(songId) : getRandomImage(), // Placeholder for now
+      songId: songId ? songId : "randomSongId" // Random songId for now
     };
   }
 </script>
@@ -81,12 +89,19 @@
   Use arrow keys or wasd to navigate discover grid
 </h3>
 <div class="game-board">
-  {#each boxes as box (box.id)}
-    <div class="box">
-      <img src={box.imageUrl} alt="Image {box.id}" />
+  {#each boxes as box, index (box.id)}
+    <div class="box" class:highlight={index === 4}>
+      {#if index === 4}  
+        <div class="rainbow">
+          <img src={box.imageUrl} alt="Image {box.id}" />
+        </div> 
+      {:else}
+        <img src={box.imageUrl} alt="Image {box.id}" />
+      {/if}
     </div>
   {/each}
 </div>
+
 
 <style>
   .info {
@@ -94,6 +109,10 @@
     display: flex;
     justify-content: center;
   }
+  .highlight {
+    border: 4px solid green !important;
+}
+
   .game-board {
     display: grid;
     grid-template-rows: 200px 200px 200px;
@@ -114,15 +133,20 @@
     justify-content: center;
     color: #aaa;
     opacity: 1;
-    transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+    transition: transform 1.5s ease-in-out, opacity 1.5s ease-in-out;
+    box-sizing: border-box;
   }
 
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 10px;
+    /* border-radius: 10px; */
   }
+
+  
+
+
 </style>
 
 <svelte:window on:keydown|preventDefault={onKeyDown} />

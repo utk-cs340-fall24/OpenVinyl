@@ -25,6 +25,7 @@ export async function load() {
   const tmp2 = await response.json();
   const token = tmp2.access_token;
   return {
+    success: true,
     posts_dummy: data ?? [],
     token,
   };

@@ -7,6 +7,9 @@
   export let data;
 
   setAccessToken(data.token);
+  if (data.success) {
+    console.log("successfully retrieved data");
+  }
 </script>
 
 <div class="wrapper">
