@@ -2,6 +2,7 @@
   import {spotify} from "$lib/spotifyClient";
   import AddPost from '$lib/addPost.svelte';
   import Post from '$lib/post.svelte';
+  import Sidebar from "../lib/sidebar.svelte";
   export let data;
 
   spotify.setAccessToken(data.token);
@@ -9,9 +10,7 @@
 </script>
 
 <div class="wrapper">
-  <div class="your-music-wrapper">
-    here is where your recently played music will appear
-  </div>
+  <Sidebar />
   
   <div class="posts-wrapper">
     {#each data.posts_dummy as post}
@@ -25,21 +24,14 @@
   
 <style>
   .wrapper{
-    display:flex;
+    display: flex;
+    min-height:90vh;
 
   }
   .posts-wrapper{
     padding-top:100px;
     display: inline-block;
     width: 70vw;
-  }
-  .your-music-wrapper{
-    display:inline-block;
-    width:15vw;
-    height:80vh;
-    background-color: #787878;
-    margin:10px;
-    margin-top: 150px;
   }
   h2{
     text-align:center;
