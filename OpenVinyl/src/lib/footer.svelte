@@ -4,7 +4,6 @@
 
 <style>
   .wrapper{
-    width:100%;
     background-color: #2e2e2e;
     padding:50px;
   }
