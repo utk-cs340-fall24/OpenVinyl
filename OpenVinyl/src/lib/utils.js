@@ -15,7 +15,7 @@ export async function createPost(profile_id, title, content, song_id, rating) {
       profile_id: profile_id,
       title: title,
       content: content,
-      song_id: "2up3OPMp9Tb4dAKM2erWXQ",
+      song_id: "11dFghVXANMlKmJXsNCbNl",
       rating: rating,
     });
     if (error) {
@@ -57,7 +57,7 @@ export async function updateUsername(profile_id, username) {
  */
 export async function getRecommendationsFromSong(song_id) {
   try {
-    const { data } = spotify.getRecommendations({
+    const { data } = await spotify.getRecommendations({
       seed_tracks: song_id,
     });
     if (data) {
