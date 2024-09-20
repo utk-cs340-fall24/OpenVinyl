@@ -77,7 +77,9 @@
     };
   }
 </script>
-
+<h3 class="info">
+  Use arrow keys or wasd to navigate discover grid
+</h3>
 <div class="game-board">
   {#each boxes as box (box.id)}
     <div class="box">
@@ -87,6 +89,11 @@
 </div>
 
 <style>
+  .info {
+    padding-top: 80px;
+    display: flex;
+    justify-content: center;
+  }
   .game-board {
     display: grid;
     grid-template-rows: 200px 200px 200px;
@@ -95,7 +102,6 @@
     width: fit-content;
     margin-left: auto;
     margin-right: auto;
-    padding-top: 100px;
     padding-bottom: 100px;
     transition: transform 0.5s ease-in-out;
   }

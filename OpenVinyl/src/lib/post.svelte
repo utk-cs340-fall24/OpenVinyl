@@ -8,9 +8,12 @@
 
   let trackData;
   let error;
+  let test;
   onMount(async () => {
     try {
       trackData = await spotify.getTrack(song_id); 
+      test = await spotify.getNewReleases();
+      console.log(test);
     } catch (err) {
       console.error('Error fetching track data:', err);
       error = 'Failed to fetch track data.';
