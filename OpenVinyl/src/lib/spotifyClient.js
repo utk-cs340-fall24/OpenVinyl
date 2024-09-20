@@ -1,5 +1,12 @@
 import SpotifyWebApi from 'spotify-web-api-js';
-import { supabase } from './supabaseClient';
+import { writable } from 'svelte/store';
 
+const accessToken = writable(null);
+const spotify = new SpotifyWebApi();
 
-export const spotify = new SpotifyWebApi();
+function setAccessToken(token) {
+    accessToken.set(token);
+    spotify.setAccessToken(token);
+}
+
+export { spotify, setAccessToken, accessToken };

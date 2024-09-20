@@ -1,11 +1,11 @@
 <script>
-  import {spotify} from "$lib/spotifyClient";
+  // import {spotify} from "$lib/spotifyClient";
+  import { setAccessToken } from "$lib/spotifyClient";
   import AddPost from '$lib/addPost.svelte';
   import Post from '$lib/post.svelte';
   export let data;
 
-  spotify.setAccessToken(data.token);
-  console.log(data);
+  setAccessToken(data.token);
 </script>
 
 <div class="wrapper">
