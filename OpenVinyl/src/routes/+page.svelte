@@ -6,8 +6,11 @@
   import Post from '$lib/post.svelte';
   import Sidebar from "../lib/sidebar.svelte";
   export let data;
-
+  console.log(data);
   setAccessToken(data.token);
+  if (data.success) {
+    console.log("successfully retrieved data");
+  }
 </script>
 
 <div class="wrapper">
