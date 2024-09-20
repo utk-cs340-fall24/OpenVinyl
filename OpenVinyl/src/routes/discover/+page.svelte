@@ -1,6 +1,7 @@
 <script>
   import { spotify } from "$lib/spotifyClient";
   import { onMount } from "svelte";
+  import { authenticateClientCredentials } from "$lib/utils";
 
   let boxes = [
     {
@@ -112,7 +113,8 @@
     }
   }
 
-  onMount(() => {
+  onMount(async () => {
+    await authenticateClientCredentials();
     fetchCenterSong();
     fetchRecommendations();
   });
