@@ -4,57 +4,22 @@
   import { authenticateClientCredentials } from "$lib/utils";
 
   let boxes = [
-    {
-      id: 1,
-      imageUrl: "https://via.placeholder.com/200",
-      songId: "11dFghVXANMlKmJXsNCbNl",
-    },
-    {
-      id: 2,
-      imageUrl: "https://via.placeholder.com/200",
-      songId: "11dFghVXANMlKmJXsNCbNl",
-    },
-    {
-      id: 3,
-      imageUrl: "https://via.placeholder.com/200",
-      songId: "11dFghVXANMlKmJXsNCbNl",
-    },
-    {
-      id: 4,
-      imageUrl: "https://via.placeholder.com/200",
-      songId: "11dFghVXANMlKmJXsNCbNl",
-    },
-    {
-      id: 5,
-      imageUrl: "https://via.placeholder.com/200",
-      songId: "11dFghVXANMlKmJXsNCbNl",
-    },
-    {
-      id: 6,
-      imageUrl: "https://via.placeholder.com/200",
-      songId: "11dFghVXANMlKmJXsNCbNl",
-    },
-    {
-      id: 7,
-      imageUrl: "https://via.placeholder.com/200",
-      songId: "11dFghVXANMlKmJXsNCbNl",
-    },
-    {
-      id: 8,
-      imageUrl: "https://via.placeholder.com/200",
-      songId: "11dFghVXANMlKmJXsNCbNl",
-    },
-    {
-      id: 9,
-      imageUrl: "https://via.placeholder.com/200",
-      songId: "11dFghVXANMlKmJXsNCbNl",
-    },
+    { id: 1, imageUrl: "https://via.placeholder.com/200", songId: "6ebkx7Q5tTxrCxKq4GYj0Y", songName: "", artistName: "", previewUrl:"" },
+    { id: 2, imageUrl: "https://via.placeholder.com/200", songId: "6ebkx7Q5tTxrCxKq4GYj0Y", songName: "", artistName: "", previewUrl:"" },
+    { id: 3, imageUrl: "https://via.placeholder.com/200", songId: "6ebkx7Q5tTxrCxKq4GYj0Y", songName: "", artistName: "", previewUrl:"" },
+    { id: 4, imageUrl: "https://via.placeholder.com/200", songId: "6ebkx7Q5tTxrCxKq4GYj0Y", songName: "", artistName: "", previewUrl:"" },
+    { id: 5, imageUrl: "https://via.placeholder.com/200", songId: "6ebkx7Q5tTxrCxKq4GYj0Y", songName: "", artistName: "", previewUrl:"" },
+    { id: 6, imageUrl: "https://via.placeholder.com/200", songId: "6ebkx7Q5tTxrCxKq4GYj0Y", songName: "", artistName: "", previewUrl:"" },
+    { id: 7, imageUrl: "https://via.placeholder.com/200", songId: "6ebkx7Q5tTxrCxKq4GYj0Y", songName: "", artistName: "", previewUrl:"" },
+    { id: 8, imageUrl: "https://via.placeholder.com/200", songId: "6ebkx7Q5tTxrCxKq4GYj0Y", songName: "", artistName: "", previewUrl:"" },
+    { id: 9, imageUrl: "https://via.placeholder.com/200", songId: "6ebkx7Q5tTxrCxKq4GYj0Y", songName: "", artistName: "", previewUrl:"" },
   ];
 
   let centerSongId = boxes[4].songId;
   let error;
   let cache = []; 
-  let cacheIndex = 0; 
+  let cacheIndex = 0;
+  let audio = null;
 
   function debounce(func, delay) {
     let timeout;
@@ -71,12 +36,17 @@
         limit: 100,
       });
 
-      cache = recommendationData.tracks.map(track => ({
+      cache = recommendationData.tracks
+      .filter(track => track.preview_url) // Only keep tracks with a preview URL (gonna be around 50-60 songs out of the 100)
+      .map(track => ({
         songId: track.id,
         imageUrl: track.album.images[0].url,
+        songName: track.name,
+        artistName: track.artists[0].name,
+        previewUrl: track.preview_url
       }));
 
-      console.log("Cached 100 recommendations:", cache);
+      console.log(`Cached ${cache.length} recommendations:`, cache);
     } catch (err) {
       console.error("Error caching recommendations:", err);
     }
@@ -89,8 +59,13 @@
 
       boxes[4] = {
         ...boxes[4],
-        imageUrl: centerImageUrl, 
+        imageUrl: centerImageUrl,
+        songName: trackData.name,
+        artistName: trackData.artists[0].name,
+        previewUrl: trackData.preview_url 
       };
+
+      playPreview(trackData.preview_url); 
 
       console.log("Center song initialized:", boxes[4]);
     } catch (err) {
@@ -98,29 +73,44 @@
       error = "Failed to fetch center song.";
     }
   }
+
   function initializeGridWithCache() {
     boxes = boxes.map((box, index) => {
       if (index === 4) {
-        return box; // Keep the center song unchanged
+        return box; 
       }
-      return fetchFromCache(); // Populate surrounding boxes with cached recommendations
+      return fetchFromCache(); 
     });
 
     console.log("Grid initialized with cache:", boxes);
   }
+
   function fetchFromCache() {
     if (cacheIndex >= cache.length) {
-      //this resets the cache index to 0 which effectively doesnt generate more than 100 songs
-      //possibly look into adding another api call here to generate 100 more recommendations
       cacheIndex = 0; 
     }
 
     const cachedSong = cache[cacheIndex++];
     return {
-      id: Math.random(), 
+      id: Math.random(),
       imageUrl: cachedSong.imageUrl,
       songId: cachedSong.songId,
+      songName: cachedSong.songName,
+      artistName: cachedSong.artistName,
+      previewUrl: cachedSong.previewUrl 
     };
+  }
+
+  function playPreview(previewUrl) {
+    if (audio) {
+      audio.pause();
+    }
+    if (previewUrl) {
+      audio = new Audio(previewUrl);
+      audio.play().catch((err) => {
+        console.error("Error playing preview:", err);
+      });
+    }
   }
 
   function moveGrid(direction) {
@@ -131,33 +121,34 @@
         newBoxes = newBoxes.slice(0, 6);
         for (let i = 0; i < 3; i++) {
           const newBox = fetchFromCache();
-          newBoxes.unshift(newBox); // Add 3 new boxes at the top
+          newBoxes.unshift(newBox); 
         }
         break;
       case "down":
         newBoxes = newBoxes.slice(3);
         for (let i = 0; i < 3; i++) {
           const newBox = fetchFromCache();
-          newBoxes.push(newBox); // Add 3 new boxes at the bottom
+          newBoxes.push(newBox); 
         }
         break;
       case "left":
         for (let i = 0; i < 9; i += 3) {
           const newBox = fetchFromCache();
-          newBoxes.splice(i, 1); // Remove one box from each row
-          newBoxes.splice(i + 2, 0, newBox); // Add a new box at the end of each row
+          newBoxes.splice(i, 1);
+          newBoxes.splice(i + 2, 0, newBox);
         }
         break;
       case "right":
         for (let i = 0; i < 9; i += 3) {
           const newBox = fetchFromCache();
-          newBoxes.splice(i + 2, 1); // Remove one box from each row
-          newBoxes.splice(i, 0, newBox); // Add a new box at the start of each row
+          newBoxes.splice(i + 2, 1); 
+          newBoxes.splice(i, 0, newBox);
         }
         break;
     }
 
     centerSongId = newBoxes[4].songId;
+    playPreview(newBoxes[4].previewUrl);
     boxes = newBoxes;
   }
 
@@ -168,7 +159,6 @@
     initializeGridWithCache();
   });
 
-  // note: I set the duration to 0ms because we are now caching songs, may increase later
   const debouncedMoveGrid = debounce(moveGrid, 0);
 
   function onKeyDown(e) {
@@ -193,7 +183,10 @@
   }
 </script>
 
-<h3 class="info">Use arrow keys or WASD to navigate the discover grid</h3>
+<div class="info">
+  <p>Use arrow keys or WASD to navigate the discover grid</p>
+  <h3>Center song is {boxes[4].songName} by {boxes[4].artistName}</h3>
+  </div>
 <div class="game-board">
   {#each boxes as box, index (box.id)}
     <div class="box" class:highlight={index === 4}>
@@ -215,6 +208,8 @@
     padding-top: 80px;
     display: flex;
     justify-content: center;
+    text-align: center;
+    flex-direction: column;
   }
 
   .rainbow {
