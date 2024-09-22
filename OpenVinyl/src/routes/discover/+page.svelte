@@ -52,10 +52,10 @@
   ];
 
   let centerSongId = boxes[4].songId;
-  let trackRecommendations;
   let error;
+  let cache = []; 
+  let cacheIndex = 0; 
 
-  let isFetching = false;
   function debounce(func, delay) {
     let timeout;
     return (...args) => {
@@ -63,6 +63,25 @@
       timeout = setTimeout(() => func(...args), delay);
     };
   }
+
+  async function cacheRecommendations() {
+    try {
+      const recommendationData = await spotify.getRecommendations({
+        seed_tracks: [centerSongId],
+        limit: 100,
+      });
+
+      cache = recommendationData.tracks.map(track => ({
+        songId: track.id,
+        imageUrl: track.album.images[0].url,
+      }));
+
+      console.log("Cached 100 recommendations:", cache);
+    } catch (err) {
+      console.error("Error caching recommendations:", err);
+    }
+  }
+
   async function fetchCenterSong() {
     try {
       const trackData = await spotify.getTrack(centerSongId);
@@ -70,7 +89,7 @@
 
       boxes[4] = {
         ...boxes[4],
-        imageUrl: centerImageUrl, // Set the center box with the fetched image
+        imageUrl: centerImageUrl, 
       };
 
       console.log("Center song initialized:", boxes[4]);
@@ -79,150 +98,98 @@
       error = "Failed to fetch center song.";
     }
   }
-  async function fetchRecommendations() {
-    if (isFetching) return; // Prevent overlapping fetches
-    isFetching = true;
-    try {
-      const recommendationData = await spotify.getRecommendations({
-        seed_tracks: [centerSongId],
-        limit: 8,
-      });
+  function initializeGridWithCache() {
+    boxes = boxes.map((box, index) => {
+      if (index === 4) {
+        return box; // Keep the center song unchanged
+      }
+      return fetchFromCache(); // Populate surrounding boxes with cached recommendations
+    });
 
-      trackRecommendations = recommendationData.tracks;
-
-      boxes = boxes.map((box, index) => {
-        if (index === 4) {
-          return box;
-        }
-
-        const recommendation =
-          trackRecommendations[index - (index > 4 ? 1 : 0)];
-        return {
-          ...box,
-          songId: recommendation.id,
-          imageUrl: recommendation.album.images[0].url,
-        };
-      });
-
-      console.log("Updated boxes:", boxes);
-    } catch (err) {
-      console.error("Error fetching track data:", err);
-      error = "Failed to fetch track data.";
-    } finally {
-      isFetching = false;
+    console.log("Grid initialized with cache:", boxes);
+  }
+  function fetchFromCache() {
+    if (cacheIndex >= cache.length) {
+      //this resets the cache index to 0 which effectively doesnt generate more than 100 songs
+      //possibly look into adding another api call here to generate 100 more recommendations
+      cacheIndex = 0; 
     }
+
+    const cachedSong = cache[cacheIndex++];
+    return {
+      id: Math.random(), 
+      imageUrl: cachedSong.imageUrl,
+      songId: cachedSong.songId,
+    };
   }
 
-  onMount(async () => {
-    await authenticateClientCredentials();
-    fetchCenterSong();
-    fetchRecommendations();
-  });
-  const debouncedMoveGrid = debounce(moveGrid, 500);
-
-  function onKeyDown(e) {
-    switch (e.keyCode) {
-      case 87:
-      case 38:
-        debouncedMoveGrid("up");
-        break;
-      case 83:
-      case 40:
-        debouncedMoveGrid("down");
-        break;
-      case 65:
-      case 37:
-        debouncedMoveGrid("right");
-        break;
-      case 68:
-      case 39:
-        debouncedMoveGrid("left");
-        break;
-    }
-  }
   function moveGrid(direction) {
     let newBoxes = [...boxes];
-    let newSongIds = [];
 
     switch (direction) {
       case "up":
         newBoxes = newBoxes.slice(0, 6);
         for (let i = 0; i < 3; i++) {
-          const newBox = generateNewBox();
-          newSongIds.push(newBox.songId);
-          newBoxes.unshift(newBox);
+          const newBox = fetchFromCache();
+          newBoxes.unshift(newBox); // Add 3 new boxes at the top
         }
         break;
       case "down":
         newBoxes = newBoxes.slice(3);
         for (let i = 0; i < 3; i++) {
-          const newBox = generateNewBox();
-          newSongIds.push(newBox.songId);
-          newBoxes.push(newBox);
+          const newBox = fetchFromCache();
+          newBoxes.push(newBox); // Add 3 new boxes at the bottom
         }
         break;
       case "left":
         for (let i = 0; i < 9; i += 3) {
-          const newBox = generateNewBox();
-          newSongIds.push(newBox.songId);
-          newBoxes.splice(i, 1);
-          newBoxes.splice(i + 2, 0, newBox);
+          const newBox = fetchFromCache();
+          newBoxes.splice(i, 1); // Remove one box from each row
+          newBoxes.splice(i + 2, 0, newBox); // Add a new box at the end of each row
         }
         break;
       case "right":
         for (let i = 0; i < 9; i += 3) {
-          const newBox = generateNewBox();
-          newSongIds.push(newBox.songId);
-          newBoxes.splice(i + 2, 1);
-          newBoxes.splice(i, 0, newBox);
+          const newBox = fetchFromCache();
+          newBoxes.splice(i + 2, 1); // Remove one box from each row
+          newBoxes.splice(i, 0, newBox); // Add a new box at the start of each row
         }
         break;
     }
 
     centerSongId = newBoxes[4].songId;
     boxes = newBoxes;
-
-    fetchRecommendationsForNewBoxes(newSongIds);
   }
-  async function fetchRecommendationsForNewBoxes(newSongIds) {
-    if (isFetching) return;
-    isFetching = true;
-    try {
-      const recommendationData = await spotify.getRecommendations({
-        seed_tracks: [centerSongId],
-        limit: newSongIds.length,
-      });
 
-      trackRecommendations = recommendationData.tracks;
+  onMount(async () => {
+    await authenticateClientCredentials();
+    fetchCenterSong();
+    await cacheRecommendations();
+    initializeGridWithCache();
+  });
 
-      let recommendationIndex = 0;
-      boxes = boxes.map((box) => {
-        if (newSongIds.includes(box.songId)) {
-          const recommendation = trackRecommendations[recommendationIndex++];
-          return {
-            ...box,
-            songId: recommendation.id,
-            imageUrl: recommendation.album.images[0].url,
-          };
-        }
-        return box;
-      });
+  // note: I set the duration to 0ms because we are now caching songs, may increase later
+  const debouncedMoveGrid = debounce(moveGrid, 0);
 
-      console.log("Updated new boxes:", boxes);
-    } catch (err) {
-      console.error("Error fetching track data:", err);
-      error = "Failed to fetch track data.";
-    } finally {
-      isFetching = false;
+  function onKeyDown(e) {
+    switch (e.keyCode) {
+      case 87:
+      case 38: 
+        debouncedMoveGrid("up");
+        break;
+      case 83:
+      case 40:
+        debouncedMoveGrid("down");
+        break;
+      case 65: 
+      case 37: 
+        debouncedMoveGrid("right");
+        break;
+      case 68: 
+      case 39: 
+        debouncedMoveGrid("left");
+        break;
     }
-  }
-
-  function generateNewBox(songId) {
-    return {
-      id: Math.random(), // Use a random id for demo
-      imageUrl: "https://via.placeholder.com/200", // Placeholder for now
-      songId: songId || "randomSongId", // Random songId for now
-    };
   }
 </script>
 
