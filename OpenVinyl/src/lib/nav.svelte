@@ -20,7 +20,7 @@
     z-index: 100;
   }
   nav{
-    background-color: #454545;
+    background-color: #1e1d1d;
     padding:15px;
     display: flex;
     flex-direction: row;
@@ -46,7 +46,7 @@
     padding: 0;
     height: fit-content;
     text-decoration: none;
-    color: #a6a6a6;
+    color: #ebe9e5;
   }
   nav a:hover{
     color: #6a6a6a;

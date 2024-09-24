@@ -55,7 +55,7 @@
   .wrapper{
     display: inline-block;
     width: 300px;
-    background-color: #787878;
+    background-color: #313131;
     margin: 10px;
     margin-top: 150px;
     margin-bottom: auto;

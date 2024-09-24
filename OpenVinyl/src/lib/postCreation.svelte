@@ -32,8 +32,8 @@
     position:absolute;
     top:25%;
     left:25%;
-    background-color: rgb(123, 97, 146);
-    /* display: none; */
+    background-color: rgb(136, 136, 136);
+    display: none;
     height:400px;
     width:800px;
     border-radius:20px;
@@ -50,7 +50,7 @@
   }
   .inner-wrapper button{
     border: 0;
-    background-color:#808080;
+    background-color:#93269b;
     width: fit-content;
     margin-left:auto;
     margin-right:auto;
@@ -60,6 +60,6 @@
     border-radius:15px;
   }
   .inner-wrapper button:hover{
-    background-color: #a5a5a5;
+    background-color: #a72baf;
   }
 </style>
