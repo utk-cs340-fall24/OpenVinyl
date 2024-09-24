@@ -1,10 +1,9 @@
 <div class="wrapper">
   <nav>
     <div class="left-nav">
-      <a href="/">home</a>
-      <a href="/about">about</a>
-      <a href="/discover">discover</a>
-      <a href="/charts">charts</a>
+      <a href="/" class="title">OpenVinyl</a>
+      <a href="/discover">Discover</a>
+      <a href="/charts">Charts</a>
     </div>
     <div class="right-nav">
       <p>username</p>
@@ -26,6 +25,11 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    font-family: "Concert One", sans-serif;
+  }
+  .title{
+    font-size:32px;
+    margin:0;
   }
   .left-nav{
     width:50%;
@@ -38,16 +42,19 @@
     text-align: right;
   }
   nav a {
-    margin: 0;
+    margin-top: 10px;
     padding: 0;
+    height: fit-content;
     text-decoration: none;
     color: #a6a6a6;
   }
   nav a:hover{
-      color: #6a6a6a;
+    color: #6a6a6a;
   }
   nav p{
     padding: 0;
-    margin: 0;
+    margin-top: 10px;
+    margin-bottom: 0;
   }
+
  </style>
