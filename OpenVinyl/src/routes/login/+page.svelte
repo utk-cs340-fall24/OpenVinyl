@@ -1,5 +1,3 @@
-<!-- <script src="https://accounts.google.com/gsi/client" async></script> -->
-
 <script>
   import { supabase } from '$lib/supabase.js';
 
@@ -18,15 +16,29 @@
     console.log("data: ", data);
     console.log("error: ", error);
   }
+
+  async function signIn() {
+    const { data, error } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: pass,
+        options: {
+            emailRedirectTo: 'http://localhost:5173'
+        }
+    })
+    console.log("data: ", data);
+    console.log("error: ", error);
+  }
 </script>
 
-<h1>Login</h1>
+<div>
+  <h1>Login</h1>
 
-<span>Sign in</span>
-<input type="email" name="" id="email" placeholder="email" bind:value={email}>
-<input type="password" name="" id="pass" placeholder="password" bind:value={pass}>
-<button id="esignin">Sign-in with email</button>
-<button id="esignup" on:click={signUp}>Sign-up with email</button>
+  <input type="email" name="" id="email" placeholder="email" bind:value={email}>
+  <input type="password" name="" id="pass" placeholder="password" bind:value={pass}>
+  <button id="esignin" on:click={signIn}>Sign-in with email</button>
+  <button id="esignup" on:click={signUp}>Sign-up with email</button>
+</div>
+
 <!-- <div class="pass-separator">
     <hr>
     <span>or continue with</span>
@@ -37,23 +49,28 @@
     <button id="google">Sign-in with Google</button>
 </div> -->
 
-<!-- <div id="g_id_onload"
-    data-client_id="330345854773-715jilr6il1dsmj6brh76q060cn9t3an.apps.googleusercontent.com"
-    data-context="signin"
-    data-ux_mode="popup"
-    data-callback="handleSignInWithGoogle"
-    data-auto_select="true"
-    data-itp_support="true">
-</div>
+<style>
+  * {
+    font-family: Arial, Helvetica, sans-serif;
+  }
 
-<div class="g_id_signin"
-    data-type="standard"
-    data-shape="rectangular"
-    data-theme="outline"
-    data-text="signin_with"
-    data-size="large"
-    data-logo_alignment="left">
-</div> -->
+  :global(body) {
+    background-color: #f3f4f6;
+    height: 100vh;
+    overflow: hidden;
+    /* width: 100vw; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
-
+  div {
+    height: 50vh;
+    width: 30vw;
+    background-color: #fff;
+    box-shadow: 0px 10px 15px -3px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    text-align: center;
+  }
+</style>
 
