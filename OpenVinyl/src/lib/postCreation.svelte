@@ -32,11 +32,13 @@
     position:absolute;
     top:25%;
     left:25%;
-    background-color: rgb(136, 136, 136);
+    background-color: #515050;
     display: none;
     height:400px;
     width:800px;
     border-radius:20px;
+    -webkit-box-shadow: 0px 10px 13px -7px #000000, -1px 4px 12px -2px rgba(0,0,0,0); 
+    box-shadow: 0px 10px 13px -7px #000000, -1px 4px 12px -2px rgba(0,0,0,0);
   }
   .inner-wrapper{
     padding:30px;
