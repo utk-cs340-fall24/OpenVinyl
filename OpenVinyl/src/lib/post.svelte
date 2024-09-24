@@ -39,6 +39,14 @@
         <p class="artist-name">{trackData.artists[0].name}</p>
       </div>
     </div>
+    {:else}
+    <div class="song-info-wrapper">
+      <img class="img-wrapper" src=https://placehold.co/100 alt="albumImg">
+      <div class="info-text-wrapper">
+        <p class="album-name">album name</p>
+        <p class="artist-name">artist name</p>
+      </div>
+    </div>
     {/if}
     
 </div>
