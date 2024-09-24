@@ -1,12 +1,13 @@
 import { supabase } from "./supabaseClient";
 import { spotify, setAccessToken } from "./spotifyClient";
 
+// Currently this function must be called on any page that uses spotify
 export async function authenticateClientCredentials() {
   try {
     if (!spotify.getAccessToken()) {
-    const response = await fetch("/api/spotify/token");
-    const data = await response.json();
-    console.log("data here: ", data)
+      const response = await fetch("/api/spotify/token");
+      const data = await response.json();
+      console.log("data here: ", data);
       setAccessToken(data.access_token);
     }
   } catch (error) {
@@ -44,7 +45,7 @@ export async function createPost(profile_id, title, content, song_id, rating) {
 }
 /*
  * profile_id: required
- * username: required 
+ * username: required
  */
 export async function updateUsername(profile_id, username) {
   try {
@@ -78,7 +79,7 @@ export async function getRecommendationsFromSong(song_id) {
       return { success: true, data };
     }
     console.log("Failed to fetch recommendations");
-    return {success: false, data};
+    return { success: false, data };
   } catch (err) {
     console.error("Unexpected error:", err);
     return { success: false, error: err.message };
