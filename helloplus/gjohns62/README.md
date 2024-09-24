@@ -12,7 +12,7 @@ To run this on your computer, you must have npm and node.js installed on your de
 
 To launch the app on your computer, you should git clone this repo.
 
-Then CD into the "my-app" folder that is in this directory and run the following command.
+Then CD into the "my-app" folder that is in the same directory as this README and run the following command.
 
 ```npm install```
 

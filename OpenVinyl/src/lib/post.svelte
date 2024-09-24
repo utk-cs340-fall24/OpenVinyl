@@ -40,13 +40,15 @@
     display:grid;
     grid-template-columns: auto;
     grid-template-rows: auto;
-    background-color: #b7b7b7;
-    width:55vw;
+    background-color: #454343;
+    width: 55vw;
     margin-left:auto;
     margin-right:auto;
-    border-radius: 15px;
-    margin-top:25px;
-    margin-bottom:25px;
+    border-radius: 5px;
+    margin-top: 25px;
+    margin-bottom: 25px;
+    color: #f3f1f1;
+    border: 3px solid #c3c1c1;
   }
 
   .img-wrapper{

@@ -2,7 +2,7 @@
   import AddPostBtn from "$lib/addPostBtn.svelte";
   import PostCreation from "$lib/postCreation.svelte";
   import Post from "$lib/post.svelte";
-  import Sidebar from "../lib/sidebar.svelte";
+  import Sidebar from "$lib/sidebar.svelte";
   export let data;
   
   console.log(data);
