@@ -30,35 +30,27 @@
   }
 </script>
 
-<div>
-  <h1>Login</h1>
-
-  <input type="email" name="" id="email" placeholder="email" bind:value={email}>
-  <input type="password" name="" id="pass" placeholder="password" bind:value={pass}>
-  <button id="esignin" on:click={signIn}>Sign-in with email</button>
-  <button id="esignup" on:click={signUp}>Sign-up with email</button>
+<div class="container">
+  <div>
+    <h1>Login</h1>
+  
+    <input type="email" name="" id="email" placeholder="email" bind:value={email}>
+    <input type="password" name="" id="pass" placeholder="password" bind:value={pass}>
+    <button id="esignin" on:click={signIn}>Sign-in with email</button>
+    <button id="esignup" on:click={signUp}>Sign-up with email</button>
+  </div>
 </div>
-
-<!-- <div class="pass-separator">
-    <hr>
-    <span>or continue with</span>
-    <hr>
-</div>
-<div class="oauth">
-    <button id="github"><i class="fa-brands fa-github"></i> Github</button>
-    <button id="google">Sign-in with Google</button>
-</div> -->
 
 <style>
   * {
     font-family: Arial, Helvetica, sans-serif;
   }
 
-  :global(body) {
+  .container {
     background-color: #f3f4f6;
     height: 100vh;
     overflow: hidden;
-    /* width: 100vw; */
+    width: 100vw;
     display: flex;
     justify-content: center;
     align-items: center;
