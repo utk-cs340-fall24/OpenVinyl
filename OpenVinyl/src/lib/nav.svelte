@@ -1,3 +1,15 @@
+<script>
+  import { supabase } from '$lib/supabaseClient.js';
+  import { onMount } from "svelte";
+  onMount(async () => {
+    const userData = await supabase.auth.getUser();
+    if(userData){
+      document.getElementById("login-button").innerHTML = userData;
+    }
+    console.log(userData.data.user.id);
+  });
+</script>
+
 <div class="wrapper">
   <nav>
     <div class="left-nav">
@@ -7,7 +19,7 @@
     </div>
     <div class="right-nav">
       <div class="login-wrapper">
-        <a class="login-button" href="/login">Login</a>
+        <a class="login-button" href="/login" id="login-button">Login</a>
       </div>
     </div>
   </nav>

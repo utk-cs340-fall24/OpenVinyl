@@ -87,9 +87,9 @@ export async function getRecommendationsFromSong(song_id) {
 }
 
 export async function getSearchSuggestions(query) {
+  console.log(query);
   try {
-    const { data } = await spotify.searchTracks({
-      query: query,
+    const { data } = await spotify.searchTracks(query, {
       limit: 5
     });
     if (data) {
