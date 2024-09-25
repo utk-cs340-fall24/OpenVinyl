@@ -19,30 +19,16 @@
     console.log("data: ", data);
     console.log("error: ", error);
   }
-
-  async function signIn() {
-    const { data, error } = await supabase.auth.signInWithPassword({
-        email: email,
-        password: pass,
-    })
-    console.log("data: ", data);
-    console.log("error: ", error);
-
-    console.log(supabase.auth.getUser());
-  }
 </script>
 
 <div class="container">
   <div class="login-window">
-    <h1>Welcome Back!</h1>
+    <h1>Create Account</h1>
     <p>Enter your information below</p>
   
     <input type="email" name="" id="email" placeholder="email" bind:value={email}>
     <input type="password" name="" id="pass" placeholder="password" bind:value={pass}>
-    <button class="inputbox" on:click={signIn}>Sign In</button>
-    <a href="\login\createaccount">
-      <button class="inputbox">Create Account</button>
-    </a>
+    <button class="inputbox" on:click={signUp}>Sign up with email</button>
   </div>
 </div>
 
@@ -93,4 +79,3 @@
     box-sizing: border-box;
   }
 </style>
-
