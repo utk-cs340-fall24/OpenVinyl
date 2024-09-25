@@ -1,25 +1,31 @@
 <script>
   function openPostCreator(){
-    document.getElementById("postModal").style.display = "block";
+    document.getElementById("postModal").style.transform = "translate(0px, 0px)";
   }
 </script>
 
 <div clsas="add-post-button">
   <button class="new-post" on:click={openPostCreator}>
-    +
+    Compose Review
   </button>
 </div>
 
 <style>
   .new-post{
-    width: 40px;
-    border-radius:50px;
+    padding:5px 12px;
+    border-radius:100px;
     border:0;
-    font-size: 32px;
-    background-color: #7722cc;
-    color:white;
+    font-size: 22px;
+    background-color: #ae40cf;
+    color:black;
+    font-family: "Concert One", sans-serif;
+    transition-duration: 1s;
   }
   .new-post:hover{
-    background-color: #8436d2;
+    background-color: #c262e0;
+    -webkit-box-shadow:0px 0px 38px 0px rgba(220,46,255,0.66);
+    -moz-box-shadow: 0px 0px 38px 0px rgba(220,46,255,0.66);
+    box-shadow: 0px 0px 38px 0px rgba(220,46,255,0.66);
+    transition-duration: 1s;
   }
 </style>
