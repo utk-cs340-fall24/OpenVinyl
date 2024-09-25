@@ -56,7 +56,7 @@
     display:grid;
     grid-template-columns: 400px auto;
     grid-template-rows: 60px auto;
-    background-color: #454343;
+    background-color: #1E1E1E;
     width: 55vw;
     margin-left:auto;
     margin-right:auto;
@@ -64,8 +64,9 @@
     margin-top: 25px;
     margin-bottom: 25px;
     color: #f3f1f1;
-    border: 3px solid #8d8d8d;
+    border: 2px solid #121212;
     font-family: "Concert One", sans-serif;
+    border-radius: 15px;
   }
 
   .profile-picture{
@@ -78,7 +79,7 @@
     margin: 15px;
     width: 100px;
     height: 100px;
-    background-color:#999999;
+    background-color:#404040;
     display:inline-block;
   }
 
@@ -104,7 +105,7 @@
   }
 
   .song-info-wrapper{
-    background-color:rgb(57, 55, 55);
+    background-color:#2c2c2c;
     grid-column: 1;
     grid-row: 2;
     display:grid;
