@@ -85,3 +85,21 @@ export async function getRecommendationsFromSong(song_id) {
     return { success: false, error: err.message };
   }
 }
+
+export async function getSearchSuggestions(query) {
+  try {
+    const { data } = await spotify.searchTracks({
+      query: query,
+      limit: 5
+    });
+    if (data) {
+      console.log("Got search results successfully", data);
+      return { success: true, data };
+    }
+    console.log("Failed to fetch search results");
+    return { success: false, data };
+  } catch (err) {
+    console.error("Unexpected error:", err);
+    return { success: false, error: err.message };
+  }
+}
