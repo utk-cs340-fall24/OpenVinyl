@@ -50,7 +50,7 @@
   .add-post-wrapper {
     position: fixed;
     z-index: 1000;
-    left: 85%;
-    padding-top: 15px;
+    left: 78%;
+    padding-top: 16px;
   }
 </style>

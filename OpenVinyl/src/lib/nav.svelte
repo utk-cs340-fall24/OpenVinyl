@@ -6,8 +6,9 @@
       <a href="/charts">Charts</a>
     </div>
     <div class="right-nav">
-      <p>username</p>
-      <a href="/login">Login</a>
+      <div class="login-wrapper">
+        <a class="login-button" href="/login">Login</a>
+      </div>
     </div>
   </nav>
 </div>
@@ -20,8 +21,8 @@
     z-index: 100;
   }
   nav{
-    background-color: #1e1d1d;
-    padding:15px;
+    background-color: #353535;
+    padding: 15px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -32,14 +33,15 @@
     margin:0;
   }
   .left-nav{
-    width:50%;
+    width:30%;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
   }
   .right-nav{
-    width: 50%;
+    width: 70%;
     text-align: right;
+    display:table;
   }
   nav a {
     margin-top: 10px;
@@ -51,10 +53,16 @@
   nav a:hover{
     color: #6a6a6a;
   }
-  nav p{
-    padding: 0;
-    margin-top: 10px;
-    margin-bottom: 0;
+  .login-wrapper{
+    display:flex;
+    justify-content: right;
+    padding-top:3px;
   }
-
+  .login-button{
+    font-size:24px;
+    display:table-cell;
+    vertical-align: middle;
+    padding:0;
+    margin:0;
+  }
  </style>
