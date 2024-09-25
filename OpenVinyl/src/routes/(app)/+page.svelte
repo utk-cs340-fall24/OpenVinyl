@@ -1,5 +1,6 @@
 <script lang="js">
   import AddPostBtn from "$lib/addPostBtn.svelte";
+  import { supabase } from "$lib/supabaseClient";
   import PostCreation from "$lib/postCreation.svelte";
   import Post from "$lib/post.svelte";
   import Sidebar from "$lib/sidebar.svelte";
@@ -8,6 +9,12 @@
   console.log(data);
 
   if (data.success) {
+    console.log("successfully retrieved data");
+    let session = supabase.auth.getSession();
+    let userid = supabase.auth.getUser();
+
+    console.log(supabase.auth.getSession());
+    console.log(supabase.auth.getUser());
     console.log("successfully retrieved data");
   }
 </script>
