@@ -109,8 +109,10 @@
           class:fa-regular={!liked} 
         >
         </i>
-      </button>   
+      </button>  
       <span style="font-size: 40px;">{likes_cnt}</span>
+      <a class="login-href" href="/discover/{song_id}" id="login-button" style="color:white"><i class="fa-solid fa-arrow-right-from-bracket fa-3x"></i></a> 
+
     </div>
   </div>
 

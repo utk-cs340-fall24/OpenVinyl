@@ -2,7 +2,7 @@
   import { spotify } from "$lib/spotifyClient";
   import { onMount } from "svelte";
   import { authenticateClientCredentials } from "$lib/utils";
-
+  import { page } from '$app/stores';
   let boxes = [
     { id: 1, imageUrl: "https://via.placeholder.com/200", songId: "6ebkx7Q5tTxrCxKq4GYj0Y", songName: "", artistName: "", previewUrl:"" },
     { id: 2, imageUrl: "https://via.placeholder.com/200", songId: "6ebkx7Q5tTxrCxKq4GYj0Y", songName: "", artistName: "", previewUrl:"" },
@@ -14,8 +14,17 @@
     { id: 8, imageUrl: "https://via.placeholder.com/200", songId: "6ebkx7Q5tTxrCxKq4GYj0Y", songName: "", artistName: "", previewUrl:"" },
     { id: 9, imageUrl: "https://via.placeholder.com/200", songId: "6ebkx7Q5tTxrCxKq4GYj0Y", songName: "", artistName: "", previewUrl:"" },
   ];
+  let centerSongId;
 
-  let centerSongId = boxes[4].songId;
+  if ($page.params.slug) {
+    centerSongId = $page.params.slug;
+  }
+  else {
+    centerSongId = "6ebkx7Q5tTxrCxKq4GYj0Y";
+  }
+  onMount(()=> {
+    console.log($page.params.slug)
+  })
   let error;
   let cache = []; 
   let cacheIndex = 0;
