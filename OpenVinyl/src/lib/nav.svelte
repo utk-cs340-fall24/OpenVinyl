@@ -7,7 +7,7 @@
     </div>
     <div class="right-nav">
       <p>username</p>
-      <a href="/login">Login</a>
+      <a href="/auth/signin">Login</a>
     </div>
   </nav>
 </div>
