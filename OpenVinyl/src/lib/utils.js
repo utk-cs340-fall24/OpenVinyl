@@ -7,7 +7,7 @@ export async function authenticateClientCredentials() {
     if (!spotify.getAccessToken()) {
       const response = await fetch("/api/spotify/token");
       const data = await response.json();
-      console.log("data here: ", data);
+      // console.log("data here: ", data);
       setAccessToken(data.access_token);
     }
   } catch (error) {

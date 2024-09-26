@@ -7,7 +7,7 @@
   import { onMount } from "svelte";
   export let data;
   
-  console.log(data);
+  // console.log(data);
 
   if (data.success) {
     console.log("successfully retrieved data");
@@ -18,9 +18,10 @@
     // console.log(supabase.auth.getUser());
     // console.log("successfully retrieved data");
   }
+  
   onMount(async () => {
     // console.log(supabase.auth.getUser());
-    
+    console.log(data)
   });
 
 </script>
@@ -39,6 +40,9 @@
         rating={post.rating}
         desc={post.content}
         song_id={post.song_id}
+        likes_arr={post.likes}
+        likes_cnt={post.likes_count}
+        post_id={post.id}
       ></Post>
     {/each}
 
