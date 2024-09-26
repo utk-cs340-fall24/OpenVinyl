@@ -1,17 +1,17 @@
 <script>
   import {createPost} from "$lib/utils";
   import {authenticateClientCredentials} from "$lib/utils";
+  import { supabase } from '$lib/supabaseClient.js';
   import {spotify } from "./spotifyClient";
-  function makePost() {
-    console.log(parseInt(document.getElementById("rating").value));
-    createPost(
-      document.getElementById("profile_id").value,
-      document.getElementById("title").value,
-      document.getElementById("content").value,
-      document.getElementById("song_id").value,
-      parseInt(document.getElementById("rating").value)
-    )
-  }
+  import { onMount } from "svelte";
+
+  let user;
+  let trackData;
+
+  onMount(async () => {
+    user = await supabase.auth.getUser();
+  });
+
   
   function cancelPost(){
     document.getElementById("postModal").style.transform = "translate(2500px, 0px)";
@@ -21,13 +21,22 @@
     try {
       await authenticateClientCredentials();
       console.log(document.getElementById("search_bar").value);
-      let trackData = await spotify.searchTracks(document.getElementById("search_bar").value, {limit: 5});
-      console.log(trackData);
+      trackData = await spotify.searchTracks(document.getElementById("search_bar").value, {limit: 5});
+      console.log(trackData.tracks.items[0].id);
     } catch (err) {
       console.error('Error fetching track data:', err);
     }
   }
-
+  
+  function makePost() {
+    console.log(parseInt(document.getElementById("rating").value));
+    createPost(
+      user.data.user.id,
+      document.getElementById("content").value,
+      trackData.tracks.items[0].id,
+      parseInt(document.getElementById("rating").value)
+    )
+  }
 </script>
 
 <div class="post-creation-popup" id="postModal">
