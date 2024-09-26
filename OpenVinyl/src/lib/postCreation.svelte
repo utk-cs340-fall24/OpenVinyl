@@ -51,7 +51,7 @@
 
 <style>
   .post-creation-popup{
-    position:absolute;
+    position:fixed;
     top:25%;
     left:25%;
     background-color: #515050;

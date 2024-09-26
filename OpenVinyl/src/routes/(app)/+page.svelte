@@ -35,7 +35,7 @@
   <div class="posts-wrapper">
     {#each data.posts as post}
       <Post
-        username={post.profile_id}
+        uuid={post.profile_id}
         rating={post.rating}
         desc={post.content}
         song_id={post.song_id}
@@ -61,9 +61,9 @@
     text-align: center;
   }
   .add-post-wrapper {
-    position: fixed;
+    position:fixed;
     z-index: 1000;
-    left: 78%;
-    padding-top: 16px;
+    right: 2%;
+    bottom: 4%;
   }
 </style>
