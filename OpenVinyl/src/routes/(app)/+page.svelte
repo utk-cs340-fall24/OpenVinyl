@@ -4,6 +4,7 @@
   import PostCreation from "$lib/postCreation.svelte";
   import Post from "$lib/post.svelte";
   import Sidebar from "$lib/sidebar.svelte";
+  import { onMount } from "svelte";
   export let data;
   
   console.log(data);
@@ -13,10 +14,15 @@
     let session = supabase.auth.getSession();
     let userid = supabase.auth.getUser();
 
-    console.log(supabase.auth.getSession());
-    console.log(supabase.auth.getUser());
-    console.log("successfully retrieved data");
+    // console.log(supabase.auth.getSession());
+    // console.log(supabase.auth.getUser());
+    // console.log("successfully retrieved data");
   }
+  onMount(async () => {
+    // console.log(supabase.auth.getUser());
+    
+  });
+
 </script>
 
 <div class="wrapper">
@@ -27,7 +33,7 @@
   <Sidebar />
 
   <div class="posts-wrapper">
-    {#each data.posts_dummy as post}
+    {#each data.posts as post}
       <Post
         username={post.profile_id}
         rating={post.rating}
@@ -57,7 +63,7 @@
   .add-post-wrapper {
     position: fixed;
     z-index: 1000;
-    left: 85%;
-    padding-top: 15px;
+    left: 78%;
+    padding-top: 16px;
   }
 </style>
