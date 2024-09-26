@@ -1,5 +1,19 @@
 import { supabase } from "./supabaseClient";
-import { spotify } from "./spotifyClient";
+import { spotify, setAccessToken } from "./spotifyClient";
+
+// Currently this function must be called on any page that uses spotify
+export async function authenticateClientCredentials() {
+  try {
+    if (!spotify.getAccessToken()) {
+      const response = await fetch("/api/spotify/token");
+      const data = await response.json();
+      console.log("data here: ", data);
+      setAccessToken(data.access_token);
+    }
+  } catch (error) {
+    console.error("Error authenticating with client credentials:", error);
+  }
+}
 
 /*
  * profile_id: required
@@ -8,14 +22,13 @@ import { spotify } from "./spotifyClient";
  * song_id: required (song 'id' field from spotify api)
  * rating: required (int from 1 to 10 inclusive, no half scores yet)
  */
-export async function createPost(profile_id, title, content, song_id, rating) {
+export async function createPost(profile_id, content, song_id, rating) {
   try {
     //TODO: Change this back to public.posts
-    const { data, error } = await supabase.from("posts_dummy").insert({
+    const { data, error } = await supabase.from("posts").insert({
       profile_id: profile_id,
-      title: title,
       content: content,
-      song_id: "11dFghVXANMlKmJXsNCbNl",
+      song_id: song_id,
       rating: rating,
     });
     if (error) {
@@ -31,7 +44,7 @@ export async function createPost(profile_id, title, content, song_id, rating) {
 }
 /*
  * profile_id: required
- * username: required 
+ * username: required
  */
 export async function updateUsername(profile_id, username) {
   try {
@@ -65,9 +78,36 @@ export async function getRecommendationsFromSong(song_id) {
       return { success: true, data };
     }
     console.log("Failed to fetch recommendations");
-    return {success: false, data};
+    return { success: false, data };
   } catch (err) {
     console.error("Unexpected error:", err);
     return { success: false, error: err.message };
   }
 }
+
+export async function getSearchSuggestions(query) {
+  console.log(query);
+  try {
+    const { data } = await spotify.searchTracks(query, {
+      limit: 5
+    });
+    if (data) {
+      console.log("Got search results successfully", data);
+      return { success: true, data };
+    }
+    console.log("Failed to fetch search results");
+    return { success: false, data };
+  } catch (err) {
+    console.error("Unexpected error:", err);
+    return { success: false, error: err.message };
+  }
+}
+
+export async function signInWithGoogle() {
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+  });
+  if (error) {
+    console.error('Error during sign in:', error.message);
+  }
+};

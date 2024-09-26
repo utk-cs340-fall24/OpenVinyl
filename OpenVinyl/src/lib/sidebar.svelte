@@ -55,12 +55,13 @@
   .wrapper{
     display: inline-block;
     width: 300px;
-    background-color: #787878;
+    background-color: #2c2c2c;
     margin: 10px;
     margin-top: 150px;
     margin-bottom: auto;
     border-radius:30px;
     font-family: "Concert One", sans-serif;
+    color:white;
   }
   .playback-img{
     text-align: center;
