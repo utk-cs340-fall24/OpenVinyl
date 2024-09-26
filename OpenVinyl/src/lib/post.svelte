@@ -6,9 +6,12 @@
   import { spotify, setAccessToken } from "$lib/spotifyClient";
   import { onMount } from 'svelte';
   import { authenticateClientCredentials } from "$lib/utils";
+  import { supabase } from "$lib/supabaseClient";
   
   let trackData;
   onMount(async () => {
+    const { data, error }  = await supabase.from("profiles").select().eq("id", username);
+    username = data[0].username;
     try {
       await authenticateClientCredentials();
       trackData = await spotify.getTrack(song_id); 

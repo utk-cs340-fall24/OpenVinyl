@@ -22,14 +22,13 @@ export async function authenticateClientCredentials() {
  * song_id: required (song 'id' field from spotify api)
  * rating: required (int from 1 to 10 inclusive, no half scores yet)
  */
-export async function createPost(profile_id, title, content, song_id, rating) {
+export async function createPost(profile_id, content, song_id, rating) {
   try {
     //TODO: Change this back to public.posts
-    const { data, error } = await supabase.from("posts_dummy").insert({
+    const { data, error } = await supabase.from("posts").insert({
       profile_id: profile_id,
-      title: title,
       content: content,
-      song_id: "11dFghVXANMlKmJXsNCbNl",
+      song_id: song_id,
       rating: rating,
     });
     if (error) {
