@@ -21,7 +21,7 @@
     </div>
     <div class="right-nav">
       <div class="login-wrapper">
-        <a class="login-button" href="/login" id="login-button">Login</a>
+        <a class="login-button" href="/auth/signin" id="login-button">Login</a>
       </div>
     </div>
   </nav>
