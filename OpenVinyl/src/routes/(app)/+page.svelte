@@ -20,6 +20,7 @@
   }
   onMount(async () => {
     // console.log(supabase.auth.getUser());
+    
   });
 
 </script>
@@ -32,7 +33,7 @@
   <Sidebar />
 
   <div class="posts-wrapper">
-    {#each data.posts_dummy as post}
+    {#each data.posts as post}
       <Post
         username={post.profile_id}
         rating={post.rating}
