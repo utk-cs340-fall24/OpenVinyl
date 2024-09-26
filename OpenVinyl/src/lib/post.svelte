@@ -1,5 +1,6 @@
 <script>
-	export let username;
+	export let uuid;
+  export let username;
 	export let rating;
   export let desc;
   export let song_id;
@@ -9,8 +10,9 @@
   import { supabase } from "$lib/supabaseClient";
   
   let trackData;
+  username = "";
   onMount(async () => {
-    const { data, error }  = await supabase.from("profiles").select().eq("id", username);
+    const { data, error }  = await supabase.from("profiles").select().eq("id", uuid);
     username = data[0].username;
     try {
       await authenticateClientCredentials();
