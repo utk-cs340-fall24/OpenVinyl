@@ -14,12 +14,12 @@
     let session = supabase.auth.getSession();
     let userid = supabase.auth.getUser();
 
-    console.log(supabase.auth.getSession());
-    console.log(supabase.auth.getUser());
-    console.log("successfully retrieved data");
+    // console.log(supabase.auth.getSession());
+    // console.log(supabase.auth.getUser());
+    // console.log("successfully retrieved data");
   }
   onMount(async () => {
-    console.log(supabase.auth.getUser());
+    // console.log(supabase.auth.getUser());
   });
 
 </script>

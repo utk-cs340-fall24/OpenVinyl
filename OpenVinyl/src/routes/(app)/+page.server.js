@@ -7,4 +7,3 @@ export async function load() {
     posts_dummy: data ?? [],
   };
 }
-

@@ -1,12 +1,14 @@
-<script>
+<script lang="js">
   import { supabase } from '$lib/supabaseClient.js';
   import { onMount } from "svelte";
+
   onMount(async () => {
-    const userData = await supabase.auth.getUser();
-    if(userData){
-      document.getElementById("login-button").innerHTML = userData.data.user.id;
+    const user = await supabase.auth.getUser();
+    const { data, error }  = await supabase.from("profiles").select().eq("id", user.data.user.id);
+    // console.log(user.data.user.id);
+    if(user){
+      document.getElementById("login-button").innerHTML = data[0].username;
     }
-    console.log(userData.data.user.id);
   });
 </script>
 
