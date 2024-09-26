@@ -1,5 +1,7 @@
 <script>
   import {createPost} from "$lib/utils";
+  import {authenticateClientCredentials} from "$lib/utils";
+  import {spotify } from "./spotifyClient";
   function makePost() {
     console.log(parseInt(document.getElementById("rating").value));
     createPost(
@@ -10,17 +12,28 @@
       parseInt(document.getElementById("rating").value)
     )
   }
+  
   function cancelPost(){
-    document.getElementById("postModal").style.transform = "translate(2500px, 0px)"
+    document.getElementById("postModal").style.transform = "translate(2500px, 0px)";
   }
+  
+  async function getSearch(){
+    try {
+      await authenticateClientCredentials();
+      console.log(document.getElementById("search_bar").value);
+      let trackData = await spotify.searchTracks(document.getElementById("search_bar").value, {limit: 5});
+      console.log(trackData);
+    } catch (err) {
+      console.error('Error fetching track data:', err);
+    }
+  }
+
 </script>
 
 <div class="post-creation-popup" id="postModal">
   <div class="inner-wrapper">
-    <input id="profile_id" type="text" placeholder="username">
-    <input id="title" type="text" placeholder="title">
+    <input on:input={getSearch} id="search_bar">
     <input id="content" type="text" placeholder="content">
-    <input id="song_id" type="text" placeholder="song name">
     <input id="rating" type="text" placeholder="rating">
     <button on:click={makePost}>Create Post</button>
     <button on:click={cancelPost}>Cancel</button>

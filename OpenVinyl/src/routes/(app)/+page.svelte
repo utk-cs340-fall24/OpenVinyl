@@ -4,6 +4,7 @@
   import PostCreation from "$lib/postCreation.svelte";
   import Post from "$lib/post.svelte";
   import Sidebar from "$lib/sidebar.svelte";
+  import { onMount } from "svelte";
   export let data;
   
   console.log(data);
@@ -13,10 +14,14 @@
     let session = supabase.auth.getSession();
     let userid = supabase.auth.getUser();
 
-    console.log(supabase.auth.getSession());
-    console.log(supabase.auth.getUser());
-    console.log("successfully retrieved data");
+    // console.log(supabase.auth.getSession());
+    // console.log(supabase.auth.getUser());
+    // console.log("successfully retrieved data");
   }
+  onMount(async () => {
+    // console.log(supabase.auth.getUser());
+  });
+
 </script>
 
 <div class="wrapper">
