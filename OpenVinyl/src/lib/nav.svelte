@@ -4,7 +4,7 @@
   onMount(async () => {
     const userData = await supabase.auth.getUser();
     if(userData){
-      document.getElementById("login-button").innerHTML = userData;
+      document.getElementById("login-button").innerHTML = userData.data.user.id;
     }
     console.log(userData.data.user.id);
   });

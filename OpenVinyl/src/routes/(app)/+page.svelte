@@ -4,7 +4,6 @@
   import PostCreation from "$lib/postCreation.svelte";
   import Post from "$lib/post.svelte";
   import Sidebar from "$lib/sidebar.svelte";
-  import { supabase } from '$lib/supabaseClient.js';
   import { onMount } from "svelte";
   export let data;
   
