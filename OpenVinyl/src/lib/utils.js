@@ -102,3 +102,12 @@ export async function getSearchSuggestions(query) {
     return { success: false, error: err.message };
   }
 }
+
+export async function signInWithGoogle() {
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+  });
+  if (error) {
+    console.error('Error during sign in:', error.message);
+  }
+};
