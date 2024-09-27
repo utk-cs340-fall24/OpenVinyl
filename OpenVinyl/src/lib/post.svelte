@@ -1,5 +1,5 @@
 <script>
-  export let uuid;
+  export let uuid;  // User ID
   export let username;
   export let rating;
   export let desc;
@@ -18,6 +18,7 @@
   let trackData;
   username = "";
   let liked = false;
+  let processingLike = false;  // To prevent spamming
 
   onMount(async () => {
     const { data, error } = await supabase.from("profiles").select().eq("id", uuid);
@@ -48,6 +49,16 @@
   });
 
   async function toggleLike() {
+    if (processingLike) return;
+
+    if (!uuid) {
+      // alert("You must be logged in to like posts.");
+      console.log("you must be logged in to post");
+      return;
+    }
+
+    processingLike = true; 
+
     const { data: existingLike, error: checkError } = await supabase
       .from('likes')
       .select('*')
@@ -57,6 +68,7 @@
 
     if (checkError) {
       console.error('Error checking existing like:', checkError);
+      processingLike = false;
       return;
     }
 
@@ -69,6 +81,7 @@
 
       if (error) {
         console.error('Error removing like:', error);
+        processingLike = false;
         return;
       }
 
@@ -76,13 +89,13 @@
       likes_cnt -= 1;
       liked = false;
     } else {
-      // Add the like if it doesn't exist
       const { error } = await supabase
         .from('likes')
         .insert({ post_id, profile_id: uuid });
 
       if (error) {
         console.error('Error adding like:', error);
+        processingLike = false;
         return;
       }
 
@@ -90,6 +103,8 @@
       likes_cnt += 1;
       liked = true;
     }
+
+    processingLike = false;  
   }
 </script>
 

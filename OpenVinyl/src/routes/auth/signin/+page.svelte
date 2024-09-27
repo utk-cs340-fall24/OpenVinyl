@@ -2,7 +2,7 @@
   import { supabase } from '$lib/supabaseClient.js';
   import '@fortawesome/fontawesome-free/css/all.css';
   import '@fortawesome/fontawesome-free/js/all.js';
-
+  import {signInWithGoogle} from "$lib/utils.js";
   let email;
   let pass;
 
@@ -32,11 +32,11 @@
     <input type="email" name="" id="email" placeholder="email" bind:value={email}>
     <input type="password" name="" id="pass" placeholder="password" bind:value={pass}>
     <div class="emailbuttons">
-      <button class="inputbox" on:click={signIn}>Sign In</button>
+      <button class="inputbox" on:click={signInWithGoogle}>Sign In</button>
     </div>
     <hr class="hr-text" data-content="Or continue with">
     <div class="oauthbuttons">
-      <button class="google">
+      <button class="google" on:click={signInWithGoogle}>
         <i class="fa-brands fa-google"></i> Google
       </button>
       <button class="spotify">
