@@ -70,7 +70,7 @@ export async function updateUsername(profile_id, username) {
  */
 export async function getRecommendationsFromSong(song_id) {
   try {
-    const { data } = await spotify.getRecommendations({
+    const data = await spotify.getRecommendations({
       seed_tracks: song_id,
     });
     if (data) {
@@ -111,3 +111,119 @@ export async function signInWithGoogle() {
     console.error('Error during sign in:', error.message);
   }
 };
+
+// Provide with an array on song id's (MAX 50)
+export async function getSongs(song_list) {
+  try {
+    if (song_list.length > 50) {
+      console.log("Too many songs requested (>50)");
+      return { success: false, message: "Too many songs requested" };
+    }
+    const data = await spotify.getTracks(song_list);
+    if (data) {
+      console.log("Got " + song_list.length + " songs successfully");
+      return { success: true, data };
+    }
+    console.log("Failed to fetch " + song_list.length + " songs");
+    return { success: false, data };
+  } catch (err) {
+    console.error("Unexpected error: ", err);
+    return { success: false, error: err.message};
+  }
+}
+
+// Provide with an array of album id's (MAX 20)
+export async function getAlbums(album_list) {
+  try {
+    if (album_list.length > 20) {
+      console.log("Too many albums requested (>20)");
+      return { success: false, message: "Too many albums requested" };
+    }
+    const data = await spotify.getAlbums(album_list);
+    if (data) {
+      console.log("Got " + album_list.length + " albums successfully");
+      return { success: true, data };
+    }
+    console.log("Failed to fetch " + album_list.length + " albums");
+    return { success: false, data };
+  } catch (err) {
+    console.error("Unexpected error: ", err);
+    return { success: false, error: err.message};
+  }
+}
+
+// Provide with a playlist ID
+export async function getPlaylist(playlist_id) {
+  try {
+    const data = await spotify.getPlaylist(playlist_id);
+    if (data) {
+      console.log("Got playlist successfully");
+      return { success: true, data };
+    }
+    console.log("Failed to fetch playlist");
+    return { success: false, data };
+  } catch (err) {
+    console.error("Unexpected error: ", err);
+    return { success: false, error: err.message};
+  }
+}
+
+// Provide with an array of artist id's (MAX 50)
+export async function getArtists(artist_list) {
+  try {
+    if (artist_list.length > 50) {
+      console.log("Too many artists requested");
+      return { success: false, message: "Too many artists requested" };
+    }
+    const data = await spotify.getArtists(artist_list);
+    if (data) {
+      console.log("Got " + artist_list.length + " artists successfully");
+      return { success: true, data };
+    }
+    console.log("Failed to fetch " + artist_list.length + " artists");
+    return { success: false, data };
+  } catch (err) {
+    console.error("Unexpected error: ", err);
+    return { success: false, error: err.message};
+  }
+}
+
+/*
+ * Provide with a single artist ID,
+ * returns a list (I think) of related artists.
+ * Docs don't say how many items this returns
+ * */
+export async function getRelatedArtists(artist_id) {
+  try {
+    const data= await spotify.getArtistRelatedArtists(artist_id);
+    if (data) {
+      console.log("Got related artists successfully");
+      return { success: true, data };
+    }
+    console.log("Failed to fetch related artists");
+    return { success: false, data };
+  } catch (err) {
+    console.error("Unexpected error: ", err);
+    return { success: false, error: err.message};
+  }
+}
+
+/*
+ * Provide with a single artist ID,
+ * returns a list (I think) of popular songs by that artist.
+ * Docs don't say how many items this returns
+ */
+export async function getTopTracks(artist_id) {
+  try {
+    const data = await spotify.getArtistTopTracks(artist_id);
+    if (data) {
+      console.log("Got artist popular songs successfully");
+      return { success: true, data };
+    }
+    console.log("Failed to fetch artist popular songs");
+    return { success: false, data };
+  } catch (err) {
+    console.error("Unexpected error: ", err);
+    return { success: false, error: err.message};
+  }
+}
