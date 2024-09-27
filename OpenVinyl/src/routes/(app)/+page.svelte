@@ -6,24 +6,26 @@
   import Sidebar from "$lib/sidebar.svelte";
   import { onMount } from "svelte";
   export let data;
-  
-  // console.log(data);
 
-  if (data.success) {
-    console.log("successfully retrieved data");
-    let session = supabase.auth.getSession();
-    let userid = supabase.auth.getUser();
+  let session_uuid;
+  let user = null;
 
-    // console.log(supabase.auth.getSession());
-    // console.log(supabase.auth.getUser());
-    // console.log("successfully retrieved data");
-  }
-  
   onMount(async () => {
-    // console.log(supabase.auth.getUser());
-    console.log(data)
-  });
+    const { data: { session }, error } = await supabase.auth.getSession();
 
+    if (error) {
+      console.error("Error fetching session:", error);
+    } else if (!session) {
+      console.log("No active session. User is not signed in.");
+    } else {
+      user = session.user;
+      session_uuid = user?.id;
+
+      console.log("User:", user);
+    }
+
+    console.log(data); 
+  });
 </script>
 
 <div class="wrapper">
@@ -36,6 +38,7 @@
   <div class="posts-wrapper">
     {#each data.posts as post}
       <Post
+        logged_in_user_uuid={session_uuid}
         uuid={post.profile_id}
         rating={post.rating}
         desc={post.content}

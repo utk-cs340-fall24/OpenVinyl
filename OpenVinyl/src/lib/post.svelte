@@ -1,139 +1,146 @@
 <script>
-  export let uuid;  // User ID
-  export let username;
+  export let uuid; // Owner of post
+  export let logged_in_user_uuid; // Logged in user (possibly null if not logged in)
   export let rating;
-  export let desc;
-  export let likes_arr;
   export let post_id;
   export let song_id;
   export let likes_cnt;
 
   import { spotify } from "$lib/spotifyClient";
-  import { onMount } from 'svelte';
+  import { onMount } from "svelte";
   import { authenticateClientCredentials } from "$lib/utils";
   import { supabase } from "$lib/supabaseClient";
-  import '@fortawesome/fontawesome-free/css/all.css';
-  import '@fortawesome/fontawesome-free/js/all.js';
+  import "@fortawesome/fontawesome-free/css/all.css";
+  import "@fortawesome/fontawesome-free/js/all.js";
 
-  let trackData;
-  username = "";
+  let trackData = null;
+  let username = "";
   let liked = false;
-  let processingLike = false;  // To prevent spamming
+  let processingLike = false; 
 
   onMount(async () => {
-    const { data, error } = await supabase.from("profiles").select().eq("id", uuid);
-    if (data && data.length > 0) {
-      username = data[0].username;
-    }
-
     try {
-      await authenticateClientCredentials();
-      trackData = await spotify.getTrack(song_id);
+      await fetchUserData();
+      await fetchTrackData();
+      await checkIfLiked();
     } catch (err) {
-      console.error('Error fetching track data:', err);
-    }
-
-    // Check if user has already liked the post
-    const { data: existingLike, error: checkError } = await supabase
-      .from('likes')
-      .select('*')
-      .eq('post_id', post_id)
-      .eq('profile_id', uuid)
-      .maybeSingle();
-
-    if (checkError) {
-      console.error('Error checking existing like:', checkError);
-    } else {
-      liked = !!existingLike;
+      console.error("Error during onMount:", err);
     }
   });
 
-  async function toggleLike() {
-    if (processingLike) return;
+  async function fetchUserData() {
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("username")
+      .eq("id", uuid)
+      .maybeSingle();
+      
+    if (error) throw error;
+    if (data) username = data.username;
+  }
 
-    if (!uuid) {
-      // alert("You must be logged in to like posts.");
-      console.log("you must be logged in to post");
-      return;
-    }
+  async function fetchTrackData() {
+    await authenticateClientCredentials();
+    const track = await spotify.getTrack(song_id);
+    trackData = track;
+  }
 
-    processingLike = true; 
-
-    const { data: existingLike, error: checkError } = await supabase
-      .from('likes')
-      .select('*')
-      .eq('post_id', post_id)
-      .eq('profile_id', uuid)
+  async function checkIfLiked() {
+    if (!logged_in_user_uuid) return;
+    
+    const { data: existingLike, error } = await supabase
+      .from("likes")
+      .select("*")
+      .eq("post_id", post_id)
+      .eq("profile_id", logged_in_user_uuid)
       .maybeSingle();
 
-    if (checkError) {
-      console.error('Error checking existing like:', checkError);
+    if (error) throw error;
+    liked = !!existingLike;
+  }
+
+  async function toggleLike() {
+    if (processingLike || !logged_in_user_uuid) return;
+
+    processingLike = true;
+    try {
+      const { data: existingLike } = await supabase
+        .from("likes")
+        .select("*")
+        .eq("post_id", post_id)
+        .eq("profile_id", logged_in_user_uuid)
+        .maybeSingle();
+
+      if (existingLike) {
+        await removeLike();
+      } else {
+        await addLike();
+      }
+    } catch (err) {
+      console.error("Error toggling like:", err);
+    } finally {
       processingLike = false;
-      return;
     }
+  }
 
-    if (existingLike) {
-      const { error } = await supabase
-        .from('likes')
-        .delete()
-        .eq('post_id', post_id)
-        .eq('profile_id', uuid);
+  async function addLike() {
+    const { error } = await supabase
+      .from("likes")
+      .insert({ post_id, profile_id: logged_in_user_uuid });
 
-      if (error) {
-        console.error('Error removing like:', error);
-        processingLike = false;
-        return;
-      }
+    if (error) throw error;
 
-      console.log('Like removed successfully!');
-      likes_cnt -= 1;
-      liked = false;
-    } else {
-      const { error } = await supabase
-        .from('likes')
-        .insert({ post_id, profile_id: uuid });
+    liked = true;
+    likes_cnt += 1;
+  }
 
-      if (error) {
-        console.error('Error adding like:', error);
-        processingLike = false;
-        return;
-      }
+  async function removeLike() {
+    const { error } = await supabase
+      .from("likes")
+      .delete()
+      .eq("post_id", post_id)
+      .eq("profile_id", logged_in_user_uuid);
 
-      console.log('Like added successfully!');
-      likes_cnt += 1;
-      liked = true;
-    }
+    if (error) throw error;
 
-    processingLike = false;  
+    liked = false;
+    likes_cnt -= 1;
   }
 </script>
 
 <div class="wrapper">
   <div class="user-wrapper">
-    <img class="profile-picture" src="https://placehold.co/50" alt="pfp">
+    <img class="profile-picture" src="https://placehold.co/50" alt="pfp" />
     <h2>{username}</h2>
   </div>
-  
+
   <div class="rating-wrapper">
     <p>{rating} / 10</p>
     <div>
-      <button on:click={toggleLike}>
-        <i 
-          class="fa-heart fa-3x" 
-          class:fa-solid={liked} 
-          class:fa-regular={!liked} 
-        >
-        </i>
-      </button>  
-      <span style="font-size: 40px;">{likes_cnt}</span>
-      <a class="login-href" href="/discover/{song_id}" id="login-button" style="color:white"><i class="fa-solid fa-arrow-right-from-bracket fa-3x"></i></a> 
+      <button on:click={toggleLike} disabled={!logged_in_user_uuid}>
+        <span>{liked ? 'Unlike' : 'Like'}</span> 
+      </button>
+     
 
+      <span style="font-size: 40px;">{likes_cnt}</span>
+      <a
+        class="login-href"
+        href="/discover/{song_id}"
+        id="login-button"
+        style="color:white"
+      >
+        <i class="fa-solid fa-arrow-right-from-bracket fa-3x"></i>
+      </a>
     </div>
   </div>
 
   {#if trackData}
     <div class="song-info-wrapper">
-      <img class="img-wrapper" src={trackData.album.images[0].url} alt="albumImg">
+      <img
+        class="img-wrapper"
+        src={trackData.album.images[0].url}
+        alt="albumImg"
+      />
       <div class="info-text-wrapper">
         <p class="album-name">{trackData.album.name}</p>
         <p class="artist-name">{trackData.artists[0].name}</p>
@@ -141,7 +148,7 @@
     </div>
   {:else}
     <div class="song-info-wrapper">
-      <img class="img-wrapper" src="https://placehold.co/100" alt="albumImg">
+      <img class="img-wrapper" src="https://placehold.co/100" alt="albumImg" />
       <div class="info-text-wrapper">
         <p class="album-name">album name</p>
         <p class="artist-name">artist name</p>
@@ -150,13 +157,12 @@
   {/if}
 </div>
 
-<!-- Styles -->
 <style>
   .wrapper {
     display: grid;
     grid-template-columns: 400px auto;
     grid-template-rows: 60px auto;
-    background-color: #1E1E1E;
+    background-color: #1e1e1e;
     width: 55vw;
     margin-left: auto;
     margin-right: auto;
