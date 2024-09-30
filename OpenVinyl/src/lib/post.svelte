@@ -5,6 +5,8 @@
   export let post_id;
   export let song_id;
   export let likes_cnt;
+  export let desc;
+  export let likes_arr;
 
   import { spotify } from "$lib/spotifyClient";
   import { onMount } from "svelte";
@@ -23,6 +25,8 @@
       await fetchUserData();
       await fetchTrackData();
       await checkIfLiked();
+      console.log(desc);
+      console.log(likes_arr);
     } catch (err) {
       console.error("Error during onMount:", err);
     }
@@ -43,6 +47,7 @@
     await authenticateClientCredentials();
     const track = await spotify.getTrack(song_id);
     trackData = track;
+    console.log(track);
   }
 
   async function checkIfLiked() {
@@ -117,19 +122,13 @@
   <div class="rating-wrapper">
     <p>{rating} / 10</p>
     <div>
-      <button on:click={toggleLike} disabled={!logged_in_user_uuid}>
-        <span>{liked ? 'Unlike' : 'Like'}</span> 
+      <button on:click={toggleLike} disabled={!logged_in_user_uuid} class="like-button">
+        <span>{liked ? 'Unlike ' : 'Like '} <i class="fa-solid fa-thumbs-up"></i></span> 
       </button>
+      <span>{likes_cnt}</span>
      
-
-      <span style="font-size: 40px;">{likes_cnt}</span>
-      <a
-        class="login-href"
-        href="/discover/{song_id}"
-        id="login-button"
-        style="color:white"
-      >
-        <i class="fa-solid fa-arrow-right-from-bracket fa-3x"></i>
+      <a class="discover-button" href="/discover/{song_id}" id="discover-button" style="color:white">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i>
       </a>
     </div>
   </div>
@@ -142,7 +141,7 @@
         alt="albumImg"
       />
       <div class="info-text-wrapper">
-        <p class="album-name">{trackData.album.name}</p>
+        <p class="song-name">{trackData.name}</p>
         <p class="artist-name">{trackData.artists[0].name}</p>
       </div>
     </div>
@@ -150,7 +149,7 @@
     <div class="song-info-wrapper">
       <img class="img-wrapper" src="https://placehold.co/100" alt="albumImg" />
       <div class="info-text-wrapper">
-        <p class="album-name">album name</p>
+        <p class="song-name">song name</p>
         <p class="artist-name">artist name</p>
       </div>
     </div>
@@ -239,7 +238,7 @@
     margin: 0;
   }
 
-  .album-name {
+  .song-name {
     font-size: 24px;
     color: #e4e4e4;
   }
@@ -247,5 +246,30 @@
   .artist-name {
     font-size: 16px;
     color: #b9b9b9;
+  }
+
+  .discover-button{
+    background-color: #00000000;
+    border-radius: 5px;
+    padding: 15px;
+    text-decoration: none;
+    font-size: 20px;
+    color:white;
+  }
+  .discover-button:hover{
+    color:#404040
+  }
+
+  .like-button{
+    border:0px;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 5px;
+    color:white;
+    background-color: #00000000;
+    font-size: 20px;
+  }
+  .like-button:hover{
+    color:#404040;
   }
 </style>
