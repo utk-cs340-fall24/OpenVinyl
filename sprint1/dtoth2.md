@@ -25,12 +25,12 @@ group name - OpenVinyl
 [#71](https://github.com/utk-cs340-fall24/OpenVinyl/issues/71)
 
 ### Files you worked on
-OpenVinyl/OpenVinyl/src/lib/spotifyClient.js
-OpenVinyl/OpenVinyl/src/lib/supabaseClient.js
-OpenVinyl/OpenVinyl/src/lib/utils.js
-OpenVinyl/OpenVinyl/src/routes/(app)/discover/[[slug]]/+page.svelte
-OpenVinyl/OpenVinyl/src/routes/(app)/+page.svelte
-OpenVinyl/OpenVinyl/src/routes/(app)/+page.server.js
+* OpenVinyl/OpenVinyl/src/lib/spotifyClient.js
+* OpenVinyl/OpenVinyl/src/lib/supabaseClient.js
+* OpenVinyl/OpenVinyl/src/lib/utils.js
+* OpenVinyl/OpenVinyl/src/routes/(app)/discover/[[slug]]/+page.svelte
+* OpenVinyl/OpenVinyl/src/routes/(app)/+page.svelte
+* OpenVinyl/OpenVinyl/src/routes/(app)/+page.server.js
 
 ### What you accomplished
 I successfully created the discover page with a way to explore more songs. This involved communicating with the spotify api and caching results to prevent rate limiting issues.
