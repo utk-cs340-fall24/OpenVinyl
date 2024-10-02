@@ -32,7 +32,7 @@
     <input type="email" name="" id="email" placeholder="email" bind:value={email}>
     <input type="password" name="" id="pass" placeholder="password" bind:value={pass}>
     <div class="emailbuttons">
-      <button class="inputbox" on:click={signInWithGoogle}>Sign In</button>
+      <button class="inputbox" on:click={signIn}>Sign In</button>
     </div>
     <hr class="hr-text" data-content="Or continue with">
     <div class="oauthbuttons">
