@@ -8,6 +8,7 @@
   export let desc;
   export let likes_arr;
 
+
   import { spotify } from "$lib/spotifyClient";
   import { onMount } from "svelte";
   import { authenticateClientCredentials } from "$lib/utils";
