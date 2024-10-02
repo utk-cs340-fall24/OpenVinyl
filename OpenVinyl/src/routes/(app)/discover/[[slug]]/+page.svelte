@@ -219,6 +219,7 @@
     justify-content: center;
     text-align: center;
     flex-direction: column;
+    color:white;
   }
 
   .rainbow {
