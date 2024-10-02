@@ -111,3 +111,20 @@ export async function signInWithGoogle() {
     console.error('Error during sign in:', error.message);
   }
 };
+
+export async function refreshTokenIfNeeded() {
+  const expires_at = parseInt(localStorage.getItem('spotify_expires_at'), 10);
+  
+  if (Date.now() >= expires_at) {
+    const refresh_token = localStorage.getItem('spotify_refresh_token');
+    const response = await fetch('/api/spotify/refresh', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refresh_token })
+    });
+    
+    const { access_token, expires_in } = await response.json();
+    localStorage.setItem('spotify_access_token', access_token);
+    localStorage.setItem('spotify_expires_at', Date.now() + expires_in * 1000);
+  }
+}

@@ -5,6 +5,8 @@
   export let post_id;
   export let song_id;
   export let likes_cnt;
+  export let desc; 
+  export let likes_arr; // Array of uuids who have like the current post
 
   import { spotify } from "$lib/spotifyClient";
   import { onMount } from "svelte";
