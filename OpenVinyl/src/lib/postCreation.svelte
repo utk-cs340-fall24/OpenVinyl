@@ -1,12 +1,17 @@
 <script>
-  import {createPost} from "$lib/utils";
-  import {authenticateClientCredentials} from "$lib/utils";
+  import { createPost } from "$lib/utils";
+  import { authenticateClientCredentials } from "$lib/utils";
   import { supabase } from '$lib/supabaseClient.js';
-  import {spotify } from "./spotifyClient";
+  import { spotify } from "./spotifyClient";
   import { onMount } from "svelte";
 
   let user;
   let trackData;
+  let selectedTrack;
+
+  let content;
+  let rating;
+  let search;
 
   onMount(async () => {
     user = await supabase.auth.getUser();
@@ -15,35 +20,82 @@
   
   function cancelPost(){
     document.getElementById("postModal").style.transform = "translate(2500px, 0px)";
+    search = "";
+    content = "";
+    rating = "";
+    searchTable = null;
   }
   
-  async function getSearch(){
-    try {
-      await authenticateClientCredentials();
-      console.log(document.getElementById("search_bar").value);
-      trackData = await spotify.searchTracks(document.getElementById("search_bar").value, {limit: 5});
-      console.log(trackData.tracks.items[0].id);
-    } catch (err) {
-      console.error('Error fetching track data:', err);
-    }
+  let debounceTimeout;
+
+  async function getSearch() {
+    clearTimeout(debounceTimeout);
+    debounceTimeout = setTimeout(async () => {
+      try {
+        await authenticateClientCredentials();
+        console.log(search);
+        if(search != ""){
+          trackData = await spotify.searchTracks(search, { limit: 5 });
+          displayResults(trackData);
+        }else{
+          console.log("empty search");
+        }
+      } catch (err) {
+        console.error('Error fetching track data:', err);
+      }
+    }, 300); // Adjust the delay as needed
   }
   
   function makePost() {
-    console.log(parseInt(document.getElementById("rating").value));
     createPost(
       user.data.user.id,
-      document.getElementById("content").value,
-      trackData.tracks.items[0].id,
-      parseInt(document.getElementById("rating").value)
+      content,
+      selectedTrack.id,
+      parseInt(rating)
     )
+  }
+
+  let searchTable;
+
+  function displayResults(data){
+    console.log(data);
+    searchTable = data;
+  }
+
+  function selectSong(data){
+    selectedTrack = data;
+    console.log(selectedTrack);
+    const rows = document.querySelectorAll(".search-table tr");
+    rows.forEach(row => row.style.backgroundColor = ""); // Reset all rows' background color
+    const selectedRow = Array.from(rows).find(row => row.dataset.trackId === data.id);
+    if (selectedRow) {
+      selectedRow.style.backgroundColor = "#e0e0e0"; // Change the color of the selected row
+    }
   }
 </script>
 
 <div class="post-creation-popup" id="postModal">
   <div class="inner-wrapper">
-    <input on:input={getSearch} id="search_bar">
-    <input id="content" type="text" placeholder="content">
-    <input id="rating" type="text" placeholder="rating">
+    <div class="search-wrapper">
+      <input on:input={getSearch} id="search_bar" bind:value={search}>
+      <table class="search-table">
+        {#if searchTable}
+          <tbody>
+            {#each searchTable.tracks.items as track}
+              <tr on:click={selectSong(track)} data-track-id={track.id}>
+                <td>{track.name}</td>
+                <td>{track.artists[0].name}</td>
+                <td>{track.album.name}</td>
+              </tr>
+            {/each}
+          </tbody>
+        {:else}
+          <p>No results found</p>
+        {/if}
+      </table>
+    </div>
+    <input id="content" type="text" placeholder="content" bind:value={content}>
+    <input id="rating" type="text" placeholder="rating out of 10" bind:value={rating}>
     <button on:click={makePost}>Create Post</button>
     <button on:click={cancelPost}>Cancel</button>
   </div>
@@ -51,11 +103,11 @@
 
 <style>
   .post-creation-popup{
-    position:absolute;
+    position:fixed;
     top:25%;
     left:25%;
     background-color: #515050;
-    height:400px;
+    height:550px;
     width:800px;
     border-radius:20px;
     -webkit-box-shadow: 0px 10px 13px -7px #000000, -1px 4px 12px -2px rgba(0,0,0,0); 
@@ -86,5 +138,19 @@
   }
   .inner-wrapper button:hover{
     background-color: #a72baf;
+  }
+  .search-wrapper{
+    display:flex;
+    flex-direction: column;
+    justify-content: space-around;
+    text-align: center;
+  }
+  .search-table{
+    background-color: #d0d0d0;
+    width: inherit;
+    text-align: left;
+  }
+  .search-table tr{
+    border-bottom: 3px solid black;
   }
 </style>

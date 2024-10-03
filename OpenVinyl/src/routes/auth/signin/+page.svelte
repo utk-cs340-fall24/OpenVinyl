@@ -2,7 +2,7 @@
   import { supabase } from '$lib/supabaseClient.js';
   import '@fortawesome/fontawesome-free/css/all.css';
   import '@fortawesome/fontawesome-free/js/all.js';
-
+  import {signInWithGoogle} from "$lib/utils.js";
   let email;
   let pass;
 
@@ -36,7 +36,7 @@
     </div>
     <hr class="hr-text" data-content="Or continue with">
     <div class="oauthbuttons">
-      <button class="google">
+      <button class="google" on:click={signInWithGoogle}>
         <i class="fa-brands fa-google"></i> Google
       </button>
       <button class="spotify">

@@ -1,0 +1,257 @@
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400   1) <script>
+e1abf978 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 12:25:17 -0400   2)   import { spotify } from "$lib/spotifyClient";
+e1abf978 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 12:25:17 -0400   3)   import { onMount } from "svelte";
+7efc75eb OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 13:15:08 -0400   4)   import { authenticateClientCredentials } from "$lib/utils";
+758db60a OpenVinyl/src/routes/(app)/discover/[[slug]]/+page.svelte (Dylan      2024-09-26 15:57:25 -0400   5)   import { page } from '$app/stores';
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400   6)   let boxes = [
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400   7)     { id: 1, imageUrl: "https://via.placeholder.com/200", songId: "6ebkx7Q5tTxrCxKq4GYj0Y", songName: "", artistName: "", previewUrl:"" },
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400   8)     { id: 2, imageUrl: "https://via.placeholder.com/200", songId: "6ebkx7Q5tTxrCxKq4GYj0Y", songName: "", artistName: "", previewUrl:"" },
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400   9)     { id: 3, imageUrl: "https://via.placeholder.com/200", songId: "6ebkx7Q5tTxrCxKq4GYj0Y", songName: "", artistName: "", previewUrl:"" },
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400  10)     { id: 4, imageUrl: "https://via.placeholder.com/200", songId: "6ebkx7Q5tTxrCxKq4GYj0Y", songName: "", artistName: "", previewUrl:"" },
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400  11)     { id: 5, imageUrl: "https://via.placeholder.com/200", songId: "6ebkx7Q5tTxrCxKq4GYj0Y", songName: "", artistName: "", previewUrl:"" },
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400  12)     { id: 6, imageUrl: "https://via.placeholder.com/200", songId: "6ebkx7Q5tTxrCxKq4GYj0Y", songName: "", artistName: "", previewUrl:"" },
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400  13)     { id: 7, imageUrl: "https://via.placeholder.com/200", songId: "6ebkx7Q5tTxrCxKq4GYj0Y", songName: "", artistName: "", previewUrl:"" },
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400  14)     { id: 8, imageUrl: "https://via.placeholder.com/200", songId: "6ebkx7Q5tTxrCxKq4GYj0Y", songName: "", artistName: "", previewUrl:"" },
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400  15)     { id: 9, imageUrl: "https://via.placeholder.com/200", songId: "6ebkx7Q5tTxrCxKq4GYj0Y", songName: "", artistName: "", previewUrl:"" },
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400  16)   ];
+758db60a OpenVinyl/src/routes/(app)/discover/[[slug]]/+page.svelte (Dylan      2024-09-26 15:57:25 -0400  17)   let centerSongId;
+e1abf978 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 12:25:17 -0400  18) 
+758db60a OpenVinyl/src/routes/(app)/discover/[[slug]]/+page.svelte (Dylan      2024-09-26 15:57:25 -0400  19)   if ($page.params.slug) {
+758db60a OpenVinyl/src/routes/(app)/discover/[[slug]]/+page.svelte (Dylan      2024-09-26 15:57:25 -0400  20)     centerSongId = $page.params.slug;
+758db60a OpenVinyl/src/routes/(app)/discover/[[slug]]/+page.svelte (Dylan      2024-09-26 15:57:25 -0400  21)   }
+758db60a OpenVinyl/src/routes/(app)/discover/[[slug]]/+page.svelte (Dylan      2024-09-26 15:57:25 -0400  22)   else {
+758db60a OpenVinyl/src/routes/(app)/discover/[[slug]]/+page.svelte (Dylan      2024-09-26 15:57:25 -0400  23)     centerSongId = "6ebkx7Q5tTxrCxKq4GYj0Y";
+758db60a OpenVinyl/src/routes/(app)/discover/[[slug]]/+page.svelte (Dylan      2024-09-26 15:57:25 -0400  24)   }
+758db60a OpenVinyl/src/routes/(app)/discover/[[slug]]/+page.svelte (Dylan      2024-09-26 15:57:25 -0400  25)   onMount(()=> {
+758db60a OpenVinyl/src/routes/(app)/discover/[[slug]]/+page.svelte (Dylan      2024-09-26 15:57:25 -0400  26)     console.log($page.params.slug)
+758db60a OpenVinyl/src/routes/(app)/discover/[[slug]]/+page.svelte (Dylan      2024-09-26 15:57:25 -0400  27)   })
+e1abf978 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 12:25:17 -0400  28)   let error;
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400  29)   let cache = []; 
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400  30)   let cacheIndex = 0;
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400  31)   let audio = null;
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400  32) 
+e1abf978 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 12:25:17 -0400  33)   function debounce(func, delay) {
+e1abf978 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 12:25:17 -0400  34)     let timeout;
+e1abf978 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 12:25:17 -0400  35)     return (...args) => {
+e1abf978 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 12:25:17 -0400  36)       clearTimeout(timeout);
+e1abf978 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 12:25:17 -0400  37)       timeout = setTimeout(() => func(...args), delay);
+e1abf978 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 12:25:17 -0400  38)     };
+e1abf978 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 12:25:17 -0400  39)   }
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400  40) 
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400  41)   async function cacheRecommendations() {
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400  42)     try {
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400  43)       const recommendationData = await spotify.getRecommendations({
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400  44)         seed_tracks: [centerSongId],
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400  45)         limit: 100,
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400  46)       });
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400  47) 
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400  48)       cache = recommendationData.tracks
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400  49)       .filter(track => track.preview_url) // Only keep tracks with a preview URL (gonna be around 50-60 songs out of the 100)
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400  50)       .map(track => ({
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400  51)         songId: track.id,
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400  52)         imageUrl: track.album.images[0].url,
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400  53)         songName: track.name,
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400  54)         artistName: track.artists[0].name,
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400  55)         previewUrl: track.preview_url
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400  56)       }));
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400  57) 
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400  58)       console.log(`Cached ${cache.length} recommendations:`, cache);
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400  59)     } catch (err) {
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400  60)       console.error("Error caching recommendations:", err);
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400  61)     }
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400  62)   }
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400  63) 
+e1abf978 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 12:25:17 -0400  64)   async function fetchCenterSong() {
+e1abf978 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 12:25:17 -0400  65)     try {
+e1abf978 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 12:25:17 -0400  66)       const trackData = await spotify.getTrack(centerSongId);
+e1abf978 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 12:25:17 -0400  67)       const centerImageUrl = trackData.album.images[0].url;
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400  68) 
+e1abf978 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 12:25:17 -0400  69)       boxes[4] = {
+e1abf978 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 12:25:17 -0400  70)         ...boxes[4],
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400  71)         imageUrl: centerImageUrl,
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400  72)         songName: trackData.name,
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400  73)         artistName: trackData.artists[0].name,
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400  74)         previewUrl: trackData.preview_url 
+e1abf978 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 12:25:17 -0400  75)       };
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400  76) 
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400  77)       playPreview(trackData.preview_url); 
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400  78) 
+e1abf978 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 12:25:17 -0400  79)       console.log("Center song initialized:", boxes[4]);
+e1abf978 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 12:25:17 -0400  80)     } catch (err) {
+e1abf978 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 12:25:17 -0400  81)       console.error("Error fetching center song:", err);
+e1abf978 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 12:25:17 -0400  82)       error = "Failed to fetch center song.";
+e1abf978 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 12:25:17 -0400  83)     }
+e1abf978 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 12:25:17 -0400  84)   }
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400  85) 
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400  86)   function initializeGridWithCache() {
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400  87)     boxes = boxes.map((box, index) => {
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400  88)       if (index === 4) {
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400  89)         return box; 
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400  90)       }
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400  91)       return fetchFromCache(); 
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400  92)     });
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400  93) 
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400  94)     console.log("Grid initialized with cache:", boxes);
+e1abf978 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 12:25:17 -0400  95)   }
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400  96) 
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400  97)   function fetchFromCache() {
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400  98)     if (cacheIndex >= cache.length) {
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400  99)       cacheIndex = 0; 
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 100)     }
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400 101) 
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400 102)     const cachedSong = cache[cacheIndex++];
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400 103)     return {
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400 104)       id: Math.random(),
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400 105)       imageUrl: cachedSong.imageUrl,
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400 106)       songId: cachedSong.songId,
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400 107)       songName: cachedSong.songName,
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400 108)       artistName: cachedSong.artistName,
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400 109)       previewUrl: cachedSong.previewUrl 
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400 110)     };
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 111)   }
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400 112) 
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400 113)   function playPreview(previewUrl) {
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400 114)     if (audio) {
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400 115)       audio.pause();
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400 116)     }
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400 117)     if (previewUrl) {
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400 118)       audio = new Audio(previewUrl);
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400 119)       audio.play().catch((err) => {
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400 120)         console.error("Error playing preview:", err);
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400 121)       });
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400 122)     }
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400 123)   }
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400 124) 
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 125)   function moveGrid(direction) {
+e1abf978 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 12:25:17 -0400 126)     let newBoxes = [...boxes];
+e1abf978 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 12:25:17 -0400 127) 
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 128)     switch (direction) {
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 129)       case "up":
+e1abf978 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 12:25:17 -0400 130)         newBoxes = newBoxes.slice(0, 6);
+e1abf978 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 12:25:17 -0400 131)         for (let i = 0; i < 3; i++) {
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400 132)           const newBox = fetchFromCache();
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400 133)           newBoxes.unshift(newBox); 
+e1abf978 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 12:25:17 -0400 134)         }
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 135)         break;
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 136)       case "down":
+e1abf978 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 12:25:17 -0400 137)         newBoxes = newBoxes.slice(3);
+e1abf978 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 12:25:17 -0400 138)         for (let i = 0; i < 3; i++) {
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400 139)           const newBox = fetchFromCache();
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400 140)           newBoxes.push(newBox); 
+e1abf978 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 12:25:17 -0400 141)         }
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 142)         break;
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 143)       case "left":
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 144)         for (let i = 0; i < 9; i += 3) {
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400 145)           const newBox = fetchFromCache();
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400 146)           newBoxes.splice(i, 1);
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400 147)           newBoxes.splice(i + 2, 0, newBox);
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 148)         }
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 149)         break;
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 150)       case "right":
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 151)         for (let i = 0; i < 9; i += 3) {
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400 152)           const newBox = fetchFromCache();
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400 153)           newBoxes.splice(i + 2, 1); 
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400 154)           newBoxes.splice(i, 0, newBox);
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 155)         }
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 156)         break;
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 157)     }
+e1abf978 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 12:25:17 -0400 158) 
+0d8739d4 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 11:32:50 -0400 159)     centerSongId = newBoxes[4].songId;
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400 160)     playPreview(newBoxes[4].previewUrl);
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 161)     boxes = newBoxes;
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 162)   }
+e1abf978 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 12:25:17 -0400 163) 
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400 164)   onMount(async () => {
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400 165)     await authenticateClientCredentials();
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400 166)     fetchCenterSong();
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400 167)     await cacheRecommendations();
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400 168)     initializeGridWithCache();
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400 169)   });
+e1abf978 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 12:25:17 -0400 170) 
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400 171)   const debouncedMoveGrid = debounce(moveGrid, 0);
+e1abf978 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 12:25:17 -0400 172) 
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400 173)   function onKeyDown(e) {
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400 174)     switch (e.keyCode) {
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400 175)       case 87:
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400 176)       case 38: 
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400 177)         debouncedMoveGrid("up");
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400 178)         break;
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400 179)       case 83:
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400 180)       case 40:
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400 181)         debouncedMoveGrid("down");
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400 182)         break;
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400 183)       case 65: 
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400 184)       case 37: 
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400 185)         debouncedMoveGrid("right");
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400 186)         break;
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400 187)       case 68: 
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400 188)       case 39: 
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400 189)         debouncedMoveGrid("left");
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400 190)         break;
+c0f286db OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-21 23:59:12 -0400 191)     }
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 192)   }
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 193) </script>
+e1abf978 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 12:25:17 -0400 194) 
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400 195) <div class="info">
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400 196)   <p>Use arrow keys or WASD to navigate the discover grid</p>
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400 197)   <h3>Center song is {boxes[4].songName} by {boxes[4].artistName}</h3>
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400 198)   </div>
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 199) <div class="game-board">
+0d8739d4 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 11:32:50 -0400 200)   {#each boxes as box, index (box.id)}
+0d8739d4 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 11:32:50 -0400 201)     <div class="box" class:highlight={index === 4}>
+e1abf978 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 12:25:17 -0400 202)       {#if index === 4}
+0d8739d4 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 11:32:50 -0400 203)         <div class="rainbow">
+0d8739d4 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 11:32:50 -0400 204)           <img src={box.imageUrl} alt="Image {box.id}" />
+e1abf978 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 12:25:17 -0400 205)         </div>
+0d8739d4 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 11:32:50 -0400 206)       {:else}
+0d8739d4 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 11:32:50 -0400 207)         <img src={box.imageUrl} alt="Image {box.id}" />
+0d8739d4 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 11:32:50 -0400 208)       {/if}
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 209)     </div>
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 210)   {/each}
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 211) </div>
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 212) 
+e1abf978 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 12:25:17 -0400 213) <svelte:window on:keydown|preventDefault={onKeyDown} />
+0d8739d4 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 11:32:50 -0400 214) 
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 215) <style>
+08aafb93 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:30:37 -0400 216)   .info {
+08aafb93 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:30:37 -0400 217)     padding-top: 80px;
+08aafb93 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:30:37 -0400 218)     display: flex;
+08aafb93 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:30:37 -0400 219)     justify-content: center;
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400 220)     text-align: center;
+cded7b49 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-22 00:37:45 -0400 221)     flex-direction: column;
+08aafb93 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:30:37 -0400 222)   }
+e1abf978 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 12:25:17 -0400 223) 
+e1abf978 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 12:25:17 -0400 224)   .rainbow {
+e1abf978 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 12:25:17 -0400 225)     border: 4px solid green;
+e1abf978 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 12:25:17 -0400 226)   }
+0d8739d4 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 11:32:50 -0400 227) 
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 228)   .game-board {
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 229)     display: grid;
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 230)     grid-template-rows: 200px 200px 200px;
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 231)     grid-template-columns: 200px 200px 200px;
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 232)     gap: 10px;
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 233)     width: fit-content;
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 234)     margin-left: auto;
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 235)     margin-right: auto;
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 236)     padding-bottom: 100px;
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 237)     transition: transform 0.5s ease-in-out;
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 238)   }
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 239)   .box {
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 240)     background: #444;
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 241)     border: 1px solid #555;
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 242)     display: flex;
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 243)     align-items: center;
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 244)     justify-content: center;
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 245)     color: #aaa;
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 246)     opacity: 1;
+e1abf978 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 12:25:17 -0400 247)     transition:
+e1abf978 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 12:25:17 -0400 248)       transform 1.5s ease-in-out,
+e1abf978 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 12:25:17 -0400 249)       opacity 1.5s ease-in-out;
+0d8739d4 OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 11:32:50 -0400 250)     box-sizing: border-box;
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 251)   }
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 252)   img {
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 253)     width: 100%;
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 254)     height: 100%;
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 255)     object-fit: cover;
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 256)   }
+ba2fa94c OpenVinyl/src/routes/discover/+page.svelte                (Dylan Toth 2024-09-20 01:12:45 -0400 257) </style>

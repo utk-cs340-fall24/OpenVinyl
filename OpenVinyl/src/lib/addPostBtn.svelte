@@ -15,7 +15,7 @@
     padding:5px 12px;
     border-radius:100px;
     border:0;
-    font-size: 22px;
+    font-size: 26px;
     background-color: #ae40cf;
     color:black;
     font-family: "Concert One", sans-serif;
