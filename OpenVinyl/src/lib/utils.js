@@ -49,7 +49,7 @@ export async function createPost(profile_id, content, song_id, rating) {
 export async function updateUsername(profile_id, username) {
   try {
     const { data, error } = await supabase
-      .from("public.profiles")
+      .from("profiles")
       .update({ username: username })
       .eq("id", profile_id);
     if (error) {
@@ -111,3 +111,39 @@ export async function signInWithGoogle() {
     console.error('Error during sign in:', error.message);
   }
 };
+
+export async function updateFirstName(profile_id, fname) {
+  try {
+    const { data, error } = await supabase
+      .from("profiles")
+      .update({ first_name: fname })
+      .eq("id", profile_id);
+    if (error) {
+      console.log("Error updating first name: ", error);
+      return { success: false, error: error.message };
+    }
+    console.log("Username updated successfully:", data);
+    return { success: true, data };
+  } catch (err) {
+    console.error("Unexpected error:", err);
+    return { success: false, error: err.message };
+  }
+}
+
+export async function updateLastName(profile_id, lname) {
+  try {
+    const { data, error } = await supabase
+      .from("profiles")
+      .update({ last_name: lname })
+      .eq("id", profile_id);
+    if (error) {
+      console.log("Error updating first name: ", error);
+      return { success: false, error: error.message };
+    }
+    console.log("Username updated successfully:", data);
+    return { success: true, data };
+  } catch (err) {
+    console.error("Unexpected error:", err);
+    return { success: false, error: err.message };
+  }
+}
