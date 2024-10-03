@@ -1,7 +1,7 @@
 <script>
   import { supabase } from '$lib/supabaseClient.js';
   import '@fortawesome/fontawesome-free/css/all.css';
-  import '@fortawesome/fontawesome-free/js/all.js';
+  import '@fortawesome/fontawesome-free/js/all';
   import {signInWithGoogle} from "$lib/utils.js";
   let email;
   let pass;
