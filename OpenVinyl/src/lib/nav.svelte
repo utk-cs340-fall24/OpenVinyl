@@ -8,6 +8,7 @@
     // console.log(user.data.user.id);
     if(user){
       document.getElementById("login-button").innerHTML = data[0].username;
+      document.getElementById("login-button").href = "/account";
     }
   });
 </script>

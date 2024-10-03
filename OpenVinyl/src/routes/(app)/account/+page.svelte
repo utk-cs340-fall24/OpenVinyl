@@ -6,6 +6,12 @@
   let lname = '';
   let username = '';
 
+  supabase.auth.onAuthStateChange((event, session) => {
+    if (event === 'SIGNED_OUT') {
+        window.location.href = '/'; // redirect to account page
+    }
+  });
+
   async function submitUserInfo() {
     const user = await supabase.auth.getUser();
 
@@ -23,30 +29,31 @@
     updateUsername(user.data.user.id, username);
     updateFirstName(user.data.user.id, fname);
     updateLastName(user.data.user.id, lname);
+  }
 
-    window.location.href = '/';
+  async function logout() {
+    const { error } = await supabase.auth.signOut();
   }
 </script>
 
-<div class="container">
-  <div class="login-window">
-    <h1>Create Account</h1>
-    <p>Enter your information below</p>
+
+<div class="wrapper">
+  <div class="account-settings">
+    <h1>Account Settings</h1>
+
+    <p>Update your information below</p>
   
     <input type="text" name="" id="fname" placeholder="first name" bind:value={fname}>
     <input type="text" name="" id="lname" placeholder="last name" bind:value={lname}>
     <input type="text" name="" id="username" placeholder="username" bind:value={username}>
-    <button class="inputbox" on:click={submitUserInfo}>Submit</button>
+    <button class="signout" on:click={logout}>Sign out</button>
+    <button class="update" on:click={submitUserInfo}>Update</button>
   </div>
 </div>
 
-<style>
-  * {
-    box-sizing: border-box;
-    font-family: Arial, Helvetica, sans-serif;
-  }
 
-  .container {
+<style>
+  .wrapper{
     background-color: #f3f4f6;
     height: 100vh;
     overflow: hidden;
@@ -56,7 +63,7 @@
     align-items: center;
   }
 
-  .container div {
+  .wrapper .account-settings {
     height: 50vh;
     max-width: 30vw;
     background-color: #fff;
@@ -66,18 +73,7 @@
     text-align: center;
   }
 
-  .login-window h1 {
-    text-align: left;
-    margin: 0;
-  }
-
-  .login-window p {
-    text-align: left;
-    margin: 0 0 1em 0;
-    opacity: 0.3;
-  }
-
-  .login-window input {
+  .wrapper .account-settings input {
     width: 100%;
     padding: 12px 20px;
     margin: 8px 0;
@@ -87,8 +83,8 @@
     box-sizing: border-box;
   }
 
-  .login-window button {
-    width: 100%;
+  .wrapper .account-settings button {
+    width: 49%;
     height: 2.5em;
     font-size: 18px;
   }
