@@ -164,7 +164,7 @@
     grid-template-rows: 60px auto;
     background-color: #1e1e1e;
     width: 55vw;
-    margin-left: auto;
+    margin-left: 20vw;
     margin-right: auto;
     border-radius: 5px;
     margin-top: 25px;

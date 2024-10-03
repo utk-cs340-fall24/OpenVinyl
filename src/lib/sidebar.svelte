@@ -38,7 +38,7 @@
     </div>
     <div class="previous-songs">
       <p class="prev-songs-header">Recent songs:</p>
-      {#each recentSongs.slice(0, 5) as song}
+      {#each recentSongs.slice(0, 3) as song}
         <div class="prev-song">
           <img src={song.cover} alt="albumImg" class="prev-song-image">
           <div class="prev-song-info">
@@ -53,11 +53,14 @@
   
 <style>
   .wrapper{
+    position: fixed;
     display: inline-block;
-    width: 300px;
+    width: 30vh;
+    height: 75vh;
     background-color: #2c2c2c;
     margin: 10px;
-    margin-top: 150px;
+    margin-top: 17vh;
+    margin-left: 2vw;
     margin-bottom: auto;
     border-radius:30px;
     font-family: "Concert One", sans-serif;
@@ -67,8 +70,6 @@
     text-align: center;
     padding: 25px;
     padding-bottom: 10px;
-    width: 250;
-    height: 250;
   }
   .playback-button{
     display: flex;
