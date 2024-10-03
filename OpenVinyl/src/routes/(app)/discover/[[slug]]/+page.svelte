@@ -1,6 +1,6 @@
 <script>
   import { spotify } from "$lib/spotifyClient";
-  import { onMount } from "svelte";
+  import { onMount, onDestroy} from "svelte";
   import { authenticateClientCredentials } from "$lib/utils";
   import { page } from '$app/stores';
   let boxes = [
@@ -167,6 +167,12 @@
     await cacheRecommendations();
     initializeGridWithCache();
   });
+  onDestroy(() => {
+  if (audio) {
+    audio.pause();
+    audio = null;  
+  }
+});
 
   const debouncedMoveGrid = debounce(moveGrid, 0);
 
