@@ -55,12 +55,12 @@
   .wrapper{
     position: fixed;
     display: inline-block;
-    width: 30vh;
-    height: 75vh;
+    width: 275px;
+    height: 705px;
     background-color: #2c2c2c;
     margin: 10px;
     margin-top: 17vh;
-    margin-left: 2vw;
+    margin-left: 20px;
     margin-bottom: auto;
     border-radius:30px;
     font-family: "Concert One", sans-serif;
@@ -68,14 +68,14 @@
   }
   .playback-img{
     text-align: center;
-    padding: 25px;
+    padding-top: 18px;
     padding-bottom: 10px;
   }
   .playback-button{
     display: flex;
     justify-content: space-evenly;
-    padding-left: 40px;
-    padding-right: 40px;
+    padding-left: auto;
+    padding-right: auto;
   }
   .button-style{
     width: 50px;
@@ -112,7 +112,7 @@
   }
   .prev-songs-header{
     margin:0px;
-    padding-left: 10px;
+    padding-left: auto;
   }
   .previous-songs{
     max-height: 40%;
@@ -120,13 +120,14 @@
   }
   .prev-song{
     text-align: center;
-    padding-left: 5px;
+    padding-left:auto;
     padding-right: 5px;
     width: 200;
     height: 75px;
     display: flex;
     flex-direction: row;
     max-width: 100%;
+    padding-left: 10px;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
