@@ -1,7 +1,7 @@
 # Sprint 1
 
 Name - Grant Johnson
-Github id - gjohns62
+Github id - grantarg
 Group name - OpenVinyl
 
 ### What you planned to do
