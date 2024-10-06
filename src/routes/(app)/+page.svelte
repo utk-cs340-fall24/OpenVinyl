@@ -6,6 +6,7 @@
   import Sidebar from "$lib/sidebar.svelte";
   import { onMount } from "svelte";
   import { goto } from '$app/navigation'; // For navigating to /account page
+  import AddPost from "$lib/addPost.svelte";
   export let data;
 
   let session_uuid;
@@ -49,8 +50,9 @@
   </div>
 
   <Sidebar />
-
   <div class="posts-wrapper">
+    <AddPost />
+
     {#each data.posts as post}
       <Post
         logged_in_user_uuid={session_uuid}

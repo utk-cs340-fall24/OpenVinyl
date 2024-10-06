@@ -1,7 +1,7 @@
 <script>
   export let uuid;
   export let logged_in_user_uuid;
-  export let rating; // Out of 10
+  export let rating; 
   export let post_id;
   export let song_id;
   export let likes_cnt;
@@ -109,19 +109,18 @@
     liked = false;
     likes_cnt -= 1;
   }
-
-  // Function to convert rating out of 10 to FontAwesome stars (half stars included)
+  //convert 10 scale to 5 for display purposes only (maybe fix later)
   function renderStars() {
     const stars = [];
     const ratingOutOfFive = rating / 2;
 
     for (let i = 1; i <= 5; i++) {
       if (ratingOutOfFive >= i) {
-        stars.push('<i class="fa-solid fa-star"></i>'); // Full star
+        stars.push('<i class="fa-solid fa-star"></i>');
       } else if (ratingOutOfFive >= i - 0.5) {
-        stars.push('<i class="fa-regular fa-star-half-stroke"></i>'); // Half star
+        stars.push('<i class="fa-regular fa-star-half-stroke"></i>');
       } else {
-        stars.push('<i class="fa-regular fa-star"></i>'); // Empty star
+        stars.push('<i class="fa-regular fa-star"></i>'); 
       }
     }
     return stars.join('');
@@ -133,10 +132,7 @@
       <img class="profile-pic" src={profile_pic_url} alt="profile" />
       <span class="username">{username}</span>
     </div>
-  
-    <!-- Like button with likes count -->
- 
-    <!-- Discover button -->
+
     <div class="right-section">
       <a href="/discover/{song_id}" class="discover-button">
         <i class="fa-solid fa-external-link-alt"></i>
@@ -144,7 +140,6 @@
     </div>
   </div>
 
-  <!-- Rest of your component remains the same -->
   <div class="content-wrapper">
     <img class="album-cover" src={trackData ? trackData.album.images[0].url : "https://placehold.co/300"} alt="album cover" />
 
@@ -158,12 +153,8 @@
     </div>
     <div class="like-section">
       <button on:click={toggleLike} disabled={!logged_in_user_uuid} class="like-button">
-        <!-- Thumbs-up icon with adjusted size and color change on 'liked' -->
-        <!-- <i class="fa-solid fa-thumbs-up" class:liked={liked}></i> -->
-        <!-- 'Like' or 'Liked' text with color change on 'liked' -->
         <span class="like-text" class:liked={liked}>{liked ? 'Liked' : 'Like'}</span>
       </button>
-      <!-- Likes count with blue background and round shape -->
       <span class="like-count">{likes_cnt}</span>
     </div>
   </div>
@@ -171,7 +162,11 @@
   </div>
 </div>
 <style>
-/* Wrapper and Top Bar */
+  *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
 .wrapper {
   display: flex;
   flex-direction: column;
