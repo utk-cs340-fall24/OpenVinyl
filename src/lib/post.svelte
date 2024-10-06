@@ -26,8 +26,6 @@
       await fetchUserData();
       await fetchTrackData();
       await checkIfLiked();
-      console.log(desc);
-      console.log(likes_arr);
     } catch (err) {
       console.error("Error during onMount:", err);
     }
@@ -48,7 +46,6 @@
     await authenticateClientCredentials();
     const track = await spotify.getTrack(song_id);
     trackData = track;
-    console.log(track);
   }
 
   async function checkIfLiked() {

@@ -20,7 +20,6 @@
     console.log("data: ", data);
     console.log("error: ", error);
 
-    console.log(supabase.auth.getUser());
   }
 </script>
 
