@@ -1,17 +1,20 @@
 <script>
   import { onMount } from "svelte";
   import { supabase } from "$lib/supabaseClient";
-  import { selectedSong } from '$lib/stores'; 
+  import { selectedSong } from "$lib/stores";
 
   let player;
   let currentSong = null;
   let recentSongs = [];
   let showPremiumMessage = false;
   let showPlayer = true;
-  let isPlaying = false; 
+  let isPlaying = false;
 
   onMount(async () => {
-    const { data: { session }, error } = await supabase.auth.getSession();
+    const {
+      data: { session },
+      error,
+    } = await supabase.auth.getSession();
     if (error) {
       console.error("Error fetching session:", error);
       return;
@@ -20,13 +23,15 @@
     const userId = session?.user?.id;
     if (!userId) {
       showPlayer = false;
-      showPremiumMessage = true; 
+      showPremiumMessage = true;
       return;
     }
 
     const { data: profile, error: profileError } = await supabase
       .from("profiles")
-      .select("spotify_access_token, spotify_refresh_token, spotify_token_expires")
+      .select(
+        "spotify_access_token, spotify_refresh_token, spotify_token_expires"
+      )
       .eq("id", userId)
       .single();
 
@@ -35,7 +40,8 @@
       return;
     }
 
-    let { spotify_access_token, spotify_refresh_token, spotify_token_expires } = profile;
+    let { spotify_access_token, spotify_refresh_token, spotify_token_expires } =
+      profile;
 
     // If the token has expired, refresh it (this / 4 is temporary i think theres a bug with not refreshing)
     if (new Date() > new Date(spotify_token_expires / 4)) {
@@ -54,7 +60,9 @@
           .from("profiles")
           .update({
             spotify_access_token: spotify_access_token,
-            spotify_token_expires: new Date(Date.now() + refreshData.expires_in * 1000),
+            spotify_token_expires: new Date(
+              Date.now() + refreshData.expires_in * 1000
+            ),
           })
           .eq("id", userId);
 
@@ -84,7 +92,6 @@
       return;
     }
 
-    // Load the Spotify Web Playback SDK
     const script = document.createElement("script");
     script.src = "https://sdk.scdn.co/spotify-player.js";
     script.async = true;
@@ -99,7 +106,6 @@
         volume: 0.5,
       });
 
-      // Error handling
       player.addListener("initialization_error", ({ message }) => {
         console.error("Initialization Error:", message);
       });
@@ -153,16 +159,16 @@
       cover: track.album.images[0]?.url,
     };
   }
-
   function updateRecentSongs(track) {
     const song = {
+      id: track.id, 
       title: track.name,
       artist: track.artists.map((artist) => artist.name).join(", "),
       cover: track.album.images[0]?.url,
     };
 
     if (recentSongs.length === 0 || recentSongs[0].title !== song.title) {
-      recentSongs = [song, ...recentSongs.slice(0, 4)]; // keep 5 recent songs only
+      recentSongs = [song, ...recentSongs.slice(0, 4)]; // Keep 5 recent songs only
     }
   }
 
@@ -198,43 +204,57 @@
   }
 
   const playPrev = () => {
-    player.previousTrack()
+    player
+      .previousTrack()
       .then(() => {
         console.log("Skipped to previous track");
       })
-      .catch(error => console.error(error));
+      .catch((error) => console.error(error));
   };
 
   const play = () => {
-    player.resume()
+    player
+      .resume()
       .then(() => {
         console.log("Playback resumed");
         isPlaying = true;
       })
-      .catch(error => console.error(error));
+      .catch((error) => console.error(error));
   };
 
   const pause = () => {
-    player.pause()
+    player
+      .pause()
       .then(() => {
         console.log("Playback paused");
         isPlaying = false;
       })
-      .catch(error => console.error(error));
+      .catch((error) => console.error(error));
   };
 
   const playNext = () => {
-    player.nextTrack()
+    player
+      .nextTrack()
       .then(() => {
         console.log("Skipped to next track");
       })
-      .catch(error => console.error(error));
+      .catch((error) => console.error(error));
   };
 
   function handleDragStart(event, song) {
-    console.log(song)
-    event.dataTransfer.setData('application/json', JSON.stringify(song));
-    event.dataTransfer.effectAllowed = 'copy';
+    console.log(song);
+    event.dataTransfer.setData("application/json", JSON.stringify(song));
+    event.dataTransfer.effectAllowed = "copy";
+  }
+
+  function handleDrop(event) {
+    event.preventDefault();
+    const data = event.dataTransfer.getData("application/json");
+    if (data) {
+      const song = JSON.parse(data);
+      updateRecentSongs(song);
+      selectedSong.set(song); 
+    }
   }
 
   function hidePremiumMessage() {
@@ -242,11 +262,16 @@
   }
 </script>
 
-<div class="sidebar">
+<!-- svelte-ignore missing-declaration -->
+<!-- svelte-ignore a11y-no-static-element-interactions -->
+<div class="sidebar" on:drop={handleDrop} on:dragover|preventDefault>
   {#if showPremiumMessage}
     <div class="premium-message">
-      <p class="small-text">You need a Spotify Premium account to use the player.</p>
-      <button on:click={hidePremiumMessage} class="small-button">Dismiss</button>
+      <p class="small-text">
+        You need a Spotify Premium account to use the player.
+      </p>
+      <button on:click={hidePremiumMessage} class="small-button">Dismiss</button
+      >
     </div>
   {/if}
 
@@ -264,21 +289,34 @@
         {/if}
 
         <div class="playback-controls">
-          <button on:click={playPrev} class="control-button" aria-label="Previous Track">⏮️</button>
+          <button
+            on:click={playPrev}
+            class="control-button"
+            aria-label="Previous Track">⏮️</button
+          >
 
           {#if isPlaying}
-            <button on:click={pause} class="control-button" aria-label="Pause">⏸️</button>
+            <button on:click={pause} class="control-button" aria-label="Pause"
+              >⏸️</button
+            >
           {:else}
-            <button on:click={play} class="control-button" aria-label="Play">▶️</button>
+            <button on:click={play} class="control-button" aria-label="Play"
+              >▶️</button
+            >
           {/if}
 
-          <button on:click={playNext} class="control-button" aria-label="Next Track">⏭️</button>
+          <button
+            on:click={playNext}
+            class="control-button"
+            aria-label="Next Track">⏭️</button
+          >
         </div>
       </div>
 
       <div class="recent-songs">
         <p class="section-header">Recent Songs</p>
-        {#each recentSongs as song (song.title)}
+        {#each recentSongs as song (song.id)}
+          <!-- svelte-ignore a11y-no-static-element-interactions -->
           <div
             class="recent-song"
             draggable="true"

@@ -8,7 +8,7 @@
   export let desc;
   export let profile_pic_url = "https://placehold.co/30"; 
 export let song_artist;
-export let song_name;
+export let song_title;
 export let song_image;
   import { spotify } from "$lib/spotifyClient";
   import { onMount } from "svelte";
@@ -25,7 +25,6 @@ export let song_image;
   onMount(async () => {
     try {
       await fetchUserData();
-      // await fetchTrackData();
       await checkIfLiked();
     } catch (err) {
       console.error("Error during onMount:", err);
@@ -139,7 +138,7 @@ export let song_image;
     <img class="album-cover" src={song_image ? song_image : "https://placehold.co/300"} alt="album cover" />
 
     <div class="song-info-wrapper">
-      <p class="song-name">{song_name ? song_name : "Song Name"}</p>
+      <p class="song-name">{song_title ? song_title : "Song Name"}</p>
       <p class="artist-name">{song_artist ? song_artist : "Artist Name"}</p>
     </div>
 <div>

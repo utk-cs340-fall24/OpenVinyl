@@ -60,7 +60,7 @@ export async function GET({request}) {
     .from('profiles')
     .update({
       spotify_access_token: access_token,
-      spotify_token_expires: new Date(Date.now() + expires_in * 1000)
+      spotify_token_expires: new Date(Date.now() + 3600)
     })
     .eq('id', userId);
 

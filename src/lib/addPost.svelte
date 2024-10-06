@@ -1,18 +1,13 @@
 <script>
     import { createPost } from "$lib/utils";
     import { supabase } from '$lib/supabaseClient.js';
-    import { onMount } from "svelte";
-    import "@fortawesome/fontawesome-free/css/all.css";
-    import "@fortawesome/fontawesome-free/js/all.js";
+    import { onMount, onDestroy } from "svelte";
     import { createEventDispatcher } from 'svelte';
     import { selectedSong } from '$lib/stores'; 
-    import { onDestroy } from 'svelte';
-    import {spotify} from "$lib/spotifyClient.js"
-  // existing variables...
+    import { spotify } from "$lib/spotifyClient.js";
 
-    
     const dispatch = createEventDispatcher();
-  
+    
     let user = null;
     let username = 'Guest';
     let content = '';
@@ -21,22 +16,25 @@
     let searchResults = [];
     let errorMessage = '';
     let successMessage = '';
-  
+    
     let showAddPost = false; 
-  
-    // Local state for the selected song
     let localSelectedTrack = null;
+    
     const unsubscribe = selectedSong.subscribe(song => {
-    if (song) {
-        console.log("song is ", song)
-      localSelectedTrack = song;
-    }
-  });
+      if (song) {
+        localSelectedTrack = {
+          id: song.id,
+          title: song.title, 
+          artist: song.artist, 
+          cover: song.cover, 
+        };
+      }
+    });
     
     onDestroy(() => {
       unsubscribe();
     });
-    
+        
     onMount(async () => {
       const { data: { session }, error } = await supabase.auth.getSession();
       if (error) {
@@ -44,26 +42,26 @@
       }
       if (session) {
         user = session.user;
-        showAddPost = true; // Show the "Add Post" section if user is logged in
-  
+        showAddPost = true;
+    
         const { data: profile, error: profileError } = await supabase
           .from('profiles')
           .select('username')
           .eq('id', user.id)
           .single();
-  
+    
         if (profileError) {
           console.error('Error fetching profile:', profileError);
         } else {
           username = profile?.username || 'Guest';
         }
       } else {
-        showAddPost = false; // Hide the "Add Post" section if user is not logged in
+        showAddPost = false;
       }
     });
-  
+    
     let debounceTimeout;
-  
+    
     async function getSearch() {
       clearTimeout(debounceTimeout);
       debounceTimeout = setTimeout(async () => {
@@ -79,55 +77,80 @@
         }
       }, 300);
     }
-  
+    
     function displayResults(data) {
-      searchResults = data.tracks.items;
+      if (data.tracks) {
+        searchResults = data.tracks.items.map(track => ({
+          id: track.id,
+          name: track.name,
+          artists: track.artists.map(artist => artist.name),
+          album: track.album,
+          cover: track.album.images[0]?.url,
+        }));
+      } else {
+        searchResults = [];
+      }
     }
-  
+    
     function selectSong(track) {
-      localSelectedTrack = track;
-      selectedSong.set(null); // Reset the store after selecting
-      searchResults = [];
-      search = '';
+      // Create a new track object for the selected song from search results
+      localSelectedTrack = {
+        id: track.id,
+        title: track.name,
+        artist: track.artists.join(", "),
+        cover: track.cover || track.album.images[0]?.url,
+      };
+      
+      searchResults = []; // Clear search results
+      search = ''; // Clear the search input
     }
-  
+    
     async function makePost() {
-      errorMessage = '';
-      successMessage = '';
-  
-      if (!localSelectedTrack) {
-        errorMessage = 'Please select a song.';
-        return;
-      }
-      if (!rating || isNaN(rating) || rating < 1 || rating > 10) {
-        errorMessage = 'Please enter a rating between 1 and 10.';
-        return;
-      }
-  
-      try {
-        const { error } = await createPost(
-          user.id,
-          content,
-          localSelectedTrack.id,
-          parseInt(rating)
-        );
-  
-        if (error) {
-          console.error('Error submitting review:', error);
-          errorMessage = 'Error submitting review.';
-        } else {
-          successMessage = 'Review submitted successfully!';
-          localSelectedTrack = null;
-          rating = '';
-          content = '';
-          searchResults = [];
-          dispatch('reviewSubmitted');
-        }
-      } catch (err) {
-        console.error('Error creating post:', err);
-        errorMessage = 'An error occurred while submitting your review.';
-      }
+  errorMessage = '';
+  successMessage = '';
+
+  if (!localSelectedTrack) {
+    errorMessage = 'Please select a song.';
+    return;
+  }
+  if (!rating || isNaN(rating) || rating < 1 || rating > 10) {
+    errorMessage = 'Please enter a rating between 1 and 10.';
+    return;
+  }
+
+  try {
+    const { error } = await createPost(
+      user.id,
+      content,
+      localSelectedTrack.id,
+      parseInt(rating)
+    );
+
+    if (error) {
+      console.error('Error submitting review:', error);
+      errorMessage = 'Error submitting review.';
+    } else {
+      successMessage = 'Review submitted successfully!';
+
+      const newPost = {
+        id: Date.now(), // tmp value
+        content,
+        rating: parseInt(rating),
+        song_id: localSelectedTrack.id,
+      };
+
+
+      localSelectedTrack = null;
+      rating = '';
+      content = '';
+      searchResults = [];
+      dispatch('reviewSubmitted');
     }
+  } catch (err) {
+    console.error('Error creating post:', err);
+    errorMessage = 'An error occurred while submitting your review.';
+  }
+}
   </script>
   
   {#if showAddPost}
@@ -149,14 +172,14 @@
               <input type="text" bind:value={search} on:input={getSearch} placeholder="Search for a song..." />
               {#if searchResults.length > 0}
                 <ul class="search-results">
+                  <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
                   {#each searchResults as track}
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
-                    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
                     <li on:click={() => selectSong(track)}>
-                      <img src={track.album.images[0]?.url} alt="album cover" />
+                      <img src={track.cover} alt="album cover" />
                       <div class="song-info">
                         <p class="song-name">{track.name}</p>
-                        <p class="artist-name">{track.artists[0]?.name}</p>
+                        <p class="artist-name">{track.artists.join(", ")}</p>
                       </div>
                     </li>
                   {/each}
@@ -198,7 +221,6 @@
   {:else}
     <p class="must-be-logged-in">You must be logged in to create a post.</p>
   {/if}
-  
   <style>
     *,
     *::before,

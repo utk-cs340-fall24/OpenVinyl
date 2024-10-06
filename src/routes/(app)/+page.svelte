@@ -9,6 +9,7 @@
   import { goto } from '$app/navigation';
   import AddPost from "$lib/addPost.svelte";
   import { selectedSong } from '$lib/stores'; 
+  
   import { getSongs, authenticateClientCredentials } from "$lib/utils.js"; 
 
   export let data;
@@ -41,22 +42,38 @@ function handleDragLeave(event) {
   isDragOver = false;
   isDroppableArea = false; 
 }
-  async function fetchSongData() {
-    await authenticateClientCredentials();
-    const songIds = posts.map(post => post.song_id);
-    try {
-      const songs = await getSongs(songIds);
-      songs.forEach(song => {
-        songData[song.id] = {
-          title: song.title,
-          artist: song.artist,
-          image: song.image_url
-        };
-      });
-    } catch (err) {
-      console.error("Error fetching song data:", err);
+async function fetchSongData() {
+  await authenticateClientCredentials();
+  
+  // Collect song IDs from posts
+  let testIds = posts.map(post => post.song_id); // Use map for cleaner code
+  
+  const options = {};
+  spotify.getTracks(testIds, options, (error, data) => {
+    if (error) {
+      console.error("Error fetching tracks:", error);
+      return;
     }
-  }
+
+    if (data && data.tracks) { 
+      console.log("Fetched tracks successfully:", data.tracks);
+      
+      data.tracks.forEach(track => {
+        if (track) { 
+          songData[track.id] = {
+            title: track.name,
+            artist: track.artists[0].name, 
+            image: track.album.images[0]?.url 
+          };
+        }
+      });
+    } else {
+      console.log("No tracks found for the given IDs.");
+    }
+    console.log(songData)
+
+  });
+}
 
   async function loadNextPage() {
     loading = true;
