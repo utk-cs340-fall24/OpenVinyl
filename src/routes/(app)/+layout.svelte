@@ -14,11 +14,9 @@
 
     if (session) {
       const user = session.user;
-      console.log("User:", user);
-
-      // Check if the logged-in provider is Spotify
-      console.log("session: ", session)
-      if (session.user.app_metadata.provider === 'spotify') {
+      console.log(session)
+      const providers = session.user.app_metadata.providers;
+      if (providers && providers.includes('spotify')) {
         // Fetch user's profile from the database to check if they already have an access token
         const { data: profile, error: profileError } = await supabase
           .from('profiles')
@@ -36,8 +34,7 @@
           const providerToken = session.provider_token;
           const refreshToken = session.provider_refresh_token;
           const expiresIn = session.expires_in;
-          console.log("three: ", providerToken, refreshToken, expiresIn)
-          console.log("profile is: ", profile)
+          
           if (providerToken && refreshToken && expiresIn) {
             const { error: updateError } = await supabase
               .from('profiles')

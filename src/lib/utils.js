@@ -131,11 +131,9 @@ export async function signInWithSpotify() {
 
   const { error } = await supabase.auth.signInWithOAuth({
     provider: 'spotify',
-    // options: {
-    //   redirectTo: getURL()
-    // }
     options: {
-      redirectTo: `${getURL()}/auth/callback`
+      scopes: 'streaming user-read-email user-read-private user-modify-playback-state user-read-playback-state user-read-currently-playing user-top-read user-read-recently-played user-library-read',
+      redirectTo: `${getURL()}`
     }
   });
   if (error) {
@@ -188,7 +186,11 @@ export async function getSongs(song_list) {
       console.log("Too many songs requested (>50)");
       return { success: false, message: "Too many songs requested" };
     }
-    const data = await spotify.getTracks(song_list);
+    console.log(song_list)
+    await authenticateClientCredentials();
+    const {data, error} = await spotify.getTracks(song_list);
+    // console.log("error is ", error)
+    console.log("data is ", data)
     if (data) {
       console.log("Got " + song_list.length + " songs successfully");
       return { success: true, data };
