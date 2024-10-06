@@ -44,7 +44,7 @@
 
   async function fetchTrackData() {
     await authenticateClientCredentials();
-    const track = await spotify.getTrack(song_id);
+    const {track, error}  = await spotify.getTrack(song_id);
     trackData = track;
   }
 

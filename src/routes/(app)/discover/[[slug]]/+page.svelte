@@ -238,7 +238,7 @@
 
 <div class="info">
   <p>Use arrow keys or WASD to navigate the discover grid</p>
-  <h3>Center song is {boxes[4].songName} by {boxes[4].artistName}</h3>
+  <p>Center song is {boxes[4].songName} by {boxes[4].artistName}</p>
 </div>
 
 <div class="game-board">
@@ -258,7 +258,6 @@
 
 <style>
 .info {
-  padding-top: 80px;
   display: flex;
   justify-content: center;
   text-align: center;
@@ -311,6 +310,6 @@
 
 /* Highlight Center Box */
 .highlight {
-  border: 4px solid green;
+  border: 4px solid #1DB954;
 }
 </style>

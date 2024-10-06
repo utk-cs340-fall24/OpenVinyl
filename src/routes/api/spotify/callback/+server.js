@@ -1,10 +1,9 @@
-// +server.js
 import { json } from '@sveltejs/kit';
 import fetch from 'node-fetch';
 
 const client_id = '74993b84e7ca4167a76581201d4f58f1';
-const client_secret = 'your_spotify_client_secret';
-const redirect_uri = 'https://yourapp.com/api/spotify/callback';
+const client_secret = '91710a7ff19648a994c76e9990a478f7';
+const redirect_uri = 'http://localhost:5173/api/spotify/callback';
 
 export async function POST({ request }) {
   const { code } = await request.json(); // The authorization code from Spotify
