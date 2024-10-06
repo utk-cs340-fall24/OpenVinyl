@@ -4,22 +4,27 @@
   import logo from '$lib/logo.svg';
 
   onMount(async () => {
-    const user = await supabase.auth.getUser();
-    const { data, error }  = await supabase.from("profiles").select().eq("id", user.data.user.id);
-    // console.log(user.data.user.id);
-    if(user){
-      document.getElementById("login-button").innerHTML = data[0].username;
-      document.getElementById("login-button").href = "/account";
+    try {
+      const user = await supabase.auth.getUser();
+      if (user && user.data.user) {
+        const { data, error } = await supabase.from("profiles").select("username").eq("id", user.data.user.id).single();
+        if (data) {
+          const loginButton = document.getElementById("login-button");
+          loginButton.innerHTML = data.username;
+          loginButton.href = "/account";
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching user profile:", error);
     }
   });
 </script>
-
 <div class="wrapper">
   <nav>
     <div class="left-nav">
-      <a href="/"><img src={logo} alt="logo" width="75"></a>
-      <a href="/discover">Discover</a>
-      <a href="/charts">Charts</a>
+      <a href="/"><img src={logo} alt="logo" class="logo"></a>
+      <a href="/discover" class="nav-link">Discover</a>
+      <a href="/charts" class="nav-link">Charts</a>
     </div>
     <div class="right-nav">
       <div class="login-wrapper">
@@ -28,60 +33,94 @@
     </div>
   </nav>
 </div>
- 
+
 <style>
-  .wrapper{
-    position:fixed;
+  .wrapper {
+    position: fixed;
     width: 100%;
-    top:0;
+    top: 0;
     z-index: 100;
+    background-color: #1d1f25;
   }
-  nav{
-    background-color: #353535;
-    padding: 5px;
+
+  nav {
     display: flex;
-    flex-direction: row;
     justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid #26282c;
     font-family: "Concert One", sans-serif;
+    align-items: center;
   }
-  .left-nav{
-    width:50%;
-    display: table;
+
+  .left-nav,
+  .right-nav {
+    display: flex;
+    align-items: center;
   }
-  .right-nav{
-    width: 70%;
-    text-align: right;
-    display:flex;
-    justify-content: right;
+
+  .left-nav {
+    gap: 1rem; /* Add space between the logo and the links */
   }
-  nav a {
-    margin-top: 10px;
-    padding: 0;
-    height: fit-content;
-    text-decoration: none;
+
+  .nav-link {
     color: #ebe9e5;
-    display:table-cell;
-    vertical-align: middle;
-    width:fit-content;
-    font-size:28px;
+    font-size: 1.25rem;
+    text-decoration: none;
+    margin-left: 1rem;
   }
-  nav a:hover{
+
+  .nav-link:hover {
     color: #6a6a6a;
   }
-  .login-wrapper{
-    width:fit-content;
-    height:100%;
-    display: table;
+
+  .login-wrapper {
+    display: flex;
+    align-items: center;
   }
-  .login-wrapper a{
-    font-size:38px;
-    display:table-cell;
-    vertical-align: middle;
-    padding-right:20px;
+
+  .login-href {
+    font-size: 1.5rem;
+    color: #ebe9e5;
+    text-decoration: none;
+    padding-right: 20px;
   }
-  img{
-    padding:5px;
-    display:table-cell;
-    vertical-align: middle;
+
+  .logo {
+    width: 50px;
+    height: auto;
   }
- </style>
+
+  /* Media Queries for responsiveness */
+  @media (max-width: 768px) {
+    .nav-link {
+      font-size: 1rem; /* Decrease font size on smaller screens */
+    }
+
+    .login-href {
+      font-size: 1.2rem;
+    }
+
+    .logo {
+      width: 40px; /* Adjust logo size for smaller screens */
+    }
+
+    .left-nav {
+      gap: 0.5rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    nav {
+      flex-direction: column; /* Stack the navigation links on smaller screens */
+      text-align: center;
+    }
+
+    .nav-link {
+      margin: 0.5rem 0; /* Add space between the links */
+    }
+
+    .login-href {
+      padding-right: 0; 
+    }
+  }
+</style>

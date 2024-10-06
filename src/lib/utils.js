@@ -35,7 +35,6 @@ export async function createPost(profile_id, content, song_id, rating) {
       console.log("Error inserting data: ", error);
       return { success: false, error: error.message };
     }
-    console.log("Data inserted successfully:", data);
     return { success: true, data };
   } catch (err) {
     console.error("Unexpected error:", err);
@@ -86,7 +85,6 @@ export async function getRecommendationsFromSong(song_id) {
 }
 
 export async function getSearchSuggestions(query) {
-  console.log(query);
   try {
     const { data } = await spotify.searchTracks(query, {
       limit: 5
@@ -103,9 +101,23 @@ export async function getSearchSuggestions(query) {
   }
 }
 
+const getURL = () => {
+  let url = 
+    import.meta.env.VITE_APP_BASE_URL ?? 
+    import.meta.env.VITE_APP_VERCEL_URL ?? 
+    'http://localhost:5173/';
+  url = url.startsWith('http') ? url : `https://${url}`
+  url = url.endsWith('/') ? url : `${url}/`
+  return url
+}
+
 export async function signInWithGoogle() {
+
   const { error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
+    options: {
+      redirectTo: getURL()
+    }
   });
   if (error) {
     console.error('Error during sign in:', error.message);
@@ -144,7 +156,11 @@ export async function updateLastName(profile_id, lname) {
     return { success: true, data };
   } catch (err) {
     console.error("Unexpected error:", err);
-    return { success: false, error: err.message };
+    return { success: false, error: err.message
+
+     };
+    }
+  }
 // Provide with an array on song id's (MAX 50)
 export async function getSongs(song_list) {
   try {

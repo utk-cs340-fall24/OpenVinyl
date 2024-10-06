@@ -196,69 +196,121 @@
         break;
     }
   }
+  let touchStartX = 0;
+  let touchStartY = 0;
+  let touchEndX = 0;
+  let touchEndY = 0;
+
+  function handleTouchStart(event) {
+    touchStartX = event.changedTouches[0].screenX;
+    touchStartY = event.changedTouches[0].screenY;
+  }
+
+  function handleTouchEnd(event) {
+    touchEndX = event.changedTouches[0].screenX;
+    touchEndY = event.changedTouches[0].screenY;
+    handleGesture();
+  }
+
+  function handleGesture() {
+    const deltaX = touchEndX - touchStartX;
+    const deltaY = touchEndY - touchStartY;
+
+    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+      if (deltaX > 50) {
+        // Swipe Right
+        debouncedMoveGrid("right");
+      } else if (deltaX < -50) {
+        // Swipe Left
+        debouncedMoveGrid("left");
+      }
+    } else {
+      if (deltaY > 50) {
+        // Swipe Down
+        debouncedMoveGrid("down");
+      } else if (deltaY < -50) {
+        // Swipe Up
+        debouncedMoveGrid("up");
+      }
+    }
+  }
 </script>
 
 <div class="info">
   <p>Use arrow keys or WASD to navigate the discover grid</p>
   <h3>Center song is {boxes[4].songName} by {boxes[4].artistName}</h3>
-  </div>
+</div>
+
 <div class="game-board">
   {#each boxes as box, index (box.id)}
     <div class="box" class:highlight={index === 4}>
-      {#if index === 4}
-        <div class="rainbow">
-          <img src={box.imageUrl} alt="Image {box.id}" />
-        </div>
-      {:else}
-        <img src={box.imageUrl} alt="Image {box.id}" />
-      {/if}
+      <img src={box.imageUrl} alt="{box.songName} by {box.artistName}" />
     </div>
   {/each}
 </div>
 
-<svelte:window on:keydown|preventDefault={onKeyDown} />
+<svelte:window 
+  on:keydown|preventDefault={onKeyDown} 
+  on:touchstart={handleTouchStart}
+  on:touchend={handleTouchEnd}
+/>
+
 
 <style>
-  .info {
-    padding-top: 80px;
-    display: flex;
-    justify-content: center;
-    text-align: center;
-    flex-direction: column;
-    color:white;
-  }
+.info {
+  padding-top: 80px;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  flex-direction: column;
+  color: white;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  padding-left: 10px;
+  padding-right: 10px;
+}
 
-  .rainbow {
-    border: 4px solid green;
-  }
+/* Game Board */
+.game-board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Always 3 columns */
+  grid-template-rows: repeat(3, auto);   /* Rows adjust based on content */
+  gap: 10px;
+  justify-content: center;  /* Center the grid horizontally */
+  width: 100%;
+  max-width: 620px;         /* Updated max-width */
+  margin: 0 auto;
+  padding-bottom: 50px;
+  box-sizing: border-box;
+}
 
-  .game-board {
-    display: grid;
-    grid-template-rows: 200px 200px 200px;
-    grid-template-columns: 200px 200px 200px;
-    gap: 10px;
-    width: fit-content;
-    margin-left: auto;
-    margin-right: auto;
-    padding-bottom: 100px;
-    transition: transform 0.5s ease-in-out;
-  }
-  .box {
-    background: #444;
-    border: 1px solid #555;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #aaa;
-    opacity: 1;
-    transition:
-      transform 1.5s ease-in-out,
-      opacity 1.5s ease-in-out;
-    box-sizing: border-box;
-  }
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+/* Box */
+.box {
+  position: relative;
+  overflow: hidden;
+  background: #444;
+  border: 1px solid #555;
+  width: 100%;
+  max-width: 200px;    /* Updated maximum width */
+  height: auto;
+  aspect-ratio: 1 / 1; /* Maintain square aspect ratio */
+  margin: 0 auto;      /* Center the box within its grid cell */
+}
+
+/* Image */
+.box img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Highlight Center Box */
+.highlight {
+  border: 4px solid green;
+}
 </style>

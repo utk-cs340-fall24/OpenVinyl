@@ -23,7 +23,6 @@ export async function load() {
     likes_count: post.likes.length,       
     liked_by: post.likes.map(like => like.profile_id)  
   }));
-console.log(postsWithLikeData)
   return {
     success: true,
     posts: postsWithLikeData ?? [],

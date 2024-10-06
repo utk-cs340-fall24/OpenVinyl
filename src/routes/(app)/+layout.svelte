@@ -15,6 +15,6 @@
 
 <style>
   .wrapper{
-    background-color: #121212;
+    background-color: #16181c;
   }
 </style>
