@@ -1,16 +1,16 @@
 <script>
   import { onMount } from "svelte";
   import { supabase } from "$lib/supabaseClient";
+  import { selectedSong } from '$lib/stores'; 
 
   let player;
   let currentSong = null;
   let recentSongs = [];
   let showPremiumMessage = false;
   let showPlayer = true;
-  let isPlaying = false; // State to track playback
+  let isPlaying = false; 
 
   onMount(async () => {
-    // Fetch Supabase session
     const { data: { session }, error } = await supabase.auth.getSession();
     if (error) {
       console.error("Error fetching session:", error);
@@ -20,13 +20,10 @@
     const userId = session?.user?.id;
     if (!userId) {
       showPlayer = false;
-      //todo, turn this into its own sign in with spotify message
-      showPremiumMessage = true;
+      showPremiumMessage = true; 
       return;
     }
-    
 
-    // Fetch Spotify tokens from Supabase
     const { data: profile, error: profileError } = await supabase
       .from("profiles")
       .select("spotify_access_token, spotify_refresh_token, spotify_token_expires")
@@ -40,8 +37,8 @@
 
     let { spotify_access_token, spotify_refresh_token, spotify_token_expires } = profile;
 
-    // If the token has expired, refresh it
-    if (new Date() > new Date(spotify_token_expires)) {
+    // If the token has expired, refresh it (this / 4 is temporary i think theres a bug with not refreshing)
+    if (new Date() > new Date(spotify_token_expires / 4)) {
       const refreshResponse = await fetch("/refresh-spotify-token", {
         method: "GET",
         headers: {
@@ -127,14 +124,13 @@
         console.error("Playback Error:", message);
       });
 
-      // Listen for changes in the player state (i.e., song changes)
       player.addListener("player_state_changed", (state) => {
         if (!state) return;
 
         const track = state.track_window.current_track;
         updateCurrentSong(track);
         updateRecentSongs(track);
-        isPlaying = state.paused ? false : true; // Update playback state
+        isPlaying = state.paused ? false : true;
       });
 
       player.addListener("ready", ({ device_id }) => {
@@ -150,7 +146,6 @@
     };
   });
 
-  // Update the current song being played
   function updateCurrentSong(track) {
     currentSong = {
       title: track.name,
@@ -159,7 +154,6 @@
     };
   }
 
-  // Update the recent songs list
   function updateRecentSongs(track) {
     const song = {
       title: track.name,
@@ -168,11 +162,10 @@
     };
 
     if (recentSongs.length === 0 || recentSongs[0].title !== song.title) {
-      recentSongs = [song, ...recentSongs.slice(0, 4)]; // Store up to 5 recent songs
+      recentSongs = [song, ...recentSongs.slice(0, 4)]; // keep 5 recent songs only
     }
   }
 
-  // Transfer playback to this device without auto-playing
   async function transferPlaybackHere(device_id) {
     const session = await supabase.auth.getSession();
     const userId = session.data.session?.user?.id;
@@ -200,14 +193,10 @@
       },
       body: JSON.stringify({
         device_ids: [device_id],
-        // Remove or set play to false to prevent auto-playing
-        // play: false is optional since the default is false
-        // play: false,
       }),
     });
   }
 
-  // Playback controls
   const playPrev = () => {
     player.previousTrack()
       .then(() => {
@@ -242,11 +231,17 @@
       .catch(error => console.error(error));
   };
 
+  function handleDragStart(event, song) {
+    console.log(song)
+    event.dataTransfer.setData('application/json', JSON.stringify(song));
+    event.dataTransfer.effectAllowed = 'copy';
+  }
+
   function hidePremiumMessage() {
     showPremiumMessage = false;
   }
 </script>
-<!-- Display current and recent songs -->
+
 <div class="sidebar">
   {#if showPremiumMessage}
     <div class="premium-message">
@@ -254,47 +249,53 @@
       <button on:click={hidePremiumMessage} class="small-button">Dismiss</button>
     </div>
   {/if}
-{#if !showPremiumMessage}
-  {#if showPlayer}
-    <div class="playback-section">
-      {#if currentSong}
-        <div class="playback-img">
-          <img src={currentSong.cover} alt="Album Cover" />
-        </div>
-        <div class="song-info">
-          <p class="song-title">{currentSong.title}</p>
-          <p class="song-artist">{currentSong.artist}</p>
-        </div>
-      {/if}
 
-      <div class="playback-controls">
-        <button on:click={playPrev} class="control-button" aria-label="Previous Track">⏮️</button>
-
-        {#if isPlaying}
-          <button on:click={pause} class="control-button" aria-label="Pause">⏸️</button>
-        {:else}
-          <button on:click={play} class="control-button" aria-label="Play">▶️</button>
+  {#if !showPremiumMessage}
+    {#if showPlayer}
+      <div class="playback-section">
+        {#if currentSong}
+          <div class="playback-img">
+            <img src={currentSong.cover} alt="Album Cover" />
+          </div>
+          <div class="song-info">
+            <p class="song-title">{currentSong.title}</p>
+            <p class="song-artist">{currentSong.artist}</p>
+          </div>
         {/if}
 
-        <button on:click={playNext} class="control-button" aria-label="Next Track">⏭️</button>
-      </div>
-    </div>
+        <div class="playback-controls">
+          <button on:click={playPrev} class="control-button" aria-label="Previous Track">⏮️</button>
 
-    <div class="recent-songs">
-      <p class="section-header">Recent Songs</p>
-      {#each recentSongs as song (song.title)}
-        <div class="recent-song">
-          <img src={song.cover} alt="Album Cover" class="recent-song-image" />
-          <div class="recent-song-info">
-            <p class="recent-song-title">{song.title}</p>
-            <p class="recent-song-artist">{song.artist}</p>
-          </div>
+          {#if isPlaying}
+            <button on:click={pause} class="control-button" aria-label="Pause">⏸️</button>
+          {:else}
+            <button on:click={play} class="control-button" aria-label="Play">▶️</button>
+          {/if}
+
+          <button on:click={playNext} class="control-button" aria-label="Next Track">⏭️</button>
         </div>
-      {/each}
-    </div>
-  {/if}
+      </div>
+
+      <div class="recent-songs">
+        <p class="section-header">Recent Songs</p>
+        {#each recentSongs as song (song.title)}
+          <div
+            class="recent-song"
+            draggable="true"
+            on:dragstart={(e) => handleDragStart(e, song)}
+          >
+            <img src={song.cover} alt="Album Cover" class="recent-song-image" />
+            <div class="recent-song-info">
+              <p class="recent-song-title">{song.title}</p>
+              <p class="recent-song-artist">{song.artist}</p>
+            </div>
+          </div>
+        {/each}
+      </div>
+    {/if}
   {/if}
 </div>
+
 <style>
   .premium-message {
     padding: 10px;
@@ -419,6 +420,11 @@
     padding: 5px;
     border-radius: 5px;
     transition: background-color 0.2s;
+    cursor: grab;
+  }
+
+  .recent-song:active {
+    cursor: grabbing;
   }
 
   .recent-song:hover {

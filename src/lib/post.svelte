@@ -43,12 +43,6 @@ export let song_image;
     if (data) username = data.username;
   }
 
-  async function fetchTrackData() {
-    await authenticateClientCredentials();
-    const {track, error}  = await spotify.getTrack(song_id);
-    trackData = track;
-  }
-
   async function checkIfLiked() {
     if (!logged_in_user_uuid) return;
 
@@ -142,11 +136,11 @@ export let song_image;
   </div>
 
   <div class="content-wrapper">
-    <img class="album-cover" src={trackData ? trackData.album.images[0].url : "https://placehold.co/300"} alt="album cover" />
+    <img class="album-cover" src={song_image ? song_image : "https://placehold.co/300"} alt="album cover" />
 
     <div class="song-info-wrapper">
-      <p class="song-name">{trackData ? trackData.name : "Song Name"}</p>
-      <p class="artist-name">{trackData ? trackData.artists[0].name : "Artist Name"}</p>
+      <p class="song-name">{song_name ? song_name : "Song Name"}</p>
+      <p class="artist-name">{song_artist ? song_artist : "Artist Name"}</p>
     </div>
 <div>
     <div class="rating-wrapper">
@@ -209,7 +203,6 @@ export let song_image;
   color: #b9b9b9;
 }
 
-/* Like Section */
 .like-section {
   display: flex;
   align-items: center;
@@ -230,26 +223,23 @@ export let song_image;
 .like-button i {
   margin-right: 5px;
   color: #f3f1f1;
-  font-size: 1rem; /* Shrink the thumbs-up icon slightly */
+  font-size: 1rem; 
 }
 
 .like-button i.liked {
-  color: #007BFF; /* Blue color when liked */
+  color: #007BFF; 
 }
 
-.like-button:hover {
-  /* color: #ff6b6b; */
-}
 
 .like-text {
   min-width: 45px;
   display: inline-block;
   font-size: 0.9rem;
-  color: #f3f1f1; /* Default white color */
+  color: #f3f1f1;
 }
 
 .like-text.liked {
-  color: #007BFF; /* Blue color when liked */
+  color: #007BFF; 
 }
 
 .like-count {
@@ -257,9 +247,9 @@ export let song_image;
   height: 24px;
   margin-left: 5px;
   text-align: center;
-  background-color: #007BFF; /* Blue background */
+  background-color: #007BFF; 
   color: white;
-  border-radius: 50%; /* Make it round */
+  border-radius: 50%; 
   font-size: 0.8rem;
   display: flex;
   align-items: center;
@@ -271,7 +261,6 @@ export let song_image;
   opacity: 0.6;
 }
 
-/* Discover Button */
 .discover-button {
   background-color: transparent;
   border: none;
@@ -284,7 +273,6 @@ export let song_image;
   color: #6a6a6a;
 }
 
-/* Content Wrapper and Remaining Styles */
 .content-wrapper {
   display: flex;
   align-items: center;

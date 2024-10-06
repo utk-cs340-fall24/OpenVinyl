@@ -187,10 +187,10 @@ export async function getSongs(song_list) {
       return { success: false, message: "Too many songs requested" };
     }
     console.log(song_list)
-
-    console.log(spotify)
+    await authenticateClientCredentials();
     const {data, error} = await spotify.getTracks(song_list);
-    console.log(error)
+    // console.log("error is ", error)
+    console.log("data is ", data)
     if (data) {
       console.log("Got " + song_list.length + " songs successfully");
       return { success: true, data };

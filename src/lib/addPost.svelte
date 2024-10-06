@@ -1,26 +1,41 @@
 <script>
     import { createPost } from "$lib/utils";
-    import { authenticateClientCredentials } from "$lib/utils";
     import { supabase } from '$lib/supabaseClient.js';
-    import { spotify } from "$lib/spotifyClient";
     import { onMount } from "svelte";
     import "@fortawesome/fontawesome-free/css/all.css";
     import "@fortawesome/fontawesome-free/js/all.js";
     import { createEventDispatcher } from 'svelte';
+    import { selectedSong } from '$lib/stores'; 
+    import { onDestroy } from 'svelte';
+    import {spotify} from "$lib/spotifyClient.js"
+  // existing variables...
+
     
+    const dispatch = createEventDispatcher();
+  
     let user = null;
     let username = 'Guest';
-    let trackData;
-    let selectedTrack;
     let content = '';
     let rating = '';
     let search = '';
     let searchResults = [];
     let errorMessage = '';
     let successMessage = '';
-    let showAddPost = false; // Controls the visibility of the "Add Post" section
+  
+    let showAddPost = false; 
+  
+    // Local state for the selected song
+    let localSelectedTrack = null;
+    const unsubscribe = selectedSong.subscribe(song => {
+    if (song) {
+        console.log("song is ", song)
+      localSelectedTrack = song;
+    }
+  });
     
-    const dispatch = createEventDispatcher();
+    onDestroy(() => {
+      unsubscribe();
+    });
     
     onMount(async () => {
       const { data: { session }, error } = await supabase.auth.getSession();
@@ -30,13 +45,13 @@
       if (session) {
         user = session.user;
         showAddPost = true; // Show the "Add Post" section if user is logged in
-    
+  
         const { data: profile, error: profileError } = await supabase
           .from('profiles')
           .select('username')
           .eq('id', user.id)
           .single();
-    
+  
         if (profileError) {
           console.error('Error fetching profile:', profileError);
         } else {
@@ -46,16 +61,15 @@
         showAddPost = false; // Hide the "Add Post" section if user is not logged in
       }
     });
-    
+  
     let debounceTimeout;
-    
+  
     async function getSearch() {
       clearTimeout(debounceTimeout);
       debounceTimeout = setTimeout(async () => {
         try {
-          await authenticateClientCredentials();
           if (search.trim() !== "") {
-            trackData = await spotify.searchTracks(search, { limit: 5 });
+            const trackData = await spotify.searchTracks(search, { limit: 5 });
             displayResults(trackData);
           } else {
             searchResults = [];
@@ -65,22 +79,23 @@
         }
       }, 300);
     }
-    
+  
     function displayResults(data) {
       searchResults = data.tracks.items;
     }
-    
+  
     function selectSong(track) {
-      selectedTrack = track;
+      localSelectedTrack = track;
+      selectedSong.set(null); // Reset the store after selecting
       searchResults = [];
       search = '';
     }
-    
+  
     async function makePost() {
       errorMessage = '';
       successMessage = '';
-    
-      if (!selectedTrack) {
+  
+      if (!localSelectedTrack) {
         errorMessage = 'Please select a song.';
         return;
       }
@@ -88,21 +103,21 @@
         errorMessage = 'Please enter a rating between 1 and 10.';
         return;
       }
-    
+  
       try {
         const { error } = await createPost(
           user.id,
           content,
-          selectedTrack.id,
+          localSelectedTrack.id,
           parseInt(rating)
         );
-    
+  
         if (error) {
           console.error('Error submitting review:', error);
           errorMessage = 'Error submitting review.';
         } else {
           successMessage = 'Review submitted successfully!';
-          selectedTrack = null;
+          localSelectedTrack = null;
           rating = '';
           content = '';
           searchResults = [];
@@ -116,82 +131,86 @@
   </script>
   
   {#if showAddPost}
-  <div class="add-review-wrapper">
-    <div class="add-review">
-      <div class="top-bar">
-        <div class="user-info">
-          <img class="profile-pic" src={user?.user_metadata?.avatar_url || 'https://placehold.co/30'} alt="profile" />
-          <span class="username">{username}</span>
-        </div>
-        <div class="top-bar-text">
-          Create Review
-        </div>
-      </div>
-  
-      <div class="content-wrapper">
-        {#if !selectedTrack}
-          <div class="song-search">
-            <input type="text" bind:value={search} on:input={getSearch} placeholder="Search for a song..." />
-            {#if searchResults.length > 0}
-              <ul class="search-results">
-                {#each searchResults as track}
-                  <li on:click={() => selectSong(track)}>
-                    <img src={track.album.images[0]?.url} alt="album cover" />
-                    <div class="song-info">
-                      <p class="song-name">{track.name}</p>
-                      <p class="artist-name">{track.artists[0]?.name}</p>
-                    </div>
-                  </li>
-                {/each}
-              </ul>
-            {/if}
+    <div class="add-review-wrapper">
+      <div class="add-review">
+        <div class="top-bar">
+          <div class="user-info">
+            <img class="profile-pic" src={user?.user_metadata?.avatar_url || 'https://placehold.co/30'} alt="profile" />
+            <span class="username">{username}</span>
           </div>
-        {:else}
-          <div class="selected-song">
-            <img class="album-cover" src={selectedTrack.album.images[0]?.url} alt="album cover" />
-            <div class="song-info-wrapper">
-              <p class="song-name">{selectedTrack.name}</p>
-              <p class="artist-name">{selectedTrack.artists[0]?.name}</p>
-              <button on:click={() => { selectedTrack = null; }} class="change-song-button">Change song</button>
+          <div class="top-bar-text">
+            Create Review
+          </div>
+        </div>
+  
+        <div class="content-wrapper">
+          {#if !localSelectedTrack}
+            <div class="song-search">
+              <input type="text" bind:value={search} on:input={getSearch} placeholder="Search for a song..." />
+              {#if searchResults.length > 0}
+                <ul class="search-results">
+                  {#each searchResults as track}
+                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                    <li on:click={() => selectSong(track)}>
+                      <img src={track.album.images[0]?.url} alt="album cover" />
+                      <div class="song-info">
+                        <p class="song-name">{track.name}</p>
+                        <p class="artist-name">{track.artists[0]?.name}</p>
+                      </div>
+                    </li>
+                  {/each}
+                </ul>
+              {/if}
             </div>
-          </div>
+          {:else}
+            <div class="selected-song">
+              <img class="album-cover" src={localSelectedTrack.cover} alt="album cover" />
+              <div class="song-info-wrapper">
+                <p class="song-name">{localSelectedTrack.title}</p>
+                <p class="artist-name">{localSelectedTrack.artist}</p>
+                <button on:click={() => { localSelectedTrack = null; }} class="change-song-button">Change song</button>
+              </div>
+            </div>
   
-          <div class="rating-wrapper">
-            <label for="rating">Rating (1-10):</label>
-            <input type="number" id="rating" min="1" max="10" bind:value={rating} />
-          </div>
+            <div class="rating-wrapper">
+              <label for="rating">Rating (1-10):</label>
+              <input type="number" id="rating" min="1" max="10" bind:value={rating} />
+            </div>
   
-          <div class="description-wrapper">
-            <label for="content">Description (optional):</label>
-            <textarea id="content" bind:value={content} placeholder="Write your review..."></textarea>
-          </div>
+            <div class="description-wrapper">
+              <label for="content">Description (optional):</label>
+              <textarea id="content" bind:value={content} placeholder="Write your review..."></textarea>
+            </div>
   
-          {#if errorMessage}
-            <p class="error-message">{errorMessage}</p>
+            {#if errorMessage}
+              <p class="error-message">{errorMessage}</p>
+            {/if}
+            {#if successMessage}
+              <p class="success-message">{successMessage}</p>
+            {/if}
+  
+            <button class="submit-button" on:click={makePost}>Submit Review</button>
           {/if}
-          {#if successMessage}
-            <p class="success-message">{successMessage}</p>
-          {/if}
-  
-          <button class="submit-button" on:click={makePost}>Submit Review</button>
-        {/if}
+        </div>
       </div>
     </div>
-  </div>
-{:else}
-  <p class="must-be-logged-in">You must be logged in to create a post.</p>
-{/if}
-
+  {:else}
+    <p class="must-be-logged-in">You must be logged in to create a post.</p>
+  {/if}
+  
   <style>
     *,
     *::before,
     *::after {
       box-sizing: border-box;
     }
+    
     .must-be-logged-in {
-        font-size: 0.8rem;
-    color: #b9b9b9;
-    text-align: center;
+      font-size: 0.8rem;
+      color: #b9b9b9;
+      text-align: center;
+      margin: 20px;
     }
   
     .add-review-wrapper {
@@ -210,6 +229,7 @@
       color: #f3f1f1;
       border: 1px solid #26282c;
       font-family: "Concert One", sans-serif;
+      border-radius: 8px;
     }
   
     .top-bar {
@@ -218,6 +238,7 @@
       justify-content: space-between;
       background-color: #26282c;
       padding: 5px 10px;
+      border-radius: 5px;
     }
   
     .user-info {
@@ -254,6 +275,7 @@
       border: 1px solid #444;
       color: #fff;
       font-size: 1rem;
+      border-radius: 5px;
     }
   
     .search-results {
@@ -264,6 +286,8 @@
       overflow-y: auto;
       background-color: #2e2e2e;
       border: 1px solid #444;
+      border-radius: 5px;
+      margin-top: 5px;
     }
   
     .search-results li {
@@ -281,11 +305,13 @@
       width: 50px;
       height: 50px;
       margin-right: 10px;
+      border-radius: 5px;
     }
   
     .selected-song {
       display: flex;
       align-items: center;
+      margin-bottom: 10px;
     }
   
     .album-cover {
@@ -293,6 +319,7 @@
       height: 100px;
       object-fit: cover;
       margin-right: 15px;
+      border-radius: 10px;
     }
   
     .song-info-wrapper {
@@ -317,6 +344,8 @@
       border: none;
       color: #fff;
       cursor: pointer;
+      border-radius: 5px;
+      font-size: 0.9rem;
     }
   
     .change-song-button:hover {
@@ -332,6 +361,8 @@
     .description-wrapper label {
       display: block;
       margin-bottom: 5px;
+      font-size: 0.9rem;
+      color: #b9b9b9;
     }
   
     .rating-wrapper input,
@@ -342,6 +373,7 @@
       border: 1px solid #444;
       color: #fff;
       font-size: 1rem;
+      border-radius: 5px;
     }
   
     .description-wrapper textarea {
@@ -358,6 +390,8 @@
       font-size: 1rem;
       cursor: pointer;
       width: 100%;
+      border-radius: 5px;
+      transition: background-color 0.2s;
     }
   
     .submit-button:hover {
@@ -367,11 +401,13 @@
     .error-message {
       color: red;
       margin-top: 10px;
+      font-size: 0.9rem;
     }
   
     .success-message {
       color: green;
       margin-top: 10px;
+      font-size: 0.9rem;
     }
   </style>
   

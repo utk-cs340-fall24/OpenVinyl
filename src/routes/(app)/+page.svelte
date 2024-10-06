@@ -8,17 +8,39 @@
   import {spotify} from "$lib/spotifyClient.js"
   import { goto } from '$app/navigation';
   import AddPost from "$lib/addPost.svelte";
+  import { selectedSong } from '$lib/stores'; 
   import { getSongs, authenticateClientCredentials } from "$lib/utils.js"; 
 
   export let data;
 
   let session_uuid;
   let user = null;
-  let posts = [...data.posts];  // Store all posts and append later
-  let songData = {};  // Object to store song details by song_id
-  let loading = false;  // Show loading spinner
+  let posts = [...data.posts]; 
+  let songData = {}; 
+  let loading = false; 
+  let isDragOver = false; 
+  let isDroppableArea = false;
 
-  // Function to fetch song data for each post
+function handleDrop(event) {
+  event.preventDefault();
+  const data = event.dataTransfer.getData('application/json');
+  if (data && isDroppableArea) { 
+    const song = JSON.parse(data);
+    selectedSong.set(song); 
+  }
+  isDragOver = false;
+}
+
+function handleDragOver(event) {
+  event.preventDefault();
+  isDragOver = true;
+  isDroppableArea = true; 
+}
+
+function handleDragLeave(event) {
+  isDragOver = false;
+  isDroppableArea = false; 
+}
   async function fetchSongData() {
     await authenticateClientCredentials();
     const songIds = posts.map(post => post.song_id);
@@ -36,28 +58,24 @@
     }
   }
 
-  // Function to handle loading more posts
   async function loadNextPage() {
     loading = true;
     const response = await fetch(`?page=${data.nextPage}`);
     const newPostsData = await response.json();
     
-    // Append new posts and fetch song data for them
     posts = [...posts, ...newPostsData.posts];
-    data.nextPage = newPostsData.nextPage;  // Update the next page info
+    data.nextPage = newPostsData.nextPage; 
 
-    // Fetch song data for the new posts
     await fetchSongData();
     loading = false;
   }
 
   onMount(async () => {
-    // Fetch initial song data
     await fetchSongData();
 
     const observer = new IntersectionObserver(entries => {
       if (entries[0].isIntersecting && !loading) {
-        loadNextPage(); // Load more posts when the user scrolls down
+        loadNextPage(); 
       }
     }, { threshold: 0.1 });
 
@@ -75,7 +93,6 @@
       user = session.user;
       session_uuid = user?.id;
 
-      // Fetch the profile to check if the username is empty
       const { data: profile, error: profileError } = await supabase
         .from('profiles')
         .select('username')
@@ -89,20 +106,25 @@
         }
       }
     }
-    // Fetch session logic here
   });
 </script>
 
-<div class="wrapper">
+<!-- svelte-ignore a11y-no-static-element-interactions -->
+<div
+  class="wrapper"
+  on:dragover={handleDragOver}
+  on:dragleave={handleDragLeave}
+  on:drop={handleDrop}
+>
+<Sidebar />
+
   <div class="add-post-wrapper">
     <AddPostBtn></AddPostBtn>
   </div>
 
-  <!-- Sidebar -->
-  <Sidebar />
 
-  <div class="posts-wrapper">
-    <AddPost />
+  <div class="posts-wrapper {isDragOver ? 'drag-over' : ''}">
+    <AddPost/>
 
     {#each posts as post}
       <Post
@@ -119,12 +141,10 @@
       ></Post>
     {/each}
 
-    <!-- Loader for when posts are loading -->
     {#if loading}
       <div class="loading-spinner">Loading...</div>
     {/if}
 
-    <!-- The element that triggers loading more posts when scrolled into view -->
     <div id="load-more-trigger"></div>
   </div>
 
@@ -135,12 +155,14 @@
   .wrapper {
     display: flex;
     min-height: 90vh;
+    width: 100%;
+    position: relative;
+    transition: background-color 0.3s, border 0.3s;
   }
 
-  .posts-wrapper {
-    display: inline-block;
-    margin-left: 0;
-    width: calc(100% - 275px); /* Adjust according to sidebar width */
+  .wrapper.drag-over {
+    border: 2px dashed #007bff;
+    background-color: rgba(0, 123, 255, 0.1);
   }
 
   .add-post-wrapper {
@@ -148,6 +170,17 @@
     z-index: 1000;
     right: 2%;
     bottom: 4%;
+  }
+
+  .posts-wrapper {
+    display: inline-block;
+    margin-left: 0;
+    width: calc(100% - 300px);
+    padding: 20px;
+    overflow-y: auto;
+    height: 100vh; 
+    background-color: #121212; 
+    transition: background-color 0.3s;
   }
 
   @media (max-width: 768px) {
@@ -162,5 +195,18 @@
     .wrapper {
       flex-direction: column;
     }
+  }
+
+  .posts-wrapper.drag-over {
+    border: 2px dashed #007bff;
+    background-color: rgba(0, 123, 255, 0.1);
+  }
+
+
+
+  .loading-spinner {
+    text-align: center;
+    padding: 20px;
+    color: #b9b9b9;
   }
 </style>
