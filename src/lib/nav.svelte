@@ -120,7 +120,7 @@
     }
 
     .login-href {
-      padding-right: 0; /* Remove padding on smaller screens */
+      padding-right: 0; 
     }
   }
 </style>
