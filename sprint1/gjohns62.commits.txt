@@ -1,0 +1,418 @@
++page.svelte (grantarg on 09/25/2024 at 19:19): <script>
++page.svelte (grantarg on 09/25/2024 at 19:19):   import { supabase } from '$lib/supabaseClient.js';
++page.svelte (grantarg on 09/25/2024 at 19:19):   let email;
++page.svelte (grantarg on 09/25/2024 at 19:19):   let pass;
++page.svelte (grantarg on 09/25/2024 at 19:19):   supabase.auth.onAuthStateChange((event, session) => {
++page.svelte (grantarg on 09/25/2024 at 19:19):     if (event === 'SIGNED_IN') {
++page.svelte (grantarg on 09/25/2024 at 19:19):         window.location.href = '/'; // redirect to account page
++page.svelte (grantarg on 09/25/2024 at 19:19):     }
++page.svelte (grantarg on 09/25/2024 at 19:19):   });
++page.svelte (grantarg on 09/25/2024 at 19:19):   async function signUp() {
++page.svelte (grantarg on 09/25/2024 at 19:19):     console.log("email: ", email,"pass: ", pass);
++page.svelte (grantarg on 09/25/2024 at 19:19):     const { data, error } = await supabase.auth.signUp({
++page.svelte (grantarg on 09/25/2024 at 19:19):         email: email,
++page.svelte (grantarg on 09/25/2024 at 19:19):         password: pass,
++page.svelte (grantarg on 09/25/2024 at 19:19):     })
++page.svelte (grantarg on 09/25/2024 at 19:19):     console.log("data: ", data);
++page.svelte (grantarg on 09/25/2024 at 19:19):     console.log("error: ", error);
++page.svelte (grantarg on 09/25/2024 at 19:19):   }
++page.svelte (grantarg on 09/25/2024 at 19:19): </script>
++page.svelte (grantarg on 09/25/2024 at 19:19): <div class="container">
++page.svelte (grantarg on 09/25/2024 at 19:19):   <div class="login-window">
++page.svelte (grantarg on 09/25/2024 at 19:19):     <h1>Create Account</h1>
++page.svelte (grantarg on 09/25/2024 at 19:19):     <p>Enter your information below</p>
++page.svelte (grantarg on 09/25/2024 at 19:19):     <input type="email" name="" id="email" placeholder="email" bind:value={email}>
++page.svelte (grantarg on 09/25/2024 at 19:19):     <input type="password" name="" id="pass" placeholder="password" bind:value={pass}>
++page.svelte (grantarg on 09/25/2024 at 19:19):     <button class="inputbox" on:click={signUp}>Sign up with email</button>
++page.svelte (grantarg on 09/25/2024 at 19:19):   </div>
++page.svelte (grantarg on 09/25/2024 at 19:19): </div>
++page.svelte (grantarg on 09/25/2024 at 19:19): <style>
++page.svelte (grantarg on 09/25/2024 at 19:19):   * {
++page.svelte (grantarg on 09/25/2024 at 19:19):     box-sizing: border-box;
++page.svelte (grantarg on 09/25/2024 at 19:19):     font-family: Arial, Helvetica, sans-serif;
++page.svelte (grantarg on 09/25/2024 at 19:19):   }
++page.svelte (grantarg on 09/25/2024 at 19:19):   .container {
++page.svelte (grantarg on 09/25/2024 at 19:19):     background-color: #f3f4f6;
++page.svelte (grantarg on 09/25/2024 at 19:19):     height: 100vh;
++page.svelte (grantarg on 09/25/2024 at 19:19):     overflow: hidden;
++page.svelte (grantarg on 09/25/2024 at 19:19):     width: 100vw;
++page.svelte (grantarg on 09/25/2024 at 19:19):     display: flex;
++page.svelte (grantarg on 09/25/2024 at 19:19):     justify-content: center;
++page.svelte (grantarg on 09/25/2024 at 19:19):     align-items: center;
++page.svelte (grantarg on 09/25/2024 at 19:19):   }
++page.svelte (grantarg on 09/25/2024 at 19:19):   .container div {
++page.svelte (grantarg on 09/25/2024 at 19:19):     height: 50vh;
++page.svelte (grantarg on 09/25/2024 at 19:19):     max-width: 30vw;
++page.svelte (grantarg on 09/25/2024 at 19:19):     background-color: #fff;
++page.svelte (grantarg on 09/25/2024 at 19:19):     box-shadow: 0px 10px 15px -3px rgba(0,0,0,0.1);
++page.svelte (grantarg on 09/25/2024 at 19:19):     border-radius: 8px;
++page.svelte (grantarg on 09/25/2024 at 19:19):     padding: 2.5em;
++page.svelte (grantarg on 09/25/2024 at 19:19):     text-align: center;
++page.svelte (grantarg on 09/25/2024 at 19:19):   }
++page.svelte (grantarg on 09/25/2024 at 19:19):   .login-window h1 {
++page.svelte (grantarg on 09/25/2024 at 19:19):     text-align: left;
++page.svelte (grantarg on 09/25/2024 at 19:19):     margin: 0;
++page.svelte (grantarg on 09/25/2024 at 19:19):   }
++page.svelte (grantarg on 09/25/2024 at 19:19):   .login-window p {
++page.svelte (grantarg on 09/25/2024 at 19:19):     text-align: left;
++page.svelte (grantarg on 09/25/2024 at 19:19):     margin: 0 0 1em 0;
++page.svelte (grantarg on 09/25/2024 at 19:19):     opacity: 0.3;
++page.svelte (grantarg on 09/25/2024 at 19:19):   }
++page.svelte (grantarg on 09/25/2024 at 19:19):   .login-window input {
++page.svelte (grantarg on 09/25/2024 at 19:19):     width: 100%;
++page.svelte (grantarg on 09/25/2024 at 19:19):     padding: 12px 20px;
++page.svelte (grantarg on 09/25/2024 at 19:19):     margin: 8px 0;
++page.svelte (grantarg on 09/25/2024 at 19:19):     display: inline-block;
++page.svelte (grantarg on 09/25/2024 at 19:19):     border: 1px solid #ccc;
++page.svelte (grantarg on 09/25/2024 at 19:19):     border-radius: 4px;
++page.svelte (grantarg on 09/25/2024 at 19:19):     box-sizing: border-box;
++page.svelte (grantarg on 09/25/2024 at 19:19):   }
++page.svelte (grantarg on 09/25/2024 at 19:19): </style>
+utils.js     (grant johnson on 10/02/2024 at 21:51):       .from("profiles")
+utils.js     (grant johnson on 10/02/2024 at 21:51): };
+utils.js     (grant johnson on 10/02/2024 at 21:51): export async function updateFirstName(profile_id, fname) {
+utils.js     (grant johnson on 10/02/2024 at 21:51):   try {
+utils.js     (grant johnson on 10/02/2024 at 21:51):     const { data, error } = await supabase
+utils.js     (grant johnson on 10/02/2024 at 21:51):       .from("profiles")
+utils.js     (grant johnson on 10/02/2024 at 21:51):       .update({ first_name: fname })
+utils.js     (grant johnson on 10/02/2024 at 21:51):       .eq("id", profile_id);
+utils.js     (grant johnson on 10/02/2024 at 21:51):     if (error) {
+utils.js     (grant johnson on 10/02/2024 at 21:51):       console.log("Error updating first name: ", error);
+utils.js     (grant johnson on 10/02/2024 at 21:51):       return { success: false, error: error.message };
+utils.js     (grant johnson on 10/02/2024 at 21:51):     }
+utils.js     (grant johnson on 10/02/2024 at 21:51):     console.log("Username updated successfully:", data);
+utils.js     (grant johnson on 10/02/2024 at 21:51):     return { success: true, data };
+utils.js     (grant johnson on 10/02/2024 at 21:51):   } catch (err) {
+utils.js     (grant johnson on 10/02/2024 at 21:51):     console.error("Unexpected error:", err);
+utils.js     (grant johnson on 10/02/2024 at 21:51):     return { success: false, error: err.message };
+utils.js     (grant johnson on 10/02/2024 at 21:51):   }
+utils.js     (grant johnson on 10/02/2024 at 21:51): }
+utils.js     (grant johnson on 10/02/2024 at 21:51): export async function updateLastName(profile_id, lname) {
+utils.js     (grant johnson on 10/02/2024 at 21:51):   try {
+utils.js     (grant johnson on 10/02/2024 at 21:51):     const { data, error } = await supabase
+utils.js     (grant johnson on 10/02/2024 at 21:51):       .from("profiles")
+utils.js     (grant johnson on 10/02/2024 at 21:51):       .update({ last_name: lname })
+utils.js     (grant johnson on 10/02/2024 at 21:51):       .eq("id", profile_id);
+utils.js     (grant johnson on 10/02/2024 at 21:51):     if (error) {
+utils.js     (grant johnson on 10/02/2024 at 21:51):       console.log("Error updating first name: ", error);
+utils.js     (grant johnson on 10/02/2024 at 21:51):       return { success: false, error: error.message };
+utils.js     (grant johnson on 10/02/2024 at 21:51):     }
+utils.js     (grant johnson on 10/02/2024 at 21:51):     console.log("Username updated successfully:", data);
+utils.js     (grant johnson on 10/02/2024 at 21:51):     return { success: true, data };
+utils.js     (grant johnson on 10/02/2024 at 21:51):   } catch (err) {
+utils.js     (grant johnson on 10/02/2024 at 21:51):     console.error("Unexpected error:", err);
+utils.js     (grant johnson on 10/02/2024 at 21:51):     return { success: false, error: err.message };
+utils.js     (grant johnson on 10/02/2024 at 21:51):   }
+utils.js     (grant johnson on 10/02/2024 at 21:51): }
++page.svelte (grant johnson on 10/02/2024 at 21:51): <script>
++page.svelte (grant johnson on 10/02/2024 at 21:51):   import { supabase } from '$lib/supabaseClient.js';
++page.svelte (grant johnson on 10/02/2024 at 21:51):   import { updateUsername, updateFirstName, updateLastName } from '$lib/utils.js';
++page.svelte (grant johnson on 10/02/2024 at 21:51):   let fname = '';
++page.svelte (grant johnson on 10/02/2024 at 21:51):   let lname = '';
++page.svelte (grant johnson on 10/02/2024 at 21:51):   let username = '';
++page.svelte (grant johnson on 10/02/2024 at 21:51):   async function submitUserInfo() {
++page.svelte (grant johnson on 10/02/2024 at 21:51):     const user = await supabase.auth.getUser();
++page.svelte (grant johnson on 10/02/2024 at 21:51):     if (fname === "") {
++page.svelte (grant johnson on 10/02/2024 at 21:51):       console.log("First Name can't be null");
++page.svelte (grant johnson on 10/02/2024 at 21:51):       return;
++page.svelte (grant johnson on 10/02/2024 at 21:51):     } else if (lname === "") {
++page.svelte (grant johnson on 10/02/2024 at 21:51):       console.log("Last Name can't be null");
++page.svelte (grant johnson on 10/02/2024 at 21:51):       return;
++page.svelte (grant johnson on 10/02/2024 at 21:51):     } else if (username === "") {
++page.svelte (grant johnson on 10/02/2024 at 21:51):       console.log("Username can't be null");
++page.svelte (grant johnson on 10/02/2024 at 21:51):       return;
++page.svelte (grant johnson on 10/02/2024 at 21:51):     }
++page.svelte (grant johnson on 10/02/2024 at 21:51):     updateUsername(user.data.user.id, username);
++page.svelte (grant johnson on 10/02/2024 at 21:51):     updateFirstName(user.data.user.id, fname);
++page.svelte (grant johnson on 10/02/2024 at 21:51):     updateLastName(user.data.user.id, lname);
++page.svelte (grant johnson on 10/02/2024 at 22:43):     window.location.href = '/';
++page.svelte (grant johnson on 10/02/2024 at 21:51):   }
++page.svelte (grant johnson on 10/02/2024 at 21:51): </script>
++page.svelte (grant johnson on 10/02/2024 at 21:51): <div class="container">
++page.svelte (grant johnson on 10/02/2024 at 21:51):   <div class="login-window">
++page.svelte (grant johnson on 10/02/2024 at 21:51):     <h1>Create Account</h1>
++page.svelte (grant johnson on 10/02/2024 at 21:51):     <p>Enter your information below</p>
++page.svelte (grant johnson on 10/02/2024 at 21:51):     <input type="text" name="" id="fname" placeholder="first name" bind:value={fname}>
++page.svelte (grant johnson on 10/02/2024 at 21:51):     <input type="text" name="" id="lname" placeholder="last name" bind:value={lname}>
++page.svelte (grant johnson on 10/02/2024 at 21:51):     <input type="text" name="" id="username" placeholder="username" bind:value={username}>
++page.svelte (grant johnson on 10/02/2024 at 21:51):     <button class="inputbox" on:click={submitUserInfo}>Submit</button>
++page.svelte (grant johnson on 10/02/2024 at 21:51):   </div>
++page.svelte (grant johnson on 10/02/2024 at 21:51): </div>
++page.svelte (grant johnson on 10/02/2024 at 21:51): <style>
++page.svelte (grant johnson on 10/02/2024 at 21:51):   * {
++page.svelte (grant johnson on 10/02/2024 at 21:51):     box-sizing: border-box;
++page.svelte (grant johnson on 10/02/2024 at 21:51):     font-family: Arial, Helvetica, sans-serif;
++page.svelte (grant johnson on 10/02/2024 at 21:51):   }
++page.svelte (grant johnson on 10/02/2024 at 21:51):   .container {
++page.svelte (grant johnson on 10/02/2024 at 21:51):     background-color: #f3f4f6;
++page.svelte (grant johnson on 10/02/2024 at 21:51):     height: 100vh;
++page.svelte (grant johnson on 10/02/2024 at 21:51):     overflow: hidden;
++page.svelte (grant johnson on 10/02/2024 at 21:51):     width: 100vw;
++page.svelte (grant johnson on 10/02/2024 at 21:51):     display: flex;
++page.svelte (grant johnson on 10/02/2024 at 21:51):     justify-content: center;
++page.svelte (grant johnson on 10/02/2024 at 21:51):     align-items: center;
++page.svelte (grant johnson on 10/02/2024 at 21:51):   }
++page.svelte (grant johnson on 10/02/2024 at 21:51):   .container div {
++page.svelte (grant johnson on 10/02/2024 at 21:51):     height: 50vh;
++page.svelte (grant johnson on 10/02/2024 at 21:51):     max-width: 30vw;
++page.svelte (grant johnson on 10/02/2024 at 21:51):     background-color: #fff;
++page.svelte (grant johnson on 10/02/2024 at 21:51):     box-shadow: 0px 10px 15px -3px rgba(0,0,0,0.1);
++page.svelte (grant johnson on 10/02/2024 at 21:51):     border-radius: 8px;
++page.svelte (grant johnson on 10/02/2024 at 21:51):     padding: 2.5em;
++page.svelte (grant johnson on 10/02/2024 at 21:51):     text-align: center;
++page.svelte (grant johnson on 10/02/2024 at 21:51):   }
++page.svelte (grant johnson on 10/02/2024 at 21:51):   .login-window h1 {
++page.svelte (grant johnson on 10/02/2024 at 21:51):     text-align: left;
++page.svelte (grant johnson on 10/02/2024 at 21:51):     margin: 0;
++page.svelte (grant johnson on 10/02/2024 at 21:51):   }
++page.svelte (grant johnson on 10/02/2024 at 21:51):   .login-window p {
++page.svelte (grant johnson on 10/02/2024 at 21:51):     text-align: left;
++page.svelte (grant johnson on 10/02/2024 at 21:51):     margin: 0 0 1em 0;
++page.svelte (grant johnson on 10/02/2024 at 21:51):     opacity: 0.3;
++page.svelte (grant johnson on 10/02/2024 at 21:51):   }
++page.svelte (grant johnson on 10/02/2024 at 21:51):   .login-window input {
++page.svelte (grant johnson on 10/02/2024 at 21:51):     width: 100%;
++page.svelte (grant johnson on 10/02/2024 at 21:51):     padding: 12px 20px;
++page.svelte (grant johnson on 10/02/2024 at 21:51):     margin: 8px 0;
++page.svelte (grant johnson on 10/02/2024 at 21:51):     display: inline-block;
++page.svelte (grant johnson on 10/02/2024 at 21:51):     border: 1px solid #ccc;
++page.svelte (grant johnson on 10/02/2024 at 21:51):     border-radius: 4px;
++page.svelte (grant johnson on 10/02/2024 at 21:51):     box-sizing: border-box;
++page.svelte (grant johnson on 10/02/2024 at 21:51):   }
++page.svelte (grant johnson on 10/02/2024 at 21:51):   .login-window button {
++page.svelte (grant johnson on 10/02/2024 at 21:51):     width: 100%;
++page.svelte (grant johnson on 10/02/2024 at 21:51):     height: 2.5em;
++page.svelte (grant johnson on 10/02/2024 at 21:51):     font-size: 18px;
++page.svelte (grant johnson on 10/02/2024 at 21:51):   }
++page.svelte (grant johnson on 10/02/2024 at 21:51): </style>
+nav.svelte   (grant johnson on 10/02/2024 at 22:43):       document.getElementById("login-button").href = "/account";
++page.svelte (grantarg on 09/23/2024 at 14:26): <script>
++page.svelte (grantarg on 09/24/2024 at 12:03):   import { supabase } from '$lib/supabaseClient.js';
++page.svelte (grantarg on 09/26/2024 at 12:43):   import '@fortawesome/fontawesome-free/css/all.css';
++page.svelte (grantarg on 10/03/2024 at 08:55):   import '@fortawesome/fontawesome-free/js/all';
++page.svelte (grantarg on 09/23/2024 at 14:26):   let email;
++page.svelte (grantarg on 09/23/2024 at 14:26):   let pass;
++page.svelte (grantarg on 09/25/2024 at 18:33):   supabase.auth.onAuthStateChange((event, session) => {
++page.svelte (grantarg on 09/25/2024 at 18:33):     if (event === 'SIGNED_IN') {
++page.svelte (grantarg on 09/25/2024 at 18:33):         window.location.href = '/'; // redirect to account page
++page.svelte (grantarg on 09/25/2024 at 18:33):     }
++page.svelte (grantarg on 09/25/2024 at 18:33):   });
++page.svelte (grantarg on 09/24/2024 at 09:57):   async function signIn() {
++page.svelte (grantarg on 09/24/2024 at 09:57):     const { data, error } = await supabase.auth.signInWithPassword({
++page.svelte (grantarg on 09/24/2024 at 09:57):         email: email,
++page.svelte (grantarg on 09/24/2024 at 09:57):         password: pass,
++page.svelte (grantarg on 09/24/2024 at 09:57):     })
++page.svelte (grantarg on 09/24/2024 at 09:57):     console.log("data: ", data);
++page.svelte (grantarg on 09/24/2024 at 09:57):     console.log("error: ", error);
++page.svelte (grantarg on 09/25/2024 at 18:33):     console.log(supabase.auth.getUser());
++page.svelte (grantarg on 09/24/2024 at 09:57):   }
++page.svelte (grantarg on 09/23/2024 at 14:26): </script>
++page.svelte (grantarg on 09/24/2024 at 12:47): <div class="container">
++page.svelte (grantarg on 09/25/2024 at 18:33):   <div class="login-window">
++page.svelte (grantarg on 09/25/2024 at 18:33):     <h1>Welcome Back!</h1>
++page.svelte (grantarg on 09/25/2024 at 18:33):     <p>Enter your information below</p>
++page.svelte (grantarg on 09/24/2024 at 12:47):     <input type="email" name="" id="email" placeholder="email" bind:value={email}>
++page.svelte (grantarg on 09/24/2024 at 12:47):     <input type="password" name="" id="pass" placeholder="password" bind:value={pass}>
++page.svelte (grantarg on 09/26/2024 at 12:43):     <div class="emailbuttons">
++page.svelte (grantarg on 09/26/2024 at 12:43):     </div>
++page.svelte (grantarg on 09/26/2024 at 12:43):     <hr class="hr-text" data-content="Or continue with">
++page.svelte (grantarg on 09/26/2024 at 12:43):     <div class="oauthbuttons">
++page.svelte (grantarg on 09/26/2024 at 12:43):         <i class="fa-brands fa-google"></i> Google
++page.svelte (grantarg on 09/26/2024 at 12:43):       </button>
++page.svelte (grantarg on 09/26/2024 at 12:43):       <button class="spotify">
++page.svelte (grantarg on 09/26/2024 at 12:43):         <i class="fa-brands fa-spotify"></i> Spotify
++page.svelte (grantarg on 09/26/2024 at 12:43):       </button>
++page.svelte (grantarg on 09/26/2024 at 12:43):       <a href="\auth\signup">
++page.svelte (grantarg on 09/26/2024 at 12:43):         <button class="inputbox"><i class="fa-solid fa-envelope"></i> Email</button>
++page.svelte (grantarg on 09/26/2024 at 12:43):       </a>
++page.svelte (grantarg on 09/26/2024 at 12:43):     </div>
++page.svelte (grantarg on 09/24/2024 at 12:47):   </div>
++page.svelte (grantarg on 09/23/2024 at 14:26): </div>
++page.svelte (grantarg on 09/24/2024 at 09:57): <style>
++page.svelte (grantarg on 09/24/2024 at 09:57):   * {
++page.svelte (grantarg on 09/25/2024 at 18:33):     box-sizing: border-box;
++page.svelte (grantarg on 09/24/2024 at 09:57):     font-family: Arial, Helvetica, sans-serif;
++page.svelte (grantarg on 09/24/2024 at 09:57):   }
++page.svelte (grantarg on 09/24/2024 at 12:47):   .container {
++page.svelte (grantarg on 09/24/2024 at 09:57):     background-color: #f3f4f6;
++page.svelte (grantarg on 09/24/2024 at 09:57):     height: 100vh;
++page.svelte (grantarg on 09/24/2024 at 09:57):     overflow: hidden;
++page.svelte (grantarg on 09/24/2024 at 12:47):     width: 100vw;
++page.svelte (grantarg on 09/24/2024 at 09:57):     display: flex;
++page.svelte (grantarg on 09/24/2024 at 09:57):     justify-content: center;
++page.svelte (grantarg on 09/24/2024 at 09:57):     align-items: center;
++page.svelte (grantarg on 09/24/2024 at 09:57):   }
++page.svelte (grantarg on 09/26/2024 at 12:43):   .container .login-window {
++page.svelte (grantarg on 09/24/2024 at 09:57):     height: 50vh;
++page.svelte (grantarg on 09/25/2024 at 18:33):     max-width: 30vw;
++page.svelte (grantarg on 09/24/2024 at 09:57):     background-color: #fff;
++page.svelte (grantarg on 09/24/2024 at 09:57):     box-shadow: 0px 10px 15px -3px rgba(0,0,0,0.1);
++page.svelte (grantarg on 09/24/2024 at 09:57):     border-radius: 8px;
++page.svelte (grantarg on 09/25/2024 at 18:33):     padding: 2.5em;
++page.svelte (grantarg on 09/24/2024 at 09:57):     text-align: center;
++page.svelte (grantarg on 09/24/2024 at 09:57):   }
++page.svelte (grantarg on 09/25/2024 at 18:33):   .login-window h1 {
++page.svelte (grantarg on 09/25/2024 at 18:33):     text-align: left;
++page.svelte (grantarg on 09/25/2024 at 18:33):     margin: 0;
++page.svelte (grantarg on 09/25/2024 at 18:33):   }
++page.svelte (grantarg on 09/25/2024 at 18:33):   .login-window p {
++page.svelte (grantarg on 09/25/2024 at 18:33):     text-align: left;
++page.svelte (grantarg on 09/25/2024 at 18:33):     margin: 0 0 1em 0;
++page.svelte (grantarg on 09/25/2024 at 18:33):     opacity: 0.3;
++page.svelte (grantarg on 09/25/2024 at 18:33):   }
++page.svelte (grantarg on 09/25/2024 at 18:33):   .login-window input {
++page.svelte (grantarg on 09/25/2024 at 18:33):     width: 100%;
++page.svelte (grantarg on 09/25/2024 at 18:33):     padding: 12px 20px;
++page.svelte (grantarg on 09/25/2024 at 18:33):     margin: 8px 0;
++page.svelte (grantarg on 09/25/2024 at 18:33):     display: inline-block;
++page.svelte (grantarg on 09/25/2024 at 18:33):     border: 1px solid #ccc;
++page.svelte (grantarg on 09/25/2024 at 18:33):     border-radius: 4px;
++page.svelte (grantarg on 09/25/2024 at 18:33):     box-sizing: border-box;
++page.svelte (grantarg on 09/25/2024 at 18:33):   }
++page.svelte (grantarg on 09/26/2024 at 12:43):   .login-window .emailbuttons button {
++page.svelte (grantarg on 09/26/2024 at 12:43):     width: 100%;
++page.svelte (grantarg on 09/26/2024 at 12:43):     height: 2.5em;
++page.svelte (grantarg on 09/26/2024 at 12:43):     font-size: 18px;
++page.svelte (grantarg on 09/26/2024 at 12:43):   }
++page.svelte (grantarg on 09/26/2024 at 12:43):   button:hover {
++page.svelte (grantarg on 09/26/2024 at 12:43):     cursor: pointer;
++page.svelte (grantarg on 09/26/2024 at 12:43):   }
++page.svelte (grantarg on 09/26/2024 at 12:43):   .fa-google {
++page.svelte (grantarg on 09/26/2024 at 12:43):     color: White;
++page.svelte (grantarg on 09/26/2024 at 12:43):   }
++page.svelte (grantarg on 09/26/2024 at 12:43):   .login-window .oauthbuttons button {
++page.svelte (grantarg on 09/26/2024 at 12:43):     width: 32%;
++page.svelte (grantarg on 09/26/2024 at 12:43):     height: 3em;
++page.svelte (grantarg on 09/26/2024 at 12:43):   }
++page.svelte (grantarg on 09/26/2024 at 12:43):   .hr-text {
++page.svelte (grantarg on 09/26/2024 at 12:43):     line-height: 1em;
++page.svelte (grantarg on 09/26/2024 at 12:43):     position: relative;
++page.svelte (grantarg on 09/26/2024 at 12:43):     outline: 0;
++page.svelte (grantarg on 09/26/2024 at 12:43):     border: 0;
++page.svelte (grantarg on 09/26/2024 at 12:43):     color: black;
++page.svelte (grantarg on 09/26/2024 at 12:43):     text-align: center;
++page.svelte (grantarg on 09/26/2024 at 12:43):     height: 1.5em;
++page.svelte (grantarg on 09/26/2024 at 12:43):     opacity: .5;
++page.svelte (grantarg on 09/26/2024 at 12:43):   }
++page.svelte (grantarg on 09/26/2024 at 12:43):   .hr-text::before {
++page.svelte (grantarg on 09/26/2024 at 12:43):     content: '';
++page.svelte (grantarg on 09/26/2024 at 12:43):     background: linear-gradient(to right, transparent, #818078, transparent);
++page.svelte (grantarg on 09/26/2024 at 12:43):     position: absolute;
++page.svelte (grantarg on 09/26/2024 at 12:43):     left: 0;
++page.svelte (grantarg on 09/26/2024 at 12:43):     top: 50%;
++page.svelte (grantarg on 09/26/2024 at 12:43):     width: 100%;
++page.svelte (grantarg on 09/26/2024 at 12:43):     height: 1px;
++page.svelte (grantarg on 09/26/2024 at 12:43):   }
++page.svelte (grantarg on 09/26/2024 at 12:43):   .hr-text::after {
++page.svelte (grantarg on 09/26/2024 at 12:43):     content: attr(data-content);
++page.svelte (grantarg on 09/26/2024 at 12:43):     position: relative;
++page.svelte (grantarg on 09/26/2024 at 12:43):     display: inline-block;
++page.svelte (grantarg on 09/26/2024 at 12:43):     color: black;
++page.svelte (grantarg on 09/26/2024 at 12:43):     padding: 0 .5em;
++page.svelte (grantarg on 09/26/2024 at 12:43):     line-height: 1.5em;
++page.svelte (grantarg on 09/26/2024 at 12:43):     color: #818078;
++page.svelte (grantarg on 09/26/2024 at 12:43):     background-color: #fcfcfa;
++page.svelte (grantarg on 09/26/2024 at 12:43):   }
++page.svelte (grantarg on 09/24/2024 at 09:57): </style>
++page.svelte (grant johnson on 10/02/2024 at 22:43): <script>
++page.svelte (grant johnson on 10/02/2024 at 22:43):   import { supabase } from '$lib/supabaseClient.js';
++page.svelte (grant johnson on 10/02/2024 at 22:43):   import { updateUsername, updateFirstName, updateLastName } from '$lib/utils.js';
++page.svelte (grant johnson on 10/02/2024 at 22:43):   let fname = '';
++page.svelte (grant johnson on 10/02/2024 at 22:43):   let lname = '';
++page.svelte (grant johnson on 10/02/2024 at 22:43):   let username = '';
++page.svelte (grant johnson on 10/02/2024 at 22:43):   supabase.auth.onAuthStateChange((event, session) => {
++page.svelte (grant johnson on 10/02/2024 at 22:43):     if (event === 'SIGNED_OUT') {
++page.svelte (grant johnson on 10/02/2024 at 22:43):         window.location.href = '/'; // redirect to account page
++page.svelte (grant johnson on 10/02/2024 at 22:43):     }
++page.svelte (grant johnson on 10/02/2024 at 22:43):   });
++page.svelte (grant johnson on 10/02/2024 at 22:43):   async function submitUserInfo() {
++page.svelte (grant johnson on 10/02/2024 at 22:43):     const user = await supabase.auth.getUser();
++page.svelte (grant johnson on 10/02/2024 at 22:43):     if (fname === "") {
++page.svelte (grant johnson on 10/02/2024 at 22:43):       console.log("First Name can't be null");
++page.svelte (grant johnson on 10/02/2024 at 22:43):       return;
++page.svelte (grant johnson on 10/02/2024 at 22:43):     } else if (lname === "") {
++page.svelte (grant johnson on 10/02/2024 at 22:43):       console.log("Last Name can't be null");
++page.svelte (grant johnson on 10/02/2024 at 22:43):       return;
++page.svelte (grant johnson on 10/02/2024 at 22:43):     } else if (username === "") {
++page.svelte (grant johnson on 10/02/2024 at 22:43):       console.log("Username can't be null");
++page.svelte (grant johnson on 10/02/2024 at 22:43):       return;
++page.svelte (grant johnson on 10/02/2024 at 22:43):     }
++page.svelte (grant johnson on 10/02/2024 at 22:43):     updateUsername(user.data.user.id, username);
++page.svelte (grant johnson on 10/02/2024 at 22:43):     updateFirstName(user.data.user.id, fname);
++page.svelte (grant johnson on 10/02/2024 at 22:43):     updateLastName(user.data.user.id, lname);
++page.svelte (grant johnson on 10/02/2024 at 22:43):   }
++page.svelte (grant johnson on 10/02/2024 at 22:43):   async function logout() {
++page.svelte (grant johnson on 10/02/2024 at 22:43):     const { error } = await supabase.auth.signOut();
++page.svelte (grant johnson on 10/02/2024 at 22:43):   }
++page.svelte (grant johnson on 10/02/2024 at 22:43): </script>
++page.svelte (grant johnson on 10/02/2024 at 22:43): <div class="wrapper">
++page.svelte (grant johnson on 10/02/2024 at 22:43):   <div class="account-settings">
++page.svelte (grant johnson on 10/02/2024 at 22:43):     <h1>Account Settings</h1>
++page.svelte (grant johnson on 10/02/2024 at 22:43):     <p>Update your information below</p>
++page.svelte (grant johnson on 10/02/2024 at 22:43):     <input type="text" name="" id="fname" placeholder="first name" bind:value={fname}>
++page.svelte (grant johnson on 10/02/2024 at 22:43):     <input type="text" name="" id="lname" placeholder="last name" bind:value={lname}>
++page.svelte (grant johnson on 10/02/2024 at 22:43):     <input type="text" name="" id="username" placeholder="username" bind:value={username}>
++page.svelte (grant johnson on 10/02/2024 at 22:43):     <button class="signout" on:click={logout}>Sign out</button>
++page.svelte (grant johnson on 10/02/2024 at 22:43):     <button class="update" on:click={submitUserInfo}>Update</button>
++page.svelte (grant johnson on 10/02/2024 at 22:43):   </div>
++page.svelte (grant johnson on 10/02/2024 at 22:43): </div>
++page.svelte (grant johnson on 10/02/2024 at 22:43): <style>
++page.svelte (grant johnson on 10/02/2024 at 22:43):   .wrapper{
++page.svelte (grant johnson on 10/02/2024 at 22:43):     background-color: #f3f4f6;
++page.svelte (grant johnson on 10/02/2024 at 22:43):     height: 100vh;
++page.svelte (grant johnson on 10/02/2024 at 22:43):     overflow: hidden;
++page.svelte (grant johnson on 10/02/2024 at 22:43):     width: 100vw;
++page.svelte (grant johnson on 10/02/2024 at 22:43):     display: flex;
++page.svelte (grant johnson on 10/02/2024 at 22:43):     justify-content: center;
++page.svelte (grant johnson on 10/02/2024 at 22:43):     align-items: center;
++page.svelte (grant johnson on 10/02/2024 at 22:43):   }
++page.svelte (grant johnson on 10/02/2024 at 22:43):   .wrapper .account-settings {
++page.svelte (grant johnson on 10/02/2024 at 22:43):     height: 50vh;
++page.svelte (grant johnson on 10/02/2024 at 22:43):     max-width: 30vw;
++page.svelte (grant johnson on 10/02/2024 at 22:43):     background-color: #fff;
++page.svelte (grant johnson on 10/02/2024 at 22:43):     box-shadow: 0px 10px 15px -3px rgba(0,0,0,0.1);
++page.svelte (grant johnson on 10/02/2024 at 22:43):     border-radius: 8px;
++page.svelte (grant johnson on 10/02/2024 at 22:43):     padding: 2.5em;
++page.svelte (grant johnson on 10/02/2024 at 22:43):     text-align: center;
++page.svelte (grant johnson on 10/02/2024 at 22:43):   }
++page.svelte (grant johnson on 10/02/2024 at 22:43):   .wrapper .account-settings input {
++page.svelte (grant johnson on 10/02/2024 at 22:43):     width: 100%;
++page.svelte (grant johnson on 10/02/2024 at 22:43):     padding: 12px 20px;
++page.svelte (grant johnson on 10/02/2024 at 22:43):     margin: 8px 0;
++page.svelte (grant johnson on 10/02/2024 at 22:43):     display: inline-block;
++page.svelte (grant johnson on 10/02/2024 at 22:43):     border: 1px solid #ccc;
++page.svelte (grant johnson on 10/02/2024 at 22:43):     border-radius: 4px;
++page.svelte (grant johnson on 10/02/2024 at 22:43):     box-sizing: border-box;
++page.svelte (grant johnson on 10/02/2024 at 22:43):   }
++page.svelte (grant johnson on 10/02/2024 at 22:43):   .wrapper .account-settings button {
++page.svelte (grant johnson on 10/02/2024 at 22:43):     width: 49%;
++page.svelte (grant johnson on 10/02/2024 at 22:43):     height: 2.5em;
++page.svelte (grant johnson on 10/02/2024 at 22:43):     font-size: 18px;
++page.svelte (grant johnson on 10/02/2024 at 22:43):   }
++page.svelte (grant johnson on 10/02/2024 at 22:43): </style>
+README.md    (grantarg on 10/03/2024 at 08:55): # create-svelte
+README.md    (grantarg on 10/03/2024 at 08:55): Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
+README.md    (grantarg on 10/03/2024 at 08:55): ## Creating a project
+README.md    (grantarg on 10/03/2024 at 08:55): If you're seeing this, you've probably already done this step. Congrats!
+README.md    (grantarg on 10/03/2024 at 08:55): ```bash
+README.md    (grantarg on 10/03/2024 at 08:55): # create a new project in the current directory
+README.md    (grantarg on 10/03/2024 at 08:55): npm create svelte@latest
+README.md    (grantarg on 10/03/2024 at 08:55): # create a new project in my-app
+README.md    (grantarg on 10/03/2024 at 08:55): npm create svelte@latest my-app
+README.md    (grantarg on 10/03/2024 at 08:55): ```
+README.md    (grantarg on 10/03/2024 at 08:55): ## Developing
+README.md    (grantarg on 10/03/2024 at 08:55): Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+README.md    (grantarg on 10/03/2024 at 08:55): ```bash
+README.md    (grantarg on 10/03/2024 at 08:55): npm run dev
+README.md    (grantarg on 10/03/2024 at 08:55): # or start the server and open the app in a new browser tab
+README.md    (grantarg on 10/03/2024 at 08:55): npm run dev -- --open
+README.md    (grantarg on 10/03/2024 at 08:55): ```
+README.md    (grantarg on 10/03/2024 at 08:55): ## Building
+README.md    (grantarg on 10/03/2024 at 08:55): To create a production version of your app:
+README.md    (grantarg on 10/03/2024 at 08:55): ```bash
+README.md    (grantarg on 10/03/2024 at 08:55): npm run build
+README.md    (grantarg on 10/03/2024 at 08:55): ```
+README.md    (grantarg on 10/03/2024 at 08:55): You can preview the production build with `npm run preview`.
+README.md    (grantarg on 10/03/2024 at 08:55): > To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+app.html     (grantarg on 09/26/2024 at 12:43):     <link href="./../node_modules/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
++page.svelte (grantarg on 09/25/2024 at 18:33):   import { supabase } from "$lib/supabaseClient";
