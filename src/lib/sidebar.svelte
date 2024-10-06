@@ -44,37 +44,37 @@
       profile;
 
     // If the token has expired, refresh it (this / 4 is temporary i think theres a bug with not refreshing)
-    if (new Date() > new Date(spotify_token_expires / 4)) {
-      const refreshResponse = await fetch("/refresh-spotify-token", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${session.access_token}`,
-        },
-      });
-      const refreshData = await refreshResponse.json();
+    // if (new Date() > new Date(spotify_token_expires)) {
+    //   const refreshResponse = await fetch("/refresh-spotify-token", {
+    //     method: "GET",
+    //     headers: {
+    //       Authorization: `Bearer ${session.access_token}`,
+    //     },
+    //   });
+    //   const refreshData = await refreshResponse.json();
 
-      if (refreshData.success) {
-        spotify_access_token = refreshData.access_token;
-        // Update Supabase with the new access token and expiration
-        const { error: updateError } = await supabase
-          .from("profiles")
-          .update({
-            spotify_access_token: spotify_access_token,
-            spotify_token_expires: new Date(
-              Date.now() + refreshData.expires_in * 1000
-            ),
-          })
-          .eq("id", userId);
+    //   if (refreshData.success) {
+    //     spotify_access_token = refreshData.access_token;
+    //     // Update Supabase with the new access token and expiration
+    //     const { error: updateError } = await supabase
+    //       .from("profiles")
+    //       .update({
+    //         spotify_access_token: spotify_access_token,
+    //         spotify_token_expires: new Date(
+    //           Date.now() + refreshData.expires_in * 1000
+    //         ),
+    //       })
+    //       .eq("id", userId);
 
-        if (updateError) {
-          console.error("Error updating access token:", updateError.message);
-          return;
-        }
-      } else {
-        console.error("Error refreshing access token:", refreshData.message);
-        return;
-      }
-    }
+    //     if (updateError) {
+    //       console.error("Error updating access token:", updateError.message);
+    //       return;
+    //     }
+    //   } else {
+    //     console.error("Error refreshing access token:", refreshData.message);
+    //     return;
+    //   }
+    // }
 
     // Check if the user is a Spotify premium user
     const profileResponse = await fetch("https://api.spotify.com/v1/me", {
@@ -161,16 +161,23 @@
   }
   function updateRecentSongs(track) {
     const song = {
-      id: track.id, 
-      title: track.name,
-      artist: track.artists.map((artist) => artist.name).join(", "),
-      cover: track.album.images[0]?.url,
+        id: track.id,
+        title: track.name,
+        artist: track.artists.map((artist) => artist.name).join(", "),
+        cover: track.album.images[0]?.url,
     };
 
-    if (recentSongs.length === 0 || recentSongs[0].title !== song.title) {
-      recentSongs = [song, ...recentSongs.slice(0, 4)]; // Keep 5 recent songs only
+    const exists = recentSongs.some(existingSong => existingSong.id === song.id);
+
+    if (!exists) {
+        recentSongs = [song, ...recentSongs]; 
+
+        // Limit the recentSongs array to 3 songs
+        if (recentSongs.length > 3) {
+            recentSongs = recentSongs.slice(0, 3); // Keep only the first 3
+        }
     }
-  }
+}
 
   async function transferPlaybackHere(device_id) {
     const session = await supabase.auth.getSession();
@@ -315,8 +322,7 @@
 
       <div class="recent-songs">
         <p class="section-header">Recent Songs</p>
-        {#each recentSongs as song (song.id)}
-          <!-- svelte-ignore a11y-no-static-element-interactions -->
+        {#each recentSongs as song (song.id + '-' + song.title)}
           <div
             class="recent-song"
             draggable="true"
@@ -330,6 +336,7 @@
           </div>
         {/each}
       </div>
+      
     {/if}
   {/if}
 </div>

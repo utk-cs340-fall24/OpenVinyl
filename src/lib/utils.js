@@ -315,3 +315,30 @@ export async function refreshTokenIfNeeded() {
     localStorage.setItem('spotify_expires_at', Date.now() + expires_in * 1000);
   }
 }
+
+export const followUser = async (userId) => {
+  const { data, error } = await supabase
+    .from('follows')
+    .insert([{ follower_id: supabase.auth.user().id, following_id: userId }]);
+
+  if (error) {
+    console.error('Error following user:', error.message);
+    return { success: false, error };
+  }
+
+  return { success: true, data };
+};
+
+export const unfollowUser = async (userId) => {
+  const { data, error } = await supabase
+    .from('follows')
+    .delete()
+    .match({ follower_id: supabase.auth.user().id, following_id: userId });
+
+  if (error) {
+    console.error('Error unfollowing user:', error.message);
+    return { success: false, error };
+  }
+
+  return { success: true, data };
+};

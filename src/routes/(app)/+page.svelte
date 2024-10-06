@@ -135,9 +135,9 @@ async function fetchSongData() {
 >
 <Sidebar />
 
-  <div class="add-post-wrapper">
+  <!-- <div class="add-post-wrapper">
     <AddPostBtn></AddPostBtn>
-  </div>
+  </div> -->
 
 
   <div class="posts-wrapper {isDragOver ? 'drag-over' : ''}">
@@ -193,7 +193,7 @@ async function fetchSongData() {
     display: inline-block;
     margin-left: 0;
     width: calc(100% - 300px);
-    padding: 20px;
+    padding: 0px;
     overflow-y: auto;
     height: 100vh; 
     background-color: #121212; 

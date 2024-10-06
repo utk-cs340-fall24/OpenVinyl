@@ -3,7 +3,6 @@ import { supabase } from "$lib/supabaseClient";
 const PAGE_SIZE = 10; // Set the number of posts per page
 export async function load({ url }) {
   const page = parseInt(url.searchParams.get('page')) || 1; // Get the current page number from the URL
-  // console.log("Current page:", page);
 
   const { data, error } = await supabase
     .from("posts")
