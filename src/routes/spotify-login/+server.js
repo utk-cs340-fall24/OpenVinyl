@@ -12,7 +12,9 @@
       'user-modify-playback-state',
       'user-read-playback-state',
       'user-read-currently-playing',
-      'user-top-read'
+      'user-top-read',
+      'user-read-recently-played', 
+      'user-library-read'
     ].join(' ');
 
     // const state = generateRandomString(16); // Implement a function to generate a random string
