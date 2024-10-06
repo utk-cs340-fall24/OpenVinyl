@@ -13,6 +13,7 @@
   let user = null;
 
   onMount(async () => {
+    console.log("inital load, ", data)
     const { data: { session }, error } = await supabase.auth.getSession();
     if (error) {
       console.error("Error fetching session:", error);

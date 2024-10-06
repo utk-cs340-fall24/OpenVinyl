@@ -3,22 +3,42 @@
   import { onMount } from "svelte";
   import logo from '$lib/logo.svg';
 
+  let user = null;
+  let showSpotifyButton = true; // Default state to show the Spotify button
+
   onMount(async () => {
     try {
-      const user = await supabase.auth.getUser();
-      if (user && user.data.user) {
-        const { data, error } = await supabase.from("profiles").select("username").eq("id", user.data.user.id).single();
+      const session = await supabase.auth.getSession();
+      user = session?.data?.session?.user;
+
+      if (user) {
+        const { data, error } = await supabase.from("profiles").select("username, spotify_access_token").eq("id", user.id).single();
         if (data) {
+          // Update login button with username
           const loginButton = document.getElementById("login-button");
           loginButton.innerHTML = data.username;
           loginButton.href = "/account";
+
+          // If the user is already authenticated with Spotify, hide the button
+          if (data.spotify_access_token) {
+            showSpotifyButton = false;
+          }
         }
+      } else {
+        // User is not logged in, hide the Spotify button
+        showSpotifyButton = false;
       }
     } catch (error) {
       console.error("Error fetching user profile:", error);
+      showSpotifyButton = false;
     }
   });
+
+  const authenticateSpotify = () => {
+    window.location.href = '/spotify-login';
+  };
 </script>
+
 <div class="wrapper">
   <nav>
     <div class="left-nav">
@@ -27,6 +47,11 @@
       <a href="/charts" class="nav-link">Charts</a>
     </div>
     <div class="right-nav">
+      {#if showSpotifyButton}
+        <button on:click={authenticateSpotify} class="spotify-button">
+          Connect with Spotify
+        </button>
+      {/if}
       <div class="login-wrapper">
         <a class="login-href" href="/auth/signin" id="login-button">Login</a>
       </div>

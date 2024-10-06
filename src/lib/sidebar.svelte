@@ -1,55 +1,221 @@
 <script>
-  // Playback control functions
+  import { onMount } from 'svelte';
+  import { supabase } from '$lib/supabaseClient';
+
+  let player;
+  let recentSongs = [];
+  let showPremiumMessage = false;
+  let showPlayer = true;
+  let sidebarVisible = true; 
+
+  onMount(async () => {
+    const session = await supabase.auth.getSession();
+    const userId = session.data.session?.user?.id;
+
+    if (!userId) return;
+
+    const { data: profile, error } = await supabase
+      .from('profiles')
+      .select('spotify_access_token, spotify_refresh_token, spotify_token_expires')
+      .eq('id', userId)
+      .single();
+
+    if (error) {
+      console.error('Error fetching Spotify tokens:', error);
+      return;
+    }
+
+    let { spotify_access_token, spotify_refresh_token, spotify_token_expires } = profile;
+
+    if (new Date() > new Date(spotify_token_expires)) {
+      // Refresh the access token
+      const refreshResponse = await fetch('/refresh-spotify-token');
+      const refreshData = await refreshResponse.json();
+
+      if (refreshData.success) {
+        spotify_access_token = refreshData.access_token;
+      } else {
+        console.error('Error refreshing access token:', refreshData.message);
+        return;
+      }
+    }
+
+    // Load the Spotify SDK
+    const script = document.createElement('script');
+    script.src = 'https://sdk.scdn.co/spotify-player.js';
+    script.async = true;
+    document.body.appendChild(script);
+
+    window.onSpotifyWebPlaybackSDKReady = () => {
+      player = new window.Spotify.Player({
+        name: 'Web Playback SDK Quick Start Player',
+        getOAuthToken: cb => {
+          cb(spotify_access_token);
+        },
+        volume: 0.5
+      });
+
+      player.addListener('initialization_error', ({ message }) => { 
+        console.error('Initialization Error:', message); 
+      });
+      player.addListener('authentication_error', ({ message }) => {
+        console.error('Authentication Error:', message);
+        if (message.includes("Premium")) {
+          showPlayer = false;
+          showPremiumMessage = true;
+        }
+      });
+      player.addListener('account_error', ({ message }) => {
+        console.error('Authentication Error:', message);
+
+        if (message.includes("premium")) {
+          showPlayer = false;
+          showPremiumMessage = true;
+        }
+      });
+      player.addListener('playback_error', ({ message }) => {
+        console.error('Playback Error:', message);
+      });
+
+      player.addListener('ready', ({ device_id }) => {
+        console.log('Ready with Device ID', device_id);
+        transferPlaybackHere(device_id);
+      });
+
+      player.addListener('not_ready', ({ device_id }) => {
+        console.log('Device ID has gone offline', device_id);
+      });
+
+      player.connect();
+    };
+  });
+
+  async function transferPlaybackHere(device_id) {
+    const session = await supabase.auth.getSession();
+    const userId = session.data.session?.user?.id;
+
+    if (!userId) return;
+
+    const { data: profile, error } = await supabase
+      .from('profiles')
+      .select('spotify_access_token')
+      .eq('id', userId)
+      .single();
+
+    if (error) {
+      console.error('Error fetching access token:', error);
+      return;
+    }
+
+    const { spotify_access_token } = profile;
+
+    await fetch('https://api.spotify.com/v1/me/player', {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${spotify_access_token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        device_ids: [device_id],
+        play: true
+      })
+    });
+  }
+
   const playPrev = () => {
-    console.log('playPrev clicked');
-  };
-  const pause = () => {
-    console.log('pause clicked');
-  };
-  const playNext = () => {
-    console.log('playNext clicked');
+    player.previousTrack().then(() => {
+      console.log('Skipped to previous track');
+    }).catch(error => console.error(error));
   };
 
-  let recentSongs = [
-    { title: "Great song #1", artist: "Niche artist #1", cover: "https://picsum.photos/200" },
-    { title: "Great song #2", artist: "Niche artist #2", cover: "https://picsum.photos/200" },
-    { title: "Great song #3", artist: "Niche artist #3", cover: "https://picsum.photos/200" },
-    { title: "Great song #4", artist: "Niche artist #4", cover: "https://picsum.photos/200" },
-    { title: "Great song #5", artist: "Niche artist #5", cover: "https://picsum.photos/200" }
-  ];
+  const pause = () => {
+    player.togglePlay().then(() => {
+      console.log('Toggled playback');
+    }).catch(error => console.error(error));
+  };
+
+  const playNext = () => {
+    player.nextTrack().then(() => {
+      console.log('Skipped to next track');
+    }).catch(error => console.error(error));
+  };
+
+
+  function hidePremiumMessage() {
+    showPremiumMessage = false;
+  }
 </script>
 
-<div class="sidebar">
-  <div class="playback-section">
-    <div class="playback-img">
-      <img src="https://picsum.photos/200" alt="Album Cover" />
-    </div>
-    <div class="playback-controls">
-      <button on:click={playPrev} class="control-button">⏮</button>
-      <button on:click={pause} class="control-button">⏸</button>
-      <button on:click={playNext} class="control-button">⏭</button>
-    </div>
-    <div class="song-info">
-      <p class="song-title">Cool song name</p>
-      <p class="song-artist">Chief Keef</p>
-    </div>
+
+
+
+  <div class="sidebar">
+    {#if showPremiumMessage}
+  <div class="premium-message">
+    <p class="small-text">You need a Spotify Premium account to use the player.</p>
+    <button on:click={hidePremiumMessage} class="small-button">Dismiss</button>
   </div>
-  <div class="recent-songs">
-    <p class="section-header">Recent Songs</p>
-    {#each recentSongs.slice(0, 3) as song}
-      <div class="recent-song">
-        <img src={song.cover} alt="Album Cover" class="recent-song-image" />
-        <div class="recent-song-info">
-          <p class="recent-song-title">{song.title}</p>
-          <p class="recent-song-artist">{song.artist}</p>
-        </div>
+{/if}
+
+    {#if showPlayer}
+    <div class="playback-section">
+      <div class="playback-img">
+        <img src="https://via.placeholder.com/200?text=Album+Cover" alt="Album Cover" />
       </div>
-    {/each}
+      <div class="playback-controls">
+        <button on:click={playPrev} class="control-button">⏮️</button>
+        <button on:click={pause} class="control-button">⏯️</button>
+        <button on:click={playNext} class="control-button">⏭️</button>
+      </div>
+      <div class="song-info">
+        <p class="song-title">Track Title</p>
+        <p class="song-artist">Artist Name</p>
+      </div>
+    </div>
+    <div class="recent-songs">
+      <p class="section-header">Recent Songs</p>
+      {#each recentSongs.slice(0, 3) as song}
+        <div class="recent-song">
+          <img src={song.cover} alt="Album Cover" class="recent-song-image" />
+          <div class="recent-song-info">
+            <p class="recent-song-title">{song.title}</p>
+            <p class="recent-song-artist">{song.artist}</p>
+          </div>
+        </div>
+      {/each}
+    </div>
+    {/if}
   </div>
-</div>
+
 
 <style>
-  /* Global Styles */
+  .premium-message {
+    padding: 10px;
+    text-align: center;
+    color: #b9b9b9;
+    border-radius: 5px;
+    margin-bottom: 20px;
+  }
+
+  .small-text {
+    font-size: 0.9rem;
+    margin: 0 0 10px 0;
+  }
+
+  .small-button {
+    padding: 5px 10px;
+    background-color: #007bff;
+    border: none;
+    color: white;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 0.8rem;
+  }
+
+  .small-button:hover {
+    background-color: #0056b3;
+  }
+
   :global(body) {
     margin: 0;
     font-family: "Concert One", sans-serif;
@@ -98,7 +264,7 @@
     border: none;
     border-radius: 50%;
     color: #f3f1f1;
-    font-size: 20px;
+    font-size: 30px;
     cursor: pointer;
     transition: background-color 0.2s;
   }
@@ -121,7 +287,6 @@
     color: #b9b9b9;
   }
 
-  /* Recent Songs Section */
   .recent-songs {
     flex: 1;
   }
@@ -169,10 +334,8 @@
     margin: 0;
   }
 
-  /* Responsive Design */
   @media (max-width: 768px) {
     .sidebar {
-      /* max-width: 100%; */
       display: none;
       border-right: none;
       border-bottom: 1px solid #26282c;

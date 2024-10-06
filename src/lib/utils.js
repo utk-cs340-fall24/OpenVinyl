@@ -115,13 +115,17 @@ export async function signInWithGoogle() {
 
   const { error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
+    // options: {
+    //   redirectTo: getURL()
+    // }
     options: {
-      redirectTo: getURL()
+      redirectTo: `${getURL()}/auth/callback`
     }
   });
   if (error) {
     console.error('Error during sign in:', error.message);
   }
+
 };
 
 export async function updateFirstName(profile_id, fname) {
