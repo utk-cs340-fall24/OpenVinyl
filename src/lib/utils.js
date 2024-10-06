@@ -127,6 +127,22 @@ export async function signInWithGoogle() {
   }
 
 };
+export async function signInWithSpotify() {
+
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider: 'spotify',
+    // options: {
+    //   redirectTo: getURL()
+    // }
+    options: {
+      redirectTo: `${getURL()}/auth/callback`
+    }
+  });
+  if (error) {
+    console.error('Error during sign in:', error.message);
+  }
+
+};
 
 export async function updateFirstName(profile_id, fname) {
   try {

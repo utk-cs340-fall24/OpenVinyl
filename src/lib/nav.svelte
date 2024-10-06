@@ -43,8 +43,10 @@
   <nav>
     <div class="left-nav">
       <a href="/"><img src={logo} alt="logo" class="logo"></a>
+      <a href="/" class="nav-link">Home</a>
       <a href="/discover" class="nav-link">Discover</a>
       <a href="/charts" class="nav-link">Charts</a>
+      <a href="/network" class="nav-link">Network</a>
     </div>
     <div class="right-nav">
       {#if showSpotifyButton}
