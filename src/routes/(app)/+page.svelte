@@ -14,7 +14,6 @@
 
   onMount(async () => {
     const { data: { session }, error } = await supabase.auth.getSession();
-    console.log("Tetst")
     if (error) {
       console.error("Error fetching session:", error);
     } else if (!session) {
@@ -22,7 +21,6 @@
     } else {
       user = session.user;
       session_uuid = user?.id;
-
 
       // Fetch the profile to check if the username is empty
       const { data: profile, error: profileError } = await supabase
@@ -39,17 +37,17 @@
         }
       }
     }
-
   });
 </script>
-
 
 <div class="wrapper">
   <div class="add-post-wrapper">
     <AddPostBtn></AddPostBtn>
   </div>
 
+  <!-- Sidebar -->
   <Sidebar />
+
   <div class="posts-wrapper">
     <AddPost />
 
@@ -68,6 +66,7 @@
 
     <h2>Load more...</h2>
   </div>
+
   <PostCreation></PostCreation>
 </div>
 
@@ -76,18 +75,36 @@
     display: flex;
     min-height: 90vh;
   }
+
   .posts-wrapper {
-    padding-top: 100px;
     display: inline-block;
-    width: 70vw;
+    margin-left: 0;
+    width: calc(100% - 275px); /* Adjust according to sidebar width */
   }
+
   h2 {
     text-align: center;
   }
+
   .add-post-wrapper {
-    position:fixed;
+    position: fixed;
     z-index: 1000;
     right: 2%;
     bottom: 4%;
+  }
+
+  /* Hide sidebar on small screens */
+  @media (max-width: 768px) {
+    .sidebar {
+      display: none;
+    }
+
+    .posts-wrapper {
+      width: 100%;
+    }
+
+    .wrapper {
+      flex-direction: column;
+    }
   }
 </style>
