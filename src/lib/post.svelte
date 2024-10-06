@@ -6,9 +6,10 @@
   export let song_id;
   export let likes_cnt;
   export let desc;
-  export let likes_arr;
   export let profile_pic_url = "https://placehold.co/30"; 
-
+export let song_artist;
+export let song_name;
+export let song_image;
   import { spotify } from "$lib/spotifyClient";
   import { onMount } from "svelte";
   import { authenticateClientCredentials } from "$lib/utils";
@@ -24,7 +25,7 @@
   onMount(async () => {
     try {
       await fetchUserData();
-      await fetchTrackData();
+      // await fetchTrackData();
       await checkIfLiked();
     } catch (err) {
       console.error("Error during onMount:", err);

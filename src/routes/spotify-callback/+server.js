@@ -3,7 +3,6 @@ import { SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, SPOTIFY_REDIRECT_URI } from '
 
 export async function GET({ url }) {
   const code = url.searchParams.get('code');
-  const state = url.searchParams.get('state');
   const error = url.searchParams.get('error');
 
   if (error) {
@@ -33,7 +32,6 @@ export async function GET({ url }) {
   });
 
   const tokenData = await tokenResponse.json();
-
   if (tokenData.error) {
     console.error('Error fetching tokens:', tokenData.error);
     return json({ success: false, message: tokenData.error_description });

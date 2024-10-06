@@ -3,7 +3,7 @@ import { json } from '@sveltejs/kit';
 import fetch from 'node-fetch';
 
 const client_id = '74993b84e7ca4167a76581201d4f58f1';
-const client_secret = 'your_spotify_client_secret';
+const client_secret = '91710a7ff19648a994c76e9990a478f7';
 
 export async function POST({ request }) {
   const { refresh_token } = await request.json();

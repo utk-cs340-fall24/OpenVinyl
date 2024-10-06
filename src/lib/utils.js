@@ -135,7 +135,7 @@ export async function signInWithSpotify() {
     //   redirectTo: getURL()
     // }
     options: {
-      redirectTo: `${getURL()}/auth/callback`
+      redirectTo: `${getURL()}`
     }
   });
   if (error) {
@@ -188,7 +188,11 @@ export async function getSongs(song_list) {
       console.log("Too many songs requested (>50)");
       return { success: false, message: "Too many songs requested" };
     }
-    const data = await spotify.getTracks(song_list);
+    console.log(song_list)
+
+    console.log(spotify)
+    const {data, error} = await spotify.getTracks(song_list);
+    console.log(error)
     if (data) {
       console.log("Got " + song_list.length + " songs successfully");
       return { success: true, data };

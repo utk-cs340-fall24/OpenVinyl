@@ -1,89 +1,111 @@
 <script>
-  import { onMount } from 'svelte';
-  import { supabase } from '$lib/supabaseClient';
+  import { onMount } from "svelte";
+  import { supabase } from "$lib/supabaseClient";
 
   let player;
   let recentSongs = [];
   let showPremiumMessage = false;
   let showPlayer = true;
-  let sidebarVisible = true; 
+  let sidebarVisible = true;
 
   onMount(async () => {
     const session = await supabase.auth.getSession();
     const userId = session.data.session?.user?.id;
-
     if (!userId) return;
 
     const { data: profile, error } = await supabase
-      .from('profiles')
-      .select('spotify_access_token, spotify_refresh_token, spotify_token_expires')
-      .eq('id', userId)
+      .from("profiles")
+      .select(
+        "spotify_access_token, spotify_refresh_token, spotify_token_expires"
+      )
+      .eq("id", userId)
       .single();
-
+  
     if (error) {
-      console.error('Error fetching Spotify tokens:', error);
+      console.error("Error fetching Spotify tokens:", error);
       return;
     }
 
-    let { spotify_access_token, spotify_refresh_token, spotify_token_expires } = profile;
+    let { spotify_access_token, spotify_refresh_token, spotify_token_expires } =
+      profile;
 
+  console.log(profile)
     if (new Date() > new Date(spotify_token_expires)) {
-      // Refresh the access token
-      const refreshResponse = await fetch('/refresh-spotify-token');
+      const refreshResponse = await fetch("/refresh-spotify-token", {
+        method: "GET",
+        headers: {
+          //note this is the supabase access token
+          Authorization: `Bearer ${session.data.session.access_token}`,
+        },
+      });
       const refreshData = await refreshResponse.json();
 
       if (refreshData.success) {
         spotify_access_token = refreshData.access_token;
       } else {
-        console.error('Error refreshing access token:', refreshData.message);
+        console.error("Error refreshing access token:", refreshData.message);
         return;
       }
     }
 
+    const profileResponse = await fetch("https://api.spotify.com/v1/me", {
+      headers: {
+        Authorization: `Bearer ${spotify_access_token}`,
+      },
+    });
+    console.log(spotify_access_token)
+    const profileData = await profileResponse.json();
+    console.log("spotify profile: ", profileData)
+    if (profileData.product !== "premium") {
+      showPlayer = false;
+      showPremiumMessage = true;
+      return;
+    }
+
     // Load the Spotify SDK
-    const script = document.createElement('script');
-    script.src = 'https://sdk.scdn.co/spotify-player.js';
+    const script = document.createElement("script");
+    script.src = "https://sdk.scdn.co/spotify-player.js";
     script.async = true;
     document.body.appendChild(script);
 
     window.onSpotifyWebPlaybackSDKReady = () => {
       player = new window.Spotify.Player({
-        name: 'Web Playback SDK Quick Start Player',
-        getOAuthToken: cb => {
+        name: "Web Playback SDK Quick Start Player",
+        getOAuthToken: (cb) => {
           cb(spotify_access_token);
         },
-        volume: 0.5
+        volume: 0.5,
       });
 
-      player.addListener('initialization_error', ({ message }) => { 
-        console.error('Initialization Error:', message); 
+      player.addListener("initialization_error", ({ message }) => {
+        console.error("Initialization Error:", message);
       });
-      player.addListener('authentication_error', ({ message }) => {
-        console.error('Authentication Error:', message);
+      player.addListener("authentication_error", ({ message }) => {
+        console.error("Authentication Error:", message);
         if (message.includes("Premium")) {
           showPlayer = false;
           showPremiumMessage = true;
         }
       });
-      player.addListener('account_error', ({ message }) => {
-        console.error('Authentication Error:', message);
+      player.addListener("account_error", ({ message }) => {
+        console.error("Authentication Error:", message);
 
         if (message.includes("premium")) {
           showPlayer = false;
           showPremiumMessage = true;
         }
       });
-      player.addListener('playback_error', ({ message }) => {
-        console.error('Playback Error:', message);
+      player.addListener("playback_error", ({ message }) => {
+        console.error("Playback Error:", message);
       });
 
-      player.addListener('ready', ({ device_id }) => {
-        console.log('Ready with Device ID', device_id);
+      player.addListener("ready", ({ device_id }) => {
+        console.log("Ready with Device ID", device_id);
         transferPlaybackHere(device_id);
       });
 
-      player.addListener('not_ready', ({ device_id }) => {
-        console.log('Device ID has gone offline', device_id);
+      player.addListener("not_ready", ({ device_id }) => {
+        console.log("Device ID has gone offline", device_id);
       });
 
       player.connect();
@@ -97,70 +119,81 @@
     if (!userId) return;
 
     const { data: profile, error } = await supabase
-      .from('profiles')
-      .select('spotify_access_token')
-      .eq('id', userId)
+      .from("profiles")
+      .select("spotify_access_token")
+      .eq("id", userId)
       .single();
 
     if (error) {
-      console.error('Error fetching access token:', error);
+      console.error("Error fetching access token:", error);
       return;
     }
 
     const { spotify_access_token } = profile;
 
-    await fetch('https://api.spotify.com/v1/me/player', {
-      method: 'PUT',
+    await fetch("https://api.spotify.com/v1/me/player", {
+      method: "PUT",
       headers: {
-        'Authorization': `Bearer ${spotify_access_token}`,
-        'Content-Type': 'application/json'
+        Authorization: `Bearer ${spotify_access_token}`,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         device_ids: [device_id],
-        play: true
-      })
+        play: true,
+      }),
     });
   }
 
   const playPrev = () => {
-    player.previousTrack().then(() => {
-      console.log('Skipped to previous track');
-    }).catch(error => console.error(error));
+    player
+      .previousTrack()
+      .then(() => {
+        console.log("Skipped to previous track");
+      })
+      .catch((error) => console.error(error));
   };
 
   const pause = () => {
-    player.togglePlay().then(() => {
-      console.log('Toggled playback');
-    }).catch(error => console.error(error));
+    player
+      .togglePlay()
+      .then(() => {
+        console.log("Toggled playback");
+      })
+      .catch((error) => console.error(error));
   };
 
   const playNext = () => {
-    player.nextTrack().then(() => {
-      console.log('Skipped to next track');
-    }).catch(error => console.error(error));
+    player
+      .nextTrack()
+      .then(() => {
+        console.log("Skipped to next track");
+      })
+      .catch((error) => console.error(error));
   };
-
 
   function hidePremiumMessage() {
     showPremiumMessage = false;
   }
 </script>
 
+<div class="sidebar">
+  {#if showPremiumMessage}
+    <div class="premium-message">
+      <p class="small-text">
+        You need a Spotify Premium account to use the player.
+      </p>
+      <button on:click={hidePremiumMessage} class="small-button">Dismiss</button
+      >
+    </div>
+  {/if}
 
-
-
-  <div class="sidebar">
-    {#if showPremiumMessage}
-  <div class="premium-message">
-    <p class="small-text">You need a Spotify Premium account to use the player.</p>
-    <button on:click={hidePremiumMessage} class="small-button">Dismiss</button>
-  </div>
-{/if}
-
-    {#if showPlayer}
+  {#if showPlayer}
     <div class="playback-section">
       <div class="playback-img">
-        <img src="https://via.placeholder.com/200?text=Album+Cover" alt="Album Cover" />
+        <img
+          src="https://via.placeholder.com/200?text=Album+Cover"
+          alt="Album Cover"
+        />
       </div>
       <div class="playback-controls">
         <button on:click={playPrev} class="control-button">⏮️</button>
@@ -184,9 +217,8 @@
         </div>
       {/each}
     </div>
-    {/if}
-  </div>
-
+  {/if}
+</div>
 
 <style>
   .premium-message {
@@ -270,7 +302,7 @@
   }
 
   .control-button:hover {
-    background-color: #007BFF;
+    background-color: #007bff;
   }
 
   .song-info {

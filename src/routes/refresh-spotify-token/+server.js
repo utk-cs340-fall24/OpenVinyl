@@ -2,19 +2,22 @@ import { json } from '@sveltejs/kit';
 import { supabase } from '$lib/supabaseClient';
 import { SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, SPOTIFY_REDIRECT_URI } from '$env/static/private';
 
-export async function GET() {
+export async function GET({request}) {
   // Get the current user session
-  const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-  const { data, error } = await supabase.auth.getSession()
-  console.log(data, error);
+  const authHeader = request.headers.get('Authorization');
+  const accessToken = authHeader?.split(' ')[1];
 
-  // console.log(session)
-  if (sessionError || !session?.user) {
-    return json({ success: false, message: 'User not authenticated' }, { status: 401 });
+  if (!accessToken) {
+    return json({ success: false, message: 'No access token provided' }, { status: 401 });
+  }
+  // Verify the access token by checking it with Supabase
+  const { data: { user }, error } = await supabase.auth.getUser(accessToken)
+
+  if (error || !user) {
+    return json({ success: false, message: 'Invalid or expired token' }, { status: 401 });
   }
 
-  const userId = session.user.id;
-
+  const userId = user.id;
   // Fetch the user's refresh token from Supabase
   const { data: profile, error: profileError } = await supabase
     .from('profiles')
@@ -29,7 +32,7 @@ export async function GET() {
   const refresh_token = profile.spotify_refresh_token;
   const client_id = SPOTIFY_CLIENT_ID;
   const client_secret = SPOTIFY_CLIENT_SECRET;
-
+  
   // Request a new access token
   const tokenResponse = await fetch('https://accounts.spotify.com/api/token', {
     method: 'POST',
@@ -65,6 +68,7 @@ export async function GET() {
     console.error('Error updating Spotify access token:', updateError);
     return json({ success: false, message: updateError.message }, { status: 500 });
   }
+  // console.log(spotify_access_token)
 
   return json({ success: true, access_token, expires_in });
 }
