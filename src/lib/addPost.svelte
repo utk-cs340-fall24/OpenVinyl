@@ -7,49 +7,48 @@
     import "@fortawesome/fontawesome-free/css/all.css";
     import "@fortawesome/fontawesome-free/js/all.js";
     import { createEventDispatcher } from 'svelte';
-  
-    let user;
-    let username;
+    
+    let user = null;
+    let username = 'Guest';
     let trackData;
     let selectedTrack;
-  
     let content = '';
     let rating = '';
     let search = '';
     let searchResults = [];
     let errorMessage = '';
     let successMessage = '';
-  
+    let showAddPost = false; // Controls the visibility of the "Add Post" section
+    
     const dispatch = createEventDispatcher();
-  
+    
     onMount(async () => {
       const { data: { session }, error } = await supabase.auth.getSession();
       if (error) {
         console.error('Error fetching session:', error);
-        window.location.href = '/auth/signin';
       }
       if (session) {
         user = session.user;
-  
+        showAddPost = true; // Show the "Add Post" section if user is logged in
+    
         const { data: profile, error: profileError } = await supabase
           .from('profiles')
           .select('username')
           .eq('id', user.id)
           .single();
-  
+    
         if (profileError) {
           console.error('Error fetching profile:', profileError);
-          username = 'Guest';
         } else {
-          username = profile.username || 'Guest';
+          username = profile?.username || 'Guest';
         }
       } else {
-        window.location.href = '/auth/signin';
+        showAddPost = false; // Hide the "Add Post" section if user is not logged in
       }
     });
-  
+    
     let debounceTimeout;
-  
+    
     async function getSearch() {
       clearTimeout(debounceTimeout);
       debounceTimeout = setTimeout(async () => {
@@ -66,21 +65,21 @@
         }
       }, 300);
     }
-  
+    
     function displayResults(data) {
       searchResults = data.tracks.items;
     }
-  
+    
     function selectSong(track) {
       selectedTrack = track;
       searchResults = [];
       search = '';
     }
-  
+    
     async function makePost() {
       errorMessage = '';
       successMessage = '';
-  
+    
       if (!selectedTrack) {
         errorMessage = 'Please select a song.';
         return;
@@ -89,7 +88,7 @@
         errorMessage = 'Please enter a rating between 1 and 10.';
         return;
       }
-  
+    
       try {
         const { error } = await createPost(
           user.id,
@@ -97,7 +96,7 @@
           selectedTrack.id,
           parseInt(rating)
         );
-  
+    
         if (error) {
           console.error('Error submitting review:', error);
           errorMessage = 'Error submitting review.';
@@ -116,6 +115,7 @@
     }
   </script>
   
+  {#if showAddPost}
   <div class="add-review-wrapper">
     <div class="add-review">
       <div class="top-bar">
@@ -178,11 +178,20 @@
       </div>
     </div>
   </div>
+{:else}
+  <p class="must-be-logged-in">You must be logged in to create a post.</p>
+{/if}
+
   <style>
     *,
     *::before,
     *::after {
       box-sizing: border-box;
+    }
+    .must-be-logged-in {
+        font-size: 0.8rem;
+    color: #b9b9b9;
+    text-align: center;
     }
   
     .add-review-wrapper {
