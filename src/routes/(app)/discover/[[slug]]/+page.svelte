@@ -29,6 +29,8 @@
   let cache = []; 
   let cacheIndex = 0;
   let audio = null;
+  const CACHE_THRESHOLD_PERCENTAGE = 0.8;  // 80% threshold for refreshing cache
+  let isRefreshingCache = false;
 
   function debounce(func, delay) {
     let timeout;
@@ -37,7 +39,18 @@
       timeout = setTimeout(() => func(...args), delay);
     };
   }
-
+  async function checkAndRefreshCache() {
+  if (shouldRefreshCache() && !isRefreshingCache) {
+    isRefreshingCache = true;
+    console.log('Threshold reached. Refreshing cache...');
+    await cacheRecommendations(); 
+    cacheIndex = 0;
+    
+  }
+}
+function shouldRefreshCache() {
+  return cacheIndex / cache.length >= CACHE_THRESHOLD_PERCENTAGE;
+}
   async function cacheRecommendations() {
     try {
       const recommendationData = await spotify.getRecommendations({
@@ -56,8 +69,10 @@
       }));
 
       console.log(`Cached ${cache.length} recommendations:`, cache);
+      isRefreshingCache = false;
     } catch (err) {
       console.error("Error caching recommendations:", err);
+      isRefreshingCache = false;
     }
   }
 
@@ -100,6 +115,7 @@
     }
 
     const cachedSong = cache[cacheIndex++];
+    checkAndRefreshCache();
     return {
       id: Math.random(),
       imageUrl: cachedSong.imageUrl,
@@ -123,6 +139,10 @@
   }
 
   function moveGrid(direction) {
+    if (isRefreshingCache) {
+    console.log('Cache is refreshing, please wait...');
+    return; 
+  }
     let newBoxes = [...boxes];
 
     switch (direction) {
