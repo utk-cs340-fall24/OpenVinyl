@@ -54,7 +54,7 @@
 
 <style>
   .wrapper{
-    background-color: #f3f4f6;
+    /* background-color: #f3f4f6; */
     height: 100vh;
     overflow: hidden;
     width: 100vw;
@@ -66,8 +66,9 @@
   .wrapper .account-settings {
     height: 50vh;
     max-width: 30vw;
-    background-color: #fff;
-    box-shadow: 0px 10px 15px -3px rgba(0,0,0,0.1);
+    background-color: #1d1f25;
+    /* box-shadow: 0px 10px 15px -3px rgba(0,0,0,0.1); */
+    border: 1px solid #26282c;
     border-radius: 8px;
     padding: 2.5em;
     text-align: center;
