@@ -54,28 +54,20 @@ export async function GET({request}) {
   }
 
   const { access_token, expires_in } = tokenData;
+  const expires_at = new Date(Date.now() + expires_in * 1000).toISOString();
 
-  // Update the access token and expiration time in Supabase
-  let expire = new Date();
-  expire.setUTCHours(expire.getUTCHours() + 1); // Use UTC hours to avoid timezone issues
   const { error: updateError } = await supabase
     .from('profiles')
     .update({
       spotify_access_token: access_token,
-      spotify_token_expires: expire.toISOString() // Convert to ISO string for storage
+      spotify_token_expires: expires_at
     })
     .eq('id', userId);
   
-  console.log("expires: ", expire.toISOString());
-  let tmp = new Date();
-
-  console.log("current time: ", tmp.toISOString())
-
   if (updateError) {
     console.error('Error updating Spotify access token:', updateError);
     return json({ success: false, message: updateError.message }, { status: 500 });
   }
-  // console.log(spotify_access_token)
 
   return json({ success: true, access_token, expires_in });
 }
