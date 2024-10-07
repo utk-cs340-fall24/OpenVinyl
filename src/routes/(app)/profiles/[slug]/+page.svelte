@@ -1,28 +1,26 @@
 <script>
     import { onMount } from "svelte";
     import { supabase } from "$lib/supabaseClient";
-    import { followUser, unfollowUser } from "$lib/utils"; // Import the follow/unfollow functions
-    import { page } from '$app/stores'; // Import page store to get URL slug
+    import { followUser, unfollowUser } from "$lib/utils"; 
+    import { page } from '$app/stores'; 
   
     let profile = null;
     let isFriend = false;
-    let slug = $page.params.slug; // Get the slug (e.g., username) from the URL
+    let slug = $page.params.slug; 
     
     onMount(async () => {
-      // Fetch the user's profile based on the slug
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
         .eq('username', slug)
         .single();
-  
+        
       if (error) {
         console.error('Error fetching user profile:', error);
       } else {
         profile = data;
       }
   
-      // Check if the user is already a friend
       const userSession = await supabase.auth.getSession();
       const userId = userSession?.data?.session?.user?.id;
   
@@ -39,7 +37,6 @@
       }
     });
   
-    // Function to follow the user
     async function follow() {
       const userSession = await supabase.auth.getSession();
       const userId = userSession?.data?.session?.user?.id;
@@ -54,7 +51,6 @@
       }
     }
   
-    // Function to unfollow the user
     async function unfollow() {
       const userSession = await supabase.auth.getSession();
       const userId = userSession?.data?.session?.user?.id;

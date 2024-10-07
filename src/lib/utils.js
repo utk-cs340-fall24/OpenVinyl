@@ -316,10 +316,25 @@ export async function refreshTokenIfNeeded() {
   }
 }
 
+// Function to follow a user
 export const followUser = async (userId) => {
+  const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+  
+  if (sessionError) {
+    console.error("Error getting session:", sessionError.message);
+    return { success: false, error: sessionError };
+  }
+
+  const user = sessionData?.session?.user;
+  
+  if (!user) {
+    console.error("User not logged in.");
+    return { success: false, error: "User not logged in." };
+  }
+
   const { data, error } = await supabase
     .from('follows')
-    .insert([{ follower_id: supabase.auth.user().id, following_id: userId }]);
+    .insert([{ owner_id: user.id, followed_id: userId }]); // Using your table's column names
 
   if (error) {
     console.error('Error following user:', error.message);
@@ -330,10 +345,24 @@ export const followUser = async (userId) => {
 };
 
 export const unfollowUser = async (userId) => {
+  const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+  
+  if (sessionError) {
+    console.error("Error getting session:", sessionError.message);
+    return { success: false, error: sessionError };
+  }
+
+  const user = sessionData?.session?.user;
+  
+  if (!user) {
+    console.error("User not logged in.");
+    return { success: false, error: "User not logged in." };
+  }
+
   const { data, error } = await supabase
     .from('follows')
     .delete()
-    .match({ follower_id: supabase.auth.user().id, following_id: userId });
+    .match({ owner_id: user.id, followed_id: userId });
 
   if (error) {
     console.error('Error unfollowing user:', error.message);
