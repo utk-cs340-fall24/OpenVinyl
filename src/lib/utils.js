@@ -315,3 +315,59 @@ export async function refreshTokenIfNeeded() {
     localStorage.setItem('spotify_expires_at', Date.now() + expires_in * 1000);
   }
 }
+
+// Function to follow a user
+export const followUser = async (userId) => {
+  const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+  
+  if (sessionError) {
+    console.error("Error getting session:", sessionError.message);
+    return { success: false, error: sessionError };
+  }
+
+  const user = sessionData?.session?.user;
+  
+  if (!user) {
+    console.error("User not logged in.");
+    return { success: false, error: "User not logged in." };
+  }
+
+  const { data, error } = await supabase
+    .from('follows')
+    .insert([{ owner_id: user.id, followed_id: userId }]); // Using your table's column names
+
+  if (error) {
+    console.error('Error following user:', error.message);
+    return { success: false, error };
+  }
+
+  return { success: true, data };
+};
+
+export const unfollowUser = async (userId) => {
+  const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+  
+  if (sessionError) {
+    console.error("Error getting session:", sessionError.message);
+    return { success: false, error: sessionError };
+  }
+
+  const user = sessionData?.session?.user;
+  
+  if (!user) {
+    console.error("User not logged in.");
+    return { success: false, error: "User not logged in." };
+  }
+
+  const { data, error } = await supabase
+    .from('follows')
+    .delete()
+    .match({ owner_id: user.id, followed_id: userId });
+
+  if (error) {
+    console.error('Error unfollowing user:', error.message);
+    return { success: false, error };
+  }
+
+  return { success: true, data };
+};
