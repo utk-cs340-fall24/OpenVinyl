@@ -96,11 +96,13 @@
   let cacheIndex = 0;
   let audio = null;
   let spotifyAccessToken = null;
-  const CACHE_THRESHOLD_PERCENTAGE = 0.8; // 80% threshold for refreshing cache
+  const CACHE_THRESHOLD_PERCENTAGE = 0.8; // 80% threshold for refreshing cache (meaning if theres 100 songs if u click 80 times it will refresh then)
   let isRefreshingCache = false;
-  let showCreatePlaylistButton = false; // To show the button if playlist doesn't exist
+  let showCreatePlaylistButton = false;
   let isLoggedIn = false;
   let playlistId = null;
+  let showCheckmark = false;
+  let checkmarkTimeout; 
 
   function debounce(func, delay) {
     let timeout;
@@ -125,14 +127,21 @@
       startReview();
     }
   }
-
+  onDestroy(() => {
+  if (audio) {
+    audio.pause();
+    audio.currentTime = 0; // Optionally, reset the audio time to the start
+    console.log("Audio playback stopped on destroy.");
+  }
+});
   function startReview() {
     const middleSong = {
-    id: boxes[4].songId,  // Use the songId as the ID
-    title: boxes[4].songName,  // Use the songName as the title
-    artist: boxes[4].artistName,  // Use the artistName
-    cover: boxes[4].imageUrl  // Use the imageUrl as the cover
+    id: boxes[4].songId,  
+    title: boxes[4].songName, 
+    artist: boxes[4].artistName,  
+    cover: boxes[4].imageUrl  
   };
+
 
   selectedSong.set(middleSong);
 
@@ -279,7 +288,8 @@
       return;
     }
     let newBoxes = [...boxes];
-
+    showCheckmark = false;
+    clearTimeout(checkmarkTimeout);
     switch (direction) {
       case "up":
         newBoxes = newBoxes.slice(0, 6);
@@ -329,7 +339,7 @@
     }
 
     if (session) {
-      isLoggedIn = true; // Set logged-in state to true
+      isLoggedIn = true;
       const user = session.user;
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
@@ -435,7 +445,7 @@
       const response = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${spotifyAccessToken}`,  // Make sure you have the access token
+          'Authorization': `Bearer ${spotifyAccessToken}`,  
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -445,6 +455,12 @@
 
       if (response.ok) {
         console.log(`Added ${boxes[4].songName} by ${boxes[4].artistName} to playlist.`);
+        showCheckmark = true;
+
+        // Hide checkmark after 1.5 seconds and store the timeout
+        checkmarkTimeout = setTimeout(() => {
+          showCheckmark = false;
+        }, 1500);
       } else {
         const errorData = await response.json();
         console.error("Error adding song to playlist:", errorData);
@@ -479,18 +495,21 @@
   </p>
   <p>Center song is {boxes[4].songName} by {boxes[4].artistName}</p>
 
-  <!-- Show the button to create playlist if it doesn't exist and the user is logged in with Spotify -->
   {#if isLoggedIn && spotifyAccessToken && showCreatePlaylistButton}
     <button on:click={createDiscoverPlaylist}
       >Create 'OpenVinyl Discover' Playlist</button
     >
   {/if}
 </div>
-
 <div class="game-board">
   {#each boxes as box, index (box.id)}
     <div class="box" class:highlight={index === 4}>
       <img src={box.imageUrl} alt="{box.songName} by {box.artistName}" />
+      {#if index === 4 && showCheckmark}
+        <div class="overlay">
+          <div class="checkmark"></div>
+        </div>
+      {/if}
     </div>
   {/each}
 </div>
@@ -517,35 +536,32 @@
     padding-right: 10px;
   }
 
-  /* Game Board */
   .game-board {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Always 3 columns */
-    grid-template-rows: repeat(3, auto); /* Rows adjust based on content */
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, auto);
     gap: 10px;
-    justify-content: center; /* Center the grid horizontally */
+    justify-content: center; 
     width: 100%;
-    max-width: 620px; /* Updated max-width */
+    max-width: 620px;
     margin: 0 auto;
     padding-bottom: 50px;
     box-sizing: border-box;
   }
   
 
-  /* Box */
   .box {
     position: relative;
     overflow: hidden;
     background: #444;
     border: 1px solid #555;
     width: 100%;
-    max-width: 200px; /* Updated maximum width */
+    max-width: 200px;
     height: auto;
-    aspect-ratio: 1 / 1; /* Maintain square aspect ratio */
-    margin: 0 auto; /* Center the box within its grid cell */
+    aspect-ratio: 1 / 1; 
+    margin: 0 auto;
   }
 
-  /* Image */
   .box img {
     position: absolute;
     top: 0;
@@ -555,8 +571,58 @@
     object-fit: cover;
   }
 
-  /* Highlight Center Box */
   .highlight {
     border: 4px solid #1db954;
+  }
+  .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(144, 238, 144, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeInOut 1.5s forwards;
+    z-index: 1;
+  }
+  .checkmark {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 5px solid white;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: scale(0);
+    animation: popIn 0.5s forwards 0.2s;
+  }
+  .checkmark::before {
+    content: "";
+    position: absolute;
+    width: 15px;
+    height: 30px;
+    border: solid white;
+    border-width: 0 5px 5px 0;
+    transform: rotate(45deg);
+    animation: drawCheck 0.4s forwards;
+  }
+  @keyframes fadeInOut {
+    0% { opacity: 0; }
+    15% { opacity: 1; }
+    85% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  @keyframes popIn {
+    0% { transform: scale(0); }
+    80% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+  }
+  @keyframes drawCheck {
+    0% { width: 0; height: 0; }
+    100% { width: 15px; height: 30px; }
   }
 </style>
