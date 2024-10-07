@@ -132,7 +132,7 @@ export async function signInWithSpotify() {
   const { error } = await supabase.auth.signInWithOAuth({
     provider: 'spotify',
     options: {
-      scopes: 'streaming user-read-email user-read-private user-modify-playback-state user-read-playback-state user-read-currently-playing user-top-read user-read-recently-played user-library-read',
+      scopes: 'streaming user-read-email user-read-private user-modify-playback-state user-read-playback-state user-read-currently-playing user-top-read user-read-recently-played user-library-read playlist-modify-private playlist-modify-public',
       redirectTo: `${getURL()}`
     }
   });

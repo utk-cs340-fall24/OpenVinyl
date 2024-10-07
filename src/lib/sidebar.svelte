@@ -1,5 +1,5 @@
 <script>
-  import { onMount } from "svelte";
+  import { onMount, onDestroy  } from "svelte";
   import { supabase } from "$lib/supabaseClient";
   import { selectedSong } from "$lib/stores";
 
@@ -267,6 +267,12 @@
   function hidePremiumMessage() {
     showPremiumMessage = false;
   }
+  onDestroy(() => {
+    if (player) {
+      player.disconnect();
+      console.log("Player disconnected.");
+    }
+  });
 </script>
 
 <!-- svelte-ignore missing-declaration -->

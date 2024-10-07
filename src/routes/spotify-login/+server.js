@@ -14,7 +14,9 @@
       'user-read-currently-playing',
       'user-top-read',
       'user-read-recently-played', 
-      'user-library-read'
+      'user-library-read',
+      'playlist-modify-private',
+      'playlist-modify-public'
     ].join(' ');
 
     // const state = generateRandomString(16); // Implement a function to generate a random string
