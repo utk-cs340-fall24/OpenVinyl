@@ -160,7 +160,8 @@
         console.error("Error fetching profile:", profileError);
       } else {
         if (!profile?.username) {
-          goto("/account");
+          // goto("/account");
+          console.log("no username")
         }
       }
     }

@@ -29,7 +29,8 @@
             return;
           }
           else {
-            if (user.app_metadata.provider == "spotify") {
+            console.log(user)
+            if (user && user.app_metadata.provider == "spotify") {
               window.location.href = '/spotify-login';
             }
           }
