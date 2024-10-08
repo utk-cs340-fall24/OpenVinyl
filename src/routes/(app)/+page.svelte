@@ -4,104 +4,145 @@
   import PostCreation from "$lib/postCreation.svelte";
   import Post from "$lib/post.svelte";
   import Sidebar from "$lib/sidebar.svelte";
-  import { onMount } from "svelte";
-  import {spotify} from "$lib/spotifyClient.js"
-  import { goto } from '$app/navigation';
+  import { onMount, onDestroy } from "svelte";
+  import { spotify } from "$lib/spotifyClient.js";
+  import { goto } from "$app/navigation";
   import AddPost from "$lib/addPost.svelte";
-  import { selectedSong } from '$lib/stores'; 
-  
-  import { getSongs, authenticateClientCredentials } from "$lib/utils.js"; 
+  import { createEventDispatcher } from "svelte";
+  import { selectedSong } from "$lib/stores";
+  import { getSongs, authenticateClientCredentials } from "$lib/utils.js";
 
   export let data;
 
   let session_uuid;
   let user = null;
-  let posts = [...data.posts]; 
-  let songData = {}; 
-  let loading = false; 
-  let isDragOver = false; 
+  let posts = [...data.posts];
+  let songData = {};
+  let loading = false;
+  let isDragOver = false;
   let isDroppableArea = false;
-
-function handleDrop(event) {
-  event.preventDefault();
-  const data = event.dataTransfer.getData('application/json');
-  if (data && isDroppableArea) { 
-    const song = JSON.parse(data);
-    selectedSong.set(song); 
-  }
-  isDragOver = false;
-}
-
-function handleDragOver(event) {
-  event.preventDefault();
-  isDragOver = true;
-  isDroppableArea = true; 
-}
-
-function handleDragLeave(event) {
-  isDragOver = false;
-  isDroppableArea = false; 
-}
-async function fetchSongData() {
-  await authenticateClientCredentials();
-  
-  // Collect song IDs from posts
-  let testIds = posts.map(post => post.song_id); // Use map for cleaner code
-  
-  const options = {};
-  spotify.getTracks(testIds, options, (error, data) => {
-    if (error) {
-      console.error("Error fetching tracks:", error);
-      return;
+  let localSelectedTrack;
+  let hasMorePosts = data.nextPage !== null;
+  const dispatch = createEventDispatcher();
+  const unsubscribe = selectedSong.subscribe((song) => {
+    if (song) {
+      localSelectedTrack = {
+        id: song.id,
+        title: song.title,
+        artist: song.artist,
+        cover: song.cover,
+      };
     }
-
-    if (data && data.tracks) { 
-      console.log("Fetched tracks successfully:", data.tracks);
-      
-      data.tracks.forEach(track => {
-        if (track) { 
-          songData[track.id] = {
-            title: track.name,
-            artist: track.artists[0].name, 
-            image: track.album.images[0]?.url 
-          };
-        }
-      });
-    } else {
-      console.log("No tracks found for the given IDs.");
-    }
-    console.log(songData)
-
   });
-}
+  onDestroy(() => {
+    unsubscribe();
+  });
+  function handleDrop(event) {
+    event.preventDefault();
+    const data = event.dataTransfer.getData("application/json");
+    if (data && isDroppableArea) {
+      const song = JSON.parse(data);
+      selectedSong.set(song);
+    }
+    isDragOver = false;
+  }
+
+  function handleDragOver(event) {
+    event.preventDefault();
+    isDragOver = true;
+    isDroppableArea = true;
+  }
+
+  function handleDragLeave(event) {
+    isDragOver = false;
+    isDroppableArea = false;
+  }
+  function handleReviewSubmitted(event) {
+    const { post } = event.detail;
+    if (post) {
+      const postWithLikesCount = {
+        ...post,
+        likes_count: post.likes_count !== undefined ? post.likes_count : 0,
+      };
+
+      posts = [postWithLikesCount, ...posts];
+
+      if (post.song_id && !songData[post.song_id]) {
+        // Fetch song data for the new song_id (maybe remove it may not be necessary since we have all the information, not sure)
+        fetchSongData();
+      }
+    }
+  }
+
+  async function fetchSongData() {
+    await authenticateClientCredentials();
+
+    // Collect song IDs from posts
+    let testIds = posts.map((post) => post.song_id);
+
+    const options = {};
+    spotify.getTracks(testIds, options, (error, data) => {
+      if (error) {
+        console.error("Error fetching tracks:", error);
+        return;
+      }
+
+      if (data && data.tracks) {
+        console.log("Fetched tracks successfully:", data.tracks);
+
+        data.tracks.forEach((track) => {
+          if (track) {
+            songData[track.id] = {
+              title: track.name,
+              artist: track.artists[0].name,
+              image: track.album.images[0]?.url,
+            };
+          }
+        });
+      } else {
+        console.log("No tracks found for the given IDs.");
+      }
+      console.log(songData);
+    });
+  }
 
   async function loadNextPage() {
-    loading = true;
-    const response = await fetch(`?page=${data.nextPage}`);
-    const newPostsData = await response.json();
-    
-    posts = [...posts, ...newPostsData.posts];
-    data.nextPage = newPostsData.nextPage; 
+    if (!hasMorePosts || loading) return;
 
-    await fetchSongData();
-    loading = false;
+    loading = true;
+    try {
+      const response = await fetch(`/api/posts?page=${data.nextPage}`);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const newPostsData = await response.json();
+
+      if (!newPostsData.success) {
+        throw new Error("Failed to load posts");
+      }
+
+      posts = [...posts, ...newPostsData.posts];
+      data.nextPage = newPostsData.nextPage;
+
+      hasMorePosts = newPostsData.nextPage !== null;
+
+      await fetchSongData(); // Fetch additional song data if necessary
+    } catch (error) {
+      console.error("Error loading next page:", error);
+    } finally {
+      loading = false;
+    }
   }
 
   onMount(async () => {
     await fetchSongData();
 
-    const observer = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting && !loading) {
-        loadNextPage(); 
-      }
-    }, { threshold: 0.1 });
-
-    const loadMoreElement = document.querySelector('#load-more-trigger');
-    if (loadMoreElement) {
-      observer.observe(loadMoreElement);
-    }
-
-    const { data: { session }, error } = await supabase.auth.getSession();
+    const {
+      data: { session },
+      error,
+    } = await supabase.auth.getSession();
     if (error) {
       console.error("Error fetching session:", error);
     } else if (!session) {
@@ -111,15 +152,15 @@ async function fetchSongData() {
       session_uuid = user?.id;
 
       const { data: profile, error: profileError } = await supabase
-        .from('profiles')
-        .select('username')
-        .eq('id', session_uuid)
+        .from("profiles")
+        .select("username")
+        .eq("id", session_uuid)
         .single();
       if (profileError) {
-        console.error('Error fetching profile:', profileError);
+        console.error("Error fetching profile:", profileError);
       } else {
         if (!profile?.username) {
-          goto('/account');
+          goto("/account");
         }
       }
     }
@@ -133,15 +174,10 @@ async function fetchSongData() {
   on:dragleave={handleDragLeave}
   on:drop={handleDrop}
 >
-<Sidebar />
-
-  <!-- <div class="add-post-wrapper">
-    <AddPostBtn></AddPostBtn>
-  </div> -->
-
+  <Sidebar />
 
   <div class="posts-wrapper {isDragOver ? 'drag-over' : ''}">
-    <AddPost/>
+    <AddPost on:reviewSubmitted={handleReviewSubmitted} />
 
     {#each posts as post}
       <Post
@@ -162,7 +198,15 @@ async function fetchSongData() {
       <div class="loading-spinner">Loading...</div>
     {/if}
 
-    <div id="load-more-trigger"></div>
+    {#if hasMorePosts}
+      <button
+        class="load-more-button"
+        on:click={loadNextPage}
+        disabled={loading}
+      >
+        {loading ? "Loading..." : "Load More Reviews"}
+      </button>
+    {/if}
   </div>
 
   <PostCreation></PostCreation>
@@ -174,7 +218,9 @@ async function fetchSongData() {
     min-height: 90vh;
     width: 100%;
     position: relative;
-    transition: background-color 0.3s, border 0.3s;
+    transition:
+      background-color 0.3s,
+      border 0.3s;
   }
 
   .wrapper.drag-over {
@@ -195,8 +241,8 @@ async function fetchSongData() {
     width: calc(100% - 300px);
     padding: 0px;
     overflow-y: auto;
-    height: 100vh; 
-    background-color: #121212; 
+    height: 100vh;
+    background-color: #121212;
     transition: background-color 0.3s;
   }
 
@@ -219,11 +265,32 @@ async function fetchSongData() {
     background-color: rgba(0, 123, 255, 0.1);
   }
 
-
-
   .loading-spinner {
     text-align: center;
     padding: 20px;
     color: #b9b9b9;
+  }
+
+  .load-more-button {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #1d1f25;
+    color: white;
+    border: 1px solid #26282c;
+    font-family: "Concert One", sans-serif;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+  }
+
+  .load-more-button:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+  }
+
+  .load-more-button:hover:not(:disabled) {
+    background-color: #121212;
   }
 </style>

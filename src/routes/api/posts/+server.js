@@ -1,8 +1,9 @@
-import { supabase } from "$lib/supabaseClient";
+import { supabase } from '$lib/supabaseClient';
 
-const PAGE_SIZE = 10; // Set the number of posts per page
-export async function load({ url }) {
-  const page = parseInt(url.searchParams.get('page')) || 1; // Get the current page number from the URL
+const PAGE_SIZE = 10; // Number of posts per page
+
+export async function GET({ url }) {
+  const page = parseInt(url.searchParams.get('page')) || 1;
 
   const { data, error } = await supabase
     .from("posts")
@@ -12,11 +13,11 @@ export async function load({ url }) {
 
   if (error) {
     console.error("Error fetching posts and likes:", error);
-    return {
+    return new Response(JSON.stringify({
       success: false,
       posts: [],
       nextPage: null,
-    };
+    }), { status: 500, headers: { 'Content-Type': 'application/json' } });
   }
 
   const postsWithLikeData = data.map(post => ({
@@ -24,13 +25,12 @@ export async function load({ url }) {
     likes_count: post.likes.length,
   }));
 
-  // Determine if there's a next page
   const hasNextPage = data.length === PAGE_SIZE;
   const nextPage = hasNextPage ? page + 1 : null;
 
-  return {
+  return new Response(JSON.stringify({
     success: true,
     posts: postsWithLikeData ?? [],
-    nextPage: nextPage,  // Prepare for the next page load or null if no more pages
-  };
+    nextPage: nextPage,
+  }), { status: 200, headers: { 'Content-Type': 'application/json' } });
 }

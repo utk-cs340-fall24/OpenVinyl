@@ -1,251 +1,243 @@
 <script>
-  import { onMount, onDestroy  } from "svelte";
-  import { supabase } from "$lib/supabaseClient";
+  import { onMount, onDestroy } from "svelte";
   import { selectedSong } from "$lib/stores";
+  import { getValidSpotifyAccessToken } from "$lib/utils";
+  import { user } from "$lib/stores";
+  import { derived } from 'svelte/store';
 
   let player;
   let currentSong = null;
   let recentSongs = [];
-  let showPremiumMessage = false;
-  let showPlayer = true;
+  let showPremiumMessage = true;
+  let showPlayer = false;
   let isPlaying = false;
 
+  const userReady = derived(user, $user => $user); // Wait for user to be set
+
   onMount(async () => {
-    const {
-      data: { session },
-      error,
-    } = await supabase.auth.getSession();
-    if (error) {
-      console.error("Error fetching session:", error);
-      return;
-    }
+    let unsubscribeUser;
+    let currentUser;
 
-    const userId = session?.user?.id;
-    if (!userId) {
-      showPlayer = false;
-      showPremiumMessage = true;
-      return;
-    }
+    try {
+      unsubscribeUser = userReady.subscribe(async (value) => {
+        if (value && value.role === 'authenticated') {
+          currentUser = value;
 
-    const { data: profile, error: profileError } = await supabase
-      .from("profiles")
-      .select(
-        "spotify_access_token, spotify_refresh_token, spotify_token_expires"
-      )
-      .eq("id", userId)
-      .single();
+          // User is ready, continue to set up the player
+          const accessToken = await getValidSpotifyAccessToken(currentUser.id);
+          if (!accessToken) {
+            showPlayer = false;
+            showPremiumMessage = true;
+            return;
+          }
 
-    if (profileError) {
-      console.error("Error fetching Spotify tokens:", profileError);
-      return;
-    }
+          const profileResponse = await fetch("https://api.spotify.com/v1/me", {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          });
 
-    let { spotify_access_token, spotify_refresh_token, spotify_token_expires } =
-      profile;
+          if (!profileResponse.ok) {
+            const errorData = await profileResponse.json();
+            console.error("Error fetching Spotify profile:", errorData);
+            showPlayer = false;
+            showPremiumMessage = true;
+            return;
+          }
 
-    // If the token has expired, refresh it (this / 4 is temporary i think theres a bug with not refreshing)
-    // if (new Date() > new Date(spotify_token_expires)) {
-    //   const refreshResponse = await fetch("/refresh-spotify-token", {
-    //     method: "GET",
-    //     headers: {
-    //       Authorization: `Bearer ${session.access_token}`,
-    //     },
-    //   });
-    //   const refreshData = await refreshResponse.json();
+          const profileData = await profileResponse.json();
+          console.log("Spotify profile:", profileData);
 
-    //   if (refreshData.success) {
-    //     spotify_access_token = refreshData.access_token;
-    //     // Update Supabase with the new access token and expiration
-    //     const { error: updateError } = await supabase
-    //       .from("profiles")
-    //       .update({
-    //         spotify_access_token: spotify_access_token,
-    //         spotify_token_expires: new Date(
-    //           Date.now() + refreshData.expires_in * 1000
-    //         ),
-    //       })
-    //       .eq("id", userId);
+          if (profileData.product !== "premium") {
+            showPlayer = false;
+            showPremiumMessage = true;
+            return;
+          }
+console.log('logged in')
+          const script = document.createElement("script");
+          script.src = "https://sdk.scdn.co/spotify-player.js";
+          script.async = true;
+          document.body.appendChild(script);
 
-    //     if (updateError) {
-    //       console.error("Error updating access token:", updateError.message);
-    //       return;
-    //     }
-    //   } else {
-    //     console.error("Error refreshing access token:", refreshData.message);
-    //     return;
-    //   }
-    // }
+          window.onSpotifyWebPlaybackSDKReady = () => {
+            player = new window.Spotify.Player({
+              name: "OpenVinyl Web Playback SDK Player",
+              getOAuthToken: (cb) => {
+                cb(accessToken);
+              },
+              volume: 0.5,
+            });
 
-    // Check if the user is a Spotify premium user
-    const profileResponse = await fetch("https://api.spotify.com/v1/me", {
-      headers: {
-        Authorization: `Bearer ${spotify_access_token}`,
-      },
-    });
+            player.addListener("initialization_error", ({ message }) => {
+              console.error("Initialization Error:", message);
+            });
 
-    const profileData = await profileResponse.json();
-    console.log("Spotify profile:", profileData);
+            player.addListener("authentication_error", ({ message }) => {
+              console.error("Authentication Error:", message);
+              if (message.includes("Premium")) {
+                showPlayer = false;
+                showPremiumMessage = true;
+              }
+            });
 
-    if (profileData.product !== "premium") {
-      showPlayer = false;
-      showPremiumMessage = true;
-      return;
-    }
+            player.addListener("account_error", ({ message }) => {
+              console.error("Account Error:", message);
+              if (message.includes("premium")) {
+                showPlayer = false;
+                showPremiumMessage = true;
+              }
+            });
 
-    const script = document.createElement("script");
-    script.src = "https://sdk.scdn.co/spotify-player.js";
-    script.async = true;
-    document.body.appendChild(script);
+            player.addListener("playback_error", ({ message }) => {
+              console.error("Playback Error:", message);
+            });
 
-    window.onSpotifyWebPlaybackSDKReady = () => {
-      player = new window.Spotify.Player({
-        name: "Web Playback SDK Quick Start Player",
-        getOAuthToken: (cb) => {
-          cb(spotify_access_token);
-        },
-        volume: 0.5,
-      });
+            player.addListener("player_state_changed", (state) => {
+              if (!state) return;
 
-      player.addListener("initialization_error", ({ message }) => {
-        console.error("Initialization Error:", message);
-      });
+              const track = state.track_window.current_track;
+              updateCurrentSong(track);
+              updateRecentSongs(track);
+              isPlaying = state.paused ? false : true;
+            });
 
-      player.addListener("authentication_error", ({ message }) => {
-        console.error("Authentication Error:", message);
-        if (message.includes("Premium")) {
-          showPlayer = false;
+            player.addListener("ready", ({ device_id }) => {
+              console.log("Ready with Device ID", device_id);
+              showPlayer = true;
+              showPremiumMessage =false;
+              transferPlaybackHere(device_id, accessToken);
+            });
+
+            player.addListener("not_ready", ({ device_id }) => {
+              console.log("Device ID has gone offline", device_id);
+            });
+
+            player.connect();
+          };
+        } else {
+          showPlayer = false; // User is a guest, hide player
           showPremiumMessage = true;
         }
       });
+    } catch (error) {
+      console.error("Error during sidebar mount:", error);
+      showPlayer = false;
+      showPremiumMessage = true;
+    }
 
-      player.addListener("account_error", ({ message }) => {
-        console.error("Account Error:", message);
-        if (message.includes("premium")) {
-          showPlayer = false;
-          showPremiumMessage = true;
-        }
-      });
-
-      player.addListener("playback_error", ({ message }) => {
-        console.error("Playback Error:", message);
-      });
-
-      player.addListener("player_state_changed", (state) => {
-        if (!state) return;
-
-        const track = state.track_window.current_track;
-        updateCurrentSong(track);
-        updateRecentSongs(track);
-        isPlaying = state.paused ? false : true;
-      });
-
-      player.addListener("ready", ({ device_id }) => {
-        console.log("Ready with Device ID", device_id);
-        transferPlaybackHere(device_id);
-      });
-
-      player.addListener("not_ready", ({ device_id }) => {
-        console.log("Device ID has gone offline", device_id);
-      });
-
-      player.connect();
+    return () => {
+      unsubscribeUser && unsubscribeUser();
+      if (player) {
+        player.disconnect();
+        console.log("Player disconnected.");
+      }
     };
   });
 
   function updateCurrentSong(track) {
+  if (!track) {
+    // Handle the case when track is null or undefined
     currentSong = {
-      title: track.name,
-      artist: track.artists.map((artist) => artist.name).join(", "),
-      cover: track.album.images[0]?.url,
+      title: "No song playing",
+      artist: "Unknown artist",
+      cover: "https://placehold.co/300", // Use a placeholder image
     };
+    return;
   }
-  function updateRecentSongs(track) {
-    const song = {
-        id: track.id,
-        title: track.name,
-        artist: track.artists.map((artist) => artist.name).join(", "),
-        cover: track.album.images[0]?.url,
-    };
 
-    const exists = recentSongs.some(existingSong => existingSong.id === song.id);
-
-    if (!exists) {
-        recentSongs = [song, ...recentSongs]; 
-
-        // Limit the recentSongs array to 3 songs
-        if (recentSongs.length > 3) {
-            recentSongs = recentSongs.slice(0, 3); // Keep only the first 3
-        }
-    }
+  currentSong = {
+    title: track.name || "Unknown title",
+    artist: track.artists?.map((artist) => artist.name).join(", ") || "Unknown artist",
+    cover: track.album?.images[0]?.url || "https://placehold.co/300", 
+  };
 }
 
-  async function transferPlaybackHere(device_id) {
-    const session = await supabase.auth.getSession();
-    const userId = session.data.session?.user?.id;
+function updateRecentSongs(track) {
+  if (!track || !track.id) {
+    return;
+  }
 
-    if (!userId) return;
+  const song = {
+    id: track.id,
+    title: track.name || "Unknown title",
+    artist: track.artists?.map((artist) => artist.name).join(", ") || "Unknown artist",
+    cover: track.album?.images[0]?.url || "https://placehold.co/300", 
+  };
 
-    const { data: profile, error } = await supabase
-      .from("profiles")
-      .select("spotify_access_token")
-      .eq("id", userId)
-      .single();
+  const exists = recentSongs.some(existingSong => existingSong.id === song.id);
 
-    if (error) {
-      console.error("Error fetching access token:", error);
-      return;
+  if (!exists) {
+    recentSongs = [song, ...recentSongs]; 
+
+    if (recentSongs.length > 3) {
+      recentSongs = recentSongs.slice(0, 3); // Limit to 3 recent songs
     }
+  }
+}
 
-    const { spotify_access_token } = profile;
+  async function transferPlaybackHere(device_id, accessToken) {
+    try {
+      await fetch("https://api.spotify.com/v1/me/player", {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          device_ids: [device_id],
+        }),
+      });
 
-    await fetch("https://api.spotify.com/v1/me/player", {
-      method: "PUT",
-      headers: {
-        Authorization: `Bearer ${spotify_access_token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        device_ids: [device_id],
-      }),
-    });
+      console.log("Playback transferred to the Web Playback SDK player.");
+    } catch (error) {
+      console.error("Error transferring playback:", error);
+    }
   }
 
   const playPrev = () => {
-    player
-      .previousTrack()
-      .then(() => {
-        console.log("Skipped to previous track");
-      })
-      .catch((error) => console.error(error));
+    if (player) {
+      player
+        .previousTrack()
+        .then(() => {
+          console.log("Skipped to previous track");
+        })
+        .catch((error) => console.error(error));
+    }
   };
 
   const play = () => {
-    player
-      .resume()
-      .then(() => {
-        console.log("Playback resumed");
-        isPlaying = true;
-      })
-      .catch((error) => console.error(error));
+    if (player) {
+      player
+        .resume()
+        .then(() => {
+          console.log("Playback resumed");
+          isPlaying = true;
+        })
+        .catch((error) => console.error(error));
+    }
   };
 
   const pause = () => {
-    player
-      .pause()
-      .then(() => {
-        console.log("Playback paused");
-        isPlaying = false;
-      })
-      .catch((error) => console.error(error));
+    if (player) {
+      player
+        .pause()
+        .then(() => {
+          console.log("Playback paused");
+          isPlaying = false;
+        })
+        .catch((error) => console.error(error));
+    }
   };
 
   const playNext = () => {
-    player
-      .nextTrack()
-      .then(() => {
-        console.log("Skipped to next track");
-      })
-      .catch((error) => console.error(error));
+    if (player) {
+      player
+        .nextTrack()
+        .then(() => {
+          console.log("Skipped to next track");
+        })
+        .catch((error) => console.error(error));
+    }
   };
 
   function handleDragStart(event, song) {
@@ -267,12 +259,6 @@
   function hidePremiumMessage() {
     showPremiumMessage = false;
   }
-  onDestroy(() => {
-    if (player) {
-      player.disconnect();
-      console.log("Player disconnected.");
-    }
-  });
 </script>
 
 <!-- svelte-ignore missing-declaration -->
@@ -283,8 +269,7 @@
       <p class="small-text">
         You need a Spotify Premium account to use the player.
       </p>
-      <button on:click={hidePremiumMessage} class="small-button">Dismiss</button
-      >
+      <button on:click={hidePremiumMessage} class="small-button">Dismiss</button>
     </div>
   {/if}
 
@@ -305,24 +290,20 @@
           <button
             on:click={playPrev}
             class="control-button"
-            aria-label="Previous Track">⏮️</button
-          >
+            aria-label="Previous Track">⏮️</button>
 
           {#if isPlaying}
             <button on:click={pause} class="control-button" aria-label="Pause"
-              >⏸️</button
-            >
+              >⏸️</button>
           {:else}
             <button on:click={play} class="control-button" aria-label="Play"
-              >▶️</button
-            >
+              >▶️</button>
           {/if}
 
           <button
             on:click={playNext}
             class="control-button"
-            aria-label="Next Track">⏭️</button
-          >
+            aria-label="Next Track">⏭️</button>
         </div>
       </div>
 
@@ -370,6 +351,7 @@
     border-radius: 3px;
     cursor: pointer;
     font-size: 0.8rem;
+    transition: background-color 0.3s;
   }
 
   .small-button:hover {
@@ -455,6 +437,7 @@
   .recent-songs {
     flex: 1;
     margin-top: 20px;
+    overflow-y: auto;
   }
 
   .section-header {

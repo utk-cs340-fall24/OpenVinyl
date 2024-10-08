@@ -22,24 +22,28 @@ export async function authenticateClientCredentials() {
  * song_id: required (song 'id' field from spotify api)
  * rating: required (int from 1 to 10 inclusive, no half scores yet)
  */
-export async function createPost(profile_id, content, song_id, rating) {
-  try {
-    //TODO: Change this back to public.posts
-    const { data, error } = await supabase.from("posts").insert({
-      profile_id: profile_id,
-      content: content,
-      song_id: song_id,
-      rating: rating,
-    });
-    if (error) {
-      console.log("Error inserting data: ", error);
-      return { success: false, error: error.message };
-    }
-    return { success: true, data };
-  } catch (err) {
-    console.error("Unexpected error:", err);
-    return { success: false, error: err.message };
+export async function createPost(userId, content, songId, rating) {
+  const { data, error } = await supabase
+    .from('posts')
+    .insert([
+      {
+        profile_id: userId,
+        content,
+        song_id: songId,
+        rating,
+        created_at: new Date().toISOString(),
+      }
+    ])
+    .select('*, likes (profile_id)')
+    .single(); 
+  if (error) {
+    return { error };
   }
+  if (!data.likes) {
+    data.likes = [];
+  }
+
+  return { data };
 }
 /*
  * profile_id: required
@@ -334,7 +338,7 @@ export const followUser = async (userId) => {
 
   const { data, error } = await supabase
     .from('follows')
-    .insert([{ owner_id: user.id, followed_id: userId }]); // Using your table's column names
+    .insert([{ owner_id: user.id, followed_id: userId }]);
 
   if (error) {
     console.error('Error following user:', error.message);
@@ -371,3 +375,28 @@ export const unfollowUser = async (userId) => {
 
   return { success: true, data };
 };
+export async function getValidSpotifyAccessToken(userId) {
+  console.log("Checking call ")
+  try {
+    console.log("waiting")
+    const response = await fetch('/api/refresh-spotify-token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ userId }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok && data.success) {
+      return data.access_token;
+    } else {
+      console.error('Failed to refresh Spotify access token:', data.message);
+      return null;
+    }
+  } catch (error) {
+    console.error('Unexpected error while refreshing Spotify access token:', error);
+    return null;
+  }
+}
