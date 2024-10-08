@@ -3,7 +3,7 @@ import { supabase } from '$lib/supabaseClient';
 export async function load({ fetch }) {
   // Fetch the current session
   const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-
+    
   if (sessionError || !session) {
     return { session: null, spotifyAuth: null };
   }

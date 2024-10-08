@@ -3,17 +3,20 @@
   import Footer from "$lib/footer.svelte";
   import { supabase } from "$lib/supabaseClient";
   import { user } from "$lib/stores";
+  // import { ensureUserProfileExists } from '$lib/utils';
   import { onMount } from "svelte";
 
   onMount(async () => {
     try {
       const { data: { session }, error } = await supabase.auth.getSession();
-
+      console.log("current session: ", session)
       if (error) {
         console.error("Error fetching session:", error);
         user.set({ role: 'guest' });
         return;
       }
+      
+      // await ensureUserProfileExists(session.user.id);
 
       if (session) {
         // Set user role to 'authenticated' when the session exists

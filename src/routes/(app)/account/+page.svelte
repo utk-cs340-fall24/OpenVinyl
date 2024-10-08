@@ -27,8 +27,8 @@
     }
 
     updateUsername(user.data.user.id, username);
-    updateFirstName(user.data.user.id, fname);
-    updateLastName(user.data.user.id, lname);
+    // updateFirstName(user.data.user.id, fname);
+    // updateLastName(user.data.user.id, lname);
   }
 
   async function logout() {
