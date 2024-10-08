@@ -13,7 +13,7 @@ export async function GET({ url }) {
   if (!code) {
     return json({ success: false, message: 'No code provided' });
   }
-
+  console.log("spotify callback here ")
   const client_id = SPOTIFY_CLIENT_ID;
   const client_secret = SPOTIFY_CLIENT_SECRET;
   const redirect_uri = SPOTIFY_REDIRECT_URI;
