@@ -46,7 +46,7 @@
     if (session) {
       user = session.user;
       showAddPost = true;
-
+        console.log("user: ", user)
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
         .select("username")

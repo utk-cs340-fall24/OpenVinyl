@@ -12,7 +12,7 @@
     try {
       const session = await supabase.auth.getSession();
       user = session?.data?.session?.user;
-      console.log(user.app_metadata.provider)
+      // console.log(user.app_metadata.provider)
      
       if (user) {
         const { data, error } = await supabase.from("profiles").select("username, spotify_access_token").eq("id", user.id).single();

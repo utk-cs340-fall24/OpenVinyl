@@ -116,28 +116,29 @@ const getURL = () => {
 }
 
 export async function signInWithGoogle() {
+  console.log("Initiating Google sign-in");
 
-  const { error } = await supabase.auth.signInWithOAuth({
-    provider: 'google',
-    // options: {
-    //   redirectTo: getURL()
-    // }
-    options: {
-      redirectTo: `${getURL()}/auth/callback`
+  try {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+    });
+
+    if (error) {
+      console.error('Error during sign in:', error.message);
+    } else {
+      console.log('Sign-in initiated successfully');
     }
-  });
-  if (error) {
-    console.error('Error during sign in:', error.message);
+  } catch (err) {
+    console.error('Unexpected error during sign in:', err);
   }
-
 };
+
 export async function signInWithSpotify() {
 
   const { error } = await supabase.auth.signInWithOAuth({
     provider: 'spotify',
     options: {
       scopes: 'streaming user-read-email user-read-private user-modify-playback-state user-read-playback-state user-read-currently-playing user-top-read user-read-recently-played user-library-read playlist-modify-private playlist-modify-public',
-      redirectTo: `${getURL()}`
     }
   });
   if (error) {
@@ -400,3 +401,26 @@ export async function getValidSpotifyAccessToken(userId) {
     return null;
   }
 }
+
+// export async function ensureUserProfileExists(userId, additionalData = {}) {
+//   try {
+//     // Combine the userId with any additional data provided
+//     const profileData = { id: userId, ...additionalData };
+//     console.log("checking if user exists")
+//     // Perform the upsert operation
+//     const { data, error } = await supabase
+//       .from('profiles')
+//       .upsert(profileData, { onConflict: 'id' })
+//       .select(); // Select to get the updated or inserted record
+//     console.log("returned from check")
+//     if (error) {
+//       console.error('Error ensuring user profile exists:', error.message);
+//       return { success: false, error: error.message };
+//     }
+//     console.log("return one", data)
+//     return { success: true, data };
+//   } catch (err) {
+//     console.error('Unexpected error ensuring user profile exists:', err);
+//     return { success: false, error: err.message };
+//   }
+// }
