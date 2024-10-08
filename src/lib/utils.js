@@ -375,3 +375,28 @@ export const unfollowUser = async (userId) => {
 
   return { success: true, data };
 };
+export async function getValidSpotifyAccessToken(userId) {
+  console.log("Checking call ")
+  try {
+    console.log("waiting")
+    const response = await fetch('/api/refresh-spotify-token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ userId }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok && data.success) {
+      return data.access_token;
+    } else {
+      console.error('Failed to refresh Spotify access token:', data.message);
+      return null;
+    }
+  } catch (error) {
+    console.error('Unexpected error while refreshing Spotify access token:', error);
+    return null;
+  }
+}
