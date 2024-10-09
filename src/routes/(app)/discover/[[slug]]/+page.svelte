@@ -91,8 +91,10 @@
 
   if ($page.params.slug) {
     centerSongId = $page.params.slug;
+    boxes[4].songId = $page.params.slug;
   } else {
     centerSongId = "6ebkx7Q5tTxrCxKq4GYj0Y";
+
   }
   const showTutorial = writable(false);
   const userReady = derived(user, $user => $user); 
@@ -114,6 +116,10 @@
   onMount(async () => {
   let unsubscribeUser;
   let currentUser;
+  if ($page.params.slug) {
+    centerSongId = $page.params.slug;
+    boxes[4].songId = $page.params.slug;
+  }
   
   try {
     unsubscribeUser = userReady.subscribe(async (value) => {
