@@ -1,14 +1,15 @@
 <script>
-  export let uuid; // Owner of post
-  export let logged_in_user_uuid; // Logged in user (possibly null if not logged in)
+  export let uuid;
+  export let logged_in_user_uuid;
   export let rating;
   export let post_id;
   export let song_id;
   export let likes_cnt;
   export let desc;
-  export let likes_arr;
-
-
+  export let profile_pic_url = "https://placehold.co/30";
+  export let song_artist;
+  export let song_title;
+  export let song_image;
   import { spotify } from "$lib/spotifyClient";
   import { onMount } from "svelte";
   import { authenticateClientCredentials } from "$lib/utils";
@@ -17,17 +18,14 @@
   import "@fortawesome/fontawesome-free/js/all.js";
 
   let trackData = null;
-  let username = "";
   let liked = false;
-  let processingLike = false; 
+  let processingLike = false;
+  let username = "";
 
   onMount(async () => {
     try {
       await fetchUserData();
-      await fetchTrackData();
       await checkIfLiked();
-      console.log(desc);
-      console.log(likes_arr);
     } catch (err) {
       console.error("Error during onMount:", err);
     }
@@ -39,21 +37,14 @@
       .select("username")
       .eq("id", uuid)
       .maybeSingle();
-      
+
     if (error) throw error;
     if (data) username = data.username;
   }
 
-  async function fetchTrackData() {
-    await authenticateClientCredentials();
-    const track = await spotify.getTrack(song_id);
-    trackData = track;
-    console.log(track);
-  }
-
   async function checkIfLiked() {
     if (!logged_in_user_uuid) return;
-    
+
     const { data: existingLike, error } = await supabase
       .from("likes")
       .select("*")
@@ -112,165 +103,234 @@
     liked = false;
     likes_cnt -= 1;
   }
+  //convert 10 scale to 5 for display purposes only (maybe fix later)
+  function renderStars() {
+    const stars = [];
+    const ratingOutOfFive = rating / 2;
+
+    for (let i = 1; i <= 5; i++) {
+      if (ratingOutOfFive >= i) {
+        stars.push('<i class="fa-solid fa-star"></i>');
+      } else if (ratingOutOfFive >= i - 0.5) {
+        stars.push('<i class="fa-regular fa-star-half-stroke"></i>');
+      } else {
+        stars.push('<i class="fa-regular fa-star"></i>');
+      }
+    }
+    return stars.join("");
+  }
 </script>
 
 <div class="wrapper">
-  <div class="user-wrapper">
-    <img class="profile-picture" src="https://placehold.co/50" alt="pfp" />
-    <h2>{username}</h2>
-  </div>
+  <div class="top-bar">
+    <div class="user-info">
+      <img class="profile-pic" src={profile_pic_url} alt="profile" />
+      <!-- <span class="username">{username}</span> -->
+      <span class="username"><a class="username-link" href="/profiles/{username}">{username}</a></span>
+    </div>
 
-  <div class="rating-wrapper">
-    <p>{rating} / 10</p>
-    <div>
-      <button on:click={toggleLike} disabled={!logged_in_user_uuid} class="like-button">
-        <span>{liked ? 'Unlike ' : 'Like '} <i class="fa-solid fa-thumbs-up"></i></span> 
-      </button>
-      <span>{likes_cnt}</span>
-     
-      <a class="discover-button" href="/discover/{song_id}" id="discover-button" style="color:white">
-        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+    <div class="right-section">
+      <a href="/discover/{song_id}" class="discover-button">
+        <i class="fa-solid fa-external-link-alt"></i>
       </a>
     </div>
   </div>
 
-  {#if trackData}
+  <div class="content-wrapper">
+    <img
+      class="album-cover"
+      src={song_image ? song_image : "https://placehold.co/300"}
+      alt="album cover"
+    />
+
     <div class="song-info-wrapper">
-      <img
-        class="img-wrapper"
-        src={trackData.album.images[0].url}
-        alt="albumImg"
-      />
-      <div class="info-text-wrapper">
-        <p class="song-name">{trackData.name}</p>
-        <p class="artist-name">{trackData.artists[0].name}</p>
+      <p class="song-name">{song_title ? song_title : "Song Name"}</p>
+      <p class="artist-name">{song_artist ? song_artist : "Artist Name"}</p>
+    </div>
+    <div>
+      <div class="rating-wrapper">
+        <p>{@html renderStars()}</p>
+      </div>
+      <div class="like-section">
+        <button
+          on:click={toggleLike}
+          disabled={!logged_in_user_uuid}
+          class="like-button"
+        >
+          <span class="like-text" class:liked>{liked ? "Liked" : "Like"}</span>
+        </button>
+        <span class="like-count">{likes_cnt}</span>
       </div>
     </div>
-  {:else}
-    <div class="song-info-wrapper">
-      <img class="img-wrapper" src="https://placehold.co/100" alt="albumImg" />
-      <div class="info-text-wrapper">
-        <p class="song-name">song name</p>
-        <p class="artist-name">artist name</p>
-      </div>
-    </div>
-  {/if}
+  </div>
 </div>
 
 <style>
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
   .wrapper {
-    display: grid;
-    grid-template-columns: 400px auto;
-    grid-template-rows: 60px auto;
-    background-color: #1e1e1e;
-    width: 55vw;
-    margin-left: auto;
-    margin-right: auto;
-    border-radius: 5px;
-    margin-top: 25px;
-    margin-bottom: 25px;
-    color: #f3f1f1;
-    border: 2px solid #121212;
-    font-family: "Concert One", sans-serif;
-    border-radius: 15px;
-  }
-
-  .profile-picture {
-    margin: 10px;
-    display: inline-block;
-    border-radius: 25px;
-  }
-
-  .img-wrapper {
-    margin: 15px;
-    width: 100px;
-    height: 100px;
-    background-color: #404040;
-    display: inline-block;
-  }
-
-  .user-wrapper {
-    grid-column: 1;
-    grid-row: 1;
-    width: fit-content;
-    display: table;
-  }
-
-  .user-wrapper h2 {
-    display: inline-block;
-    padding: 0;
-    margin: 0;
-    display: table-cell;
-    vertical-align: middle;
-  }
-
-  .rating-wrapper {
-    grid-column: 2;
-    grid-row: 2;
+    display: flex;
+    flex-direction: column;
+    background-color: #1d1f25;
+    width: 70%;
+    margin: 20px auto;
     padding: 10px;
+    color: #f3f1f1;
+    border: 1px solid #26282c;
+    font-family: "Concert One", sans-serif;
+    min-height: 150px;
   }
 
-  .song-info-wrapper {
-    background-color: #2c2c2c;
-    grid-column: 1;
-    grid-row: 2;
-    display: grid;
-    text-align: left;
-    border-radius: 10px;
-    margin: 15px;
+  .top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #26282c;
+    padding: 5px 10px;
+    width: 100%;
+    box-sizing: border-box;
   }
 
-  .song-info-wrapper img {
-    display: inline-block;
-    grid-row: 1 / 3;
-    grid-column: 1;
+  .user-info {
+    display: flex;
+    align-items: center;
   }
 
-  .info-text-wrapper {
-    grid-column: 2;
-    grid-row: 2;
-    display: inline-block;
-    width: fit-content;
-    margin: 15px;
-    margin-left: 0px;
+  .profile-pic {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    margin-right: 8px;
   }
 
-  .info-text-wrapper p {
-    margin: 0;
+  .username {
+    font-size: 0.8rem;
+    color: #b9b9b9;
   }
-
-  .song-name {
-    font-size: 24px;
-    color: #e4e4e4;
-  }
-
-  .artist-name {
-    font-size: 16px;
+  .username-link {
+    text-decoration: none;
     color: #b9b9b9;
   }
 
-  .discover-button{
-    background-color: #00000000;
-    border-radius: 5px;
-    padding: 15px;
-    text-decoration: none;
-    font-size: 20px;
-    color:white;
-  }
-  .discover-button:hover{
-    color:#404040
+  .like-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  .like-button{
-    border:0px;
-    border-radius: 5px;
-    padding: 5px;
-    margin: 5px;
-    color:white;
-    background-color: #00000000;
-    font-size: 20px;
+  .like-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    color: #f3f1f1;
+    display: flex;
+    align-items: center;
+    padding: 0;
+    font-size: 1.2rem;
   }
-  .like-button:hover{
-    color:#404040;
+
+  .like-button i {
+    margin-right: 5px;
+    color: #f3f1f1;
+    font-size: 1rem;
+  }
+
+  .like-button i.liked {
+    color: #007bff;
+  }
+
+  .like-text {
+    min-width: 45px;
+    display: inline-block;
+    font-size: 0.9rem;
+    color: #f3f1f1;
+  }
+
+  .like-text.liked {
+    color: #007bff;
+  }
+
+  .like-count {
+    width: 24px;
+    height: 24px;
+    margin-left: 5px;
+    text-align: center;
+    background-color: #007bff;
+    color: white;
+    border-radius: 50%;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .like-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  .discover-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    color: #f3f1f1;
+    font-size: 1rem;
+  }
+
+  .discover-button:hover {
+    color: #6a6a6a;
+  }
+
+  .content-wrapper {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+  }
+
+  .album-cover {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    margin-right: 15px;
+  }
+
+  .song-info-wrapper {
+    flex: 1;
+  }
+
+  .song-name {
+    font-size: 1.2rem;
+    color: #e4e4e4;
+    margin: 0;
+  }
+
+  .artist-name {
+    font-size: 0.9rem;
+    color: #b9b9b9;
+  }
+
+  .rating-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  @media (max-width: 768px) {
+    .wrapper {
+      width: 90%;
+    }
+
+    .content-wrapper {
+      flex-direction: column;
+    }
+
+    .album-cover {
+      width: 100%;
+      height: auto;
+      margin: 0 0 10px 0;
+    }
   }
 </style>

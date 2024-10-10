@@ -22,25 +22,28 @@ export async function authenticateClientCredentials() {
  * song_id: required (song 'id' field from spotify api)
  * rating: required (int from 1 to 10 inclusive, no half scores yet)
  */
-export async function createPost(profile_id, content, song_id, rating) {
-  try {
-    //TODO: Change this back to public.posts
-    const { data, error } = await supabase.from("posts").insert({
-      profile_id: profile_id,
-      content: content,
-      song_id: song_id,
-      rating: rating,
-    });
-    if (error) {
-      console.log("Error inserting data: ", error);
-      return { success: false, error: error.message };
-    }
-    console.log("Data inserted successfully:", data);
-    return { success: true, data };
-  } catch (err) {
-    console.error("Unexpected error:", err);
-    return { success: false, error: err.message };
+export async function createPost(userId, content, songId, rating) {
+  const { data, error } = await supabase
+    .from('posts')
+    .insert([
+      {
+        profile_id: userId,
+        content,
+        song_id: songId,
+        rating,
+        created_at: new Date().toISOString(),
+      }
+    ])
+    .select('*, likes (profile_id)')
+    .single(); 
+  if (error) {
+    return { error };
   }
+  if (!data.likes) {
+    data.likes = [];
+  }
+
+  return { data };
 }
 /*
  * profile_id: required
@@ -86,7 +89,6 @@ export async function getRecommendationsFromSong(song_id) {
 }
 
 export async function getSearchSuggestions(query) {
-  console.log(query);
   try {
     const { data } = await spotify.searchTracks(query, {
       limit: 5
@@ -103,13 +105,46 @@ export async function getSearchSuggestions(query) {
   }
 }
 
+const getURL = () => {
+  let url = 
+    import.meta.env.VITE_APP_BASE_URL ?? 
+    import.meta.env.VITE_APP_VERCEL_URL ?? 
+    'http://localhost:5173/';
+  url = url.startsWith('http') ? url : `https://${url}`
+  url = url.endsWith('/') ? url : `${url}/`
+  return url
+}
+
 export async function signInWithGoogle() {
+  console.log("Initiating Google sign-in");
+
+  try {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+    });
+
+    if (error) {
+      console.error('Error during sign in:', error.message);
+    } else {
+      console.log('Sign-in initiated successfully');
+    }
+  } catch (err) {
+    console.error('Unexpected error during sign in:', err);
+  }
+};
+
+export async function signInWithSpotify() {
+
   const { error } = await supabase.auth.signInWithOAuth({
-    provider: 'google',
+    provider: 'spotify',
+    options: {
+      scopes: 'streaming user-read-email user-read-private user-modify-playback-state user-read-playback-state user-read-currently-playing user-top-read user-read-recently-played user-library-read playlist-modify-private playlist-modify-public',
+    }
   });
   if (error) {
     console.error('Error during sign in:', error.message);
   }
+
 };
 
 export async function updateFirstName(profile_id, fname) {
@@ -144,7 +179,11 @@ export async function updateLastName(profile_id, lname) {
     return { success: true, data };
   } catch (err) {
     console.error("Unexpected error:", err);
-    return { success: false, error: err.message };
+    return { success: false, error: err.message
+
+     };
+    }
+  }
 // Provide with an array on song id's (MAX 50)
 export async function getSongs(song_list) {
   try {
@@ -152,7 +191,11 @@ export async function getSongs(song_list) {
       console.log("Too many songs requested (>50)");
       return { success: false, message: "Too many songs requested" };
     }
-    const data = await spotify.getTracks(song_list);
+    console.log(song_list)
+    await authenticateClientCredentials();
+    const {data, error} = await spotify.getTracks(song_list);
+    // console.log("error is ", error)
+    console.log("data is ", data)
     if (data) {
       console.log("Got " + song_list.length + " songs successfully");
       return { success: true, data };
@@ -277,3 +320,107 @@ export async function refreshTokenIfNeeded() {
     localStorage.setItem('spotify_expires_at', Date.now() + expires_in * 1000);
   }
 }
+
+// Function to follow a user
+export const followUser = async (userId) => {
+  const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+  
+  if (sessionError) {
+    console.error("Error getting session:", sessionError.message);
+    return { success: false, error: sessionError };
+  }
+
+  const user = sessionData?.session?.user;
+  
+  if (!user) {
+    console.error("User not logged in.");
+    return { success: false, error: "User not logged in." };
+  }
+
+  const { data, error } = await supabase
+    .from('follows')
+    .insert([{ owner_id: user.id, followed_id: userId }]);
+
+  if (error) {
+    console.error('Error following user:', error.message);
+    return { success: false, error };
+  }
+
+  return { success: true, data };
+};
+
+export const unfollowUser = async (userId) => {
+  const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+  
+  if (sessionError) {
+    console.error("Error getting session:", sessionError.message);
+    return { success: false, error: sessionError };
+  }
+
+  const user = sessionData?.session?.user;
+  
+  if (!user) {
+    console.error("User not logged in.");
+    return { success: false, error: "User not logged in." };
+  }
+
+  const { data, error } = await supabase
+    .from('follows')
+    .delete()
+    .match({ owner_id: user.id, followed_id: userId });
+
+  if (error) {
+    console.error('Error unfollowing user:', error.message);
+    return { success: false, error };
+  }
+
+  return { success: true, data };
+};
+export async function getValidSpotifyAccessToken(userId) {
+  console.log("Checking call ")
+  try {
+    console.log("waiting")
+    const response = await fetch('/api/refresh-spotify-token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ userId }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok && data.success) {
+      return data.access_token;
+    } else {
+      console.error('Failed to refresh Spotify access token:', data.message);
+      return null;
+    }
+  } catch (error) {
+    console.error('Unexpected error while refreshing Spotify access token:', error);
+    return null;
+  }
+}
+
+// export async function ensureUserProfileExists(userId, additionalData = {}) {
+//   try {
+//     // Combine the userId with any additional data provided
+//     const profileData = { id: userId, ...additionalData };
+//     console.log("checking if user exists")
+//     // Perform the upsert operation
+//     const { data, error } = await supabase
+//       .from('profiles')
+//       .upsert(profileData, { onConflict: 'id' })
+//       .select(); // Select to get the updated or inserted record
+//     console.log("returned from check")
+//     if (error) {
+//       console.error('Error ensuring user profile exists:', error.message);
+//       return { success: false, error: error.message };
+//     }
+//     console.log("return one", data)
+//     return { success: true, data };
+//   } catch (err) {
+//     console.error('Unexpected error ensuring user profile exists:', err);
+//     return { success: false, error: err.message };
+//   }
+// }

@@ -33,7 +33,6 @@
     debounceTimeout = setTimeout(async () => {
       try {
         await authenticateClientCredentials();
-        console.log(search);
         if(search != ""){
           trackData = await spotify.searchTracks(search, { limit: 5 });
           displayResults(trackData);
@@ -58,13 +57,11 @@
   let searchTable;
 
   function displayResults(data){
-    console.log(data);
     searchTable = data;
   }
 
   function selectSong(data){
     selectedTrack = data;
-    console.log(selectedTrack);
     const rows = document.querySelectorAll(".search-table tr");
     rows.forEach(row => row.style.backgroundColor = ""); // Reset all rows' background color
     const selectedRow = Array.from(rows).find(row => row.dataset.trackId === data.id);

@@ -2,7 +2,7 @@
   import { supabase } from '$lib/supabaseClient.js';
   import '@fortawesome/fontawesome-free/css/all.css';
   import '@fortawesome/fontawesome-free/js/all';
-  import {signInWithGoogle} from "$lib/utils.js";
+  import {signInWithGoogle, signInWithSpotify} from "$lib/utils.js";
   let email;
   let pass;
 
@@ -20,7 +20,6 @@
     console.log("data: ", data);
     console.log("error: ", error);
 
-    console.log(supabase.auth.getUser());
   }
 </script>
 
@@ -39,7 +38,7 @@
       <button class="google" on:click={signInWithGoogle}>
         <i class="fa-brands fa-google"></i> Google
       </button>
-      <button class="spotify">
+      <button class="spotify" on:click={signInWithSpotify}>
         <i class="fa-brands fa-spotify"></i> Spotify
       </button>
       <a href="\auth\signup">
