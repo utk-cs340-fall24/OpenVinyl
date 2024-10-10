@@ -62,7 +62,8 @@ console.log('logged in')
           window.onSpotifyWebPlaybackSDKReady = () => {
             player = new window.Spotify.Player({
               name: "OpenVinyl Web Playback SDK Player",
-              getOAuthToken: (cb) => {
+              getOAuthToken: async (cb) => {
+                const accessToken = await getValidSpotifyAccessToken(currentUser.id);
                 cb(accessToken);
               },
               volume: 0.5,

@@ -5,6 +5,7 @@
   import { user } from "$lib/stores";
   // import { ensureUserProfileExists } from '$lib/utils';
   import { onMount } from "svelte";
+  import Sidebar from "$lib/sidebar.svelte";
 
   onMount(async () => {
     try {

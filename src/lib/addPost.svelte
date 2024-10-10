@@ -145,6 +145,7 @@
         rating = "";
         content = "";
         searchResults = [];
+        // console.log("makePost: ", post)
         dispatch("reviewSubmitted", {
           post: {
             ...createdPost,
