@@ -174,7 +174,6 @@
           class="like-button"
           aria-label={liked ? "Unlike" : "Like"}
         >
-          <i class="fa-heart{liked ? ' liked' : ''}"></i>
           <span class="like-text" class:liked={liked}>{liked ? "Liked" : "Like"}</span>
         </button>
         <span class="like-count">{likes_cnt}</span>
@@ -221,15 +220,15 @@
   }
 
   .profile-pic {
-    width: 40px;
-    height: 40px;
+    width: 25px;
+    height: 25px;
     border-radius: 50%;
     margin-right: 10px;
     object-fit: cover;
   }
 
   .username {
-    font-size: 1rem;
+    font-size: 0.8rem;
     color: #b9b9b9;
   }
 
