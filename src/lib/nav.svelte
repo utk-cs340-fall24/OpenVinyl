@@ -8,6 +8,21 @@
   let user = null;
   let showSpotifyButton = true; // Default state to show the Spotify button
 
+  let active = 0;
+
+  function hamburgerMenu() {
+    if (active == 0) {
+      active = 1;
+    } else if (active == 1) {
+      active = 0;
+    }
+
+
+
+
+    return;
+  }
+
   onMount(async () => {
     try {
       const session = await supabase.auth.getSession();
@@ -54,7 +69,9 @@
   <nav>
     <div class="left-nav">
       <a href="/"><img src={logo} alt="logo" class="logo"></a>
-      <a 
+
+      <div class="links desktop">
+        <a 
         href="/" 
         class="nav-link" 
         class:active={$page.url.pathname === "/"}
@@ -75,13 +92,11 @@
       >
         Charts
       </a>
-      <a 
-        href="/network" 
-        class="nav-link" 
-        class:active={$page.url.pathname.startsWith("/network")}
-      >
-        Network
-      </a>
+        <a href="/network" class="nav-link" class:active={$page.url.pathname.startsWith("/network")}>
+          Network
+        </a>
+      </div>
+      
     </div>
     <div class="right-nav">
       {#if showSpotifyButton}
@@ -91,12 +106,51 @@
       {/if}
       <div class="login-wrapper">
         <a class="login-href" href="/auth/signin" id="login-button">Login</a>
+
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <!-- svelte-ignore a11y-no-static-element-interactions -->
+        <div class="hamburger {active === 1 ? "is-active" : ""}" id="hamburger" on:click={hamburgerMenu}>
+          <span class="line"></span>
+          <span class="line"></span>
+          <span class="line"></span>
+        </div>
       </div>
     </div>
   </nav>
+
+  <div class="links mobile {active === 1 ? "is-active" : ""}">
+    <a 
+    href="/" 
+    class="nav-link" 
+    class:active={$page.url.pathname === "/"}
+  >
+    Home
+  </a>
+  <a 
+    href="/discover" 
+    class="nav-link" 
+    class:active={$page.url.pathname.startsWith("/discover")}
+  >
+    Discover
+  </a>
+  <a 
+    href="/charts" 
+    class="nav-link" 
+    class:active={$page.url.pathname.startsWith("/charts")}
+  >
+    Charts
+  </a>
+    <a href="/network" class="nav-link" class:active={$page.url.pathname.startsWith("/network")}>
+      Network
+    </a>
+  </div>
 </div>
 
 <style>
+
+  .mobile {
+    display: none;
+  }
   .wrapper {
     /* position: fixed; */
     width: 100%;
@@ -130,21 +184,47 @@
   margin-right: 15px;
 }
 
-.spotify-button:hover {
-  background-color: #1aa34a;
-  transform: scale(1.03); 
-}
+  .hamburger {
+    display: none;
+    margin-right: 1rem;
+  }
 
-.spotify-button:active {
-  background-color: #188a3e;
-  transform: scale(1); 
-}
+  .hamburger:hover{
+    cursor: pointer;
+  }
 
-.spotify-button:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(29, 185, 84, 0.4);
-}
+  .is-active .line:nth-child(2){
+    opacity: 0;
+  }
 
+  .is-active .line:nth-child(1){
+    -webkit-transform: translateY(13px) rotate(45deg);
+    -ms-transform: translateY(13px) rotate(45deg);
+    -o-transform: translateY(13px) rotate(45deg);
+    transform: translateY(13px) rotate(45deg);
+  }
+
+  .is-active .line:nth-child(3){
+    -webkit-transform: translateY(-13px) rotate(-45deg);
+    -ms-transform: translateY(-13px) rotate(-45deg);
+    -o-transform: translateY(-13px) rotate(-45deg);
+    transform: translateY(-13px) rotate(-45deg);
+  }
+
+  .spotify-button:hover {
+    background-color: #1aa34a;
+    transform: scale(1.03); 
+  }
+
+  .spotify-button:active {
+    background-color: #188a3e;
+    transform: scale(1); 
+  }
+
+  .spotify-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(29, 185, 84, 0.4);
+  }
 
   .left-nav,
   .right-nav {
@@ -217,7 +297,7 @@
 
   @media (max-width: 480px) {
     nav {
-      flex-direction: column;
+      /* flex-direction: ; */
       text-align: center;
     }
 
@@ -227,6 +307,61 @@
 
     .login-href {
       padding-right: 0; 
+    }
+
+    .hamburger .line{
+      width: 40px;
+      height: 5px;
+      background-color: #ecf0f1;
+      display: block;
+      margin: 8px auto;
+      -webkit-transition: all 0.3s ease-in-out;
+      -o-transition: all 0.3s ease-in-out;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .left-nav {
+      flex-direction: column;
+    }
+
+    .links {
+      display: none;
+    }
+
+    .links.is-active {
+      display: flex;
+      flex-direction: column;
+      padding-left: 2rem;
+    }
+
+    .login-href {
+      display: none;
+    }
+
+    .hamburger {
+      display: block;
+    }
+
+    .hamburger:hover{
+      cursor: pointer;
+    }
+
+    .hamburger.is-active .line:nth-child(2){
+      opacity: 0;
+    }
+
+    .hamburger.is-active .line:nth-child(1){
+      -webkit-transform: translateY(13px) rotate(45deg);
+      -ms-transform: translateY(13px) rotate(45deg);
+      -o-transform: translateY(13px) rotate(45deg);
+      transform: translateY(13px) rotate(45deg);
+    }
+
+    .hamburger.is-active .line:nth-child(3){
+      -webkit-transform: translateY(-13px) rotate(-45deg);
+      -ms-transform: translateY(-13px) rotate(-45deg);
+      -o-transform: translateY(-13px) rotate(-45deg);
+      transform: translateY(-13px) rotate(-45deg);
     }
   }
 </style>
