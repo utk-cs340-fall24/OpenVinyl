@@ -60,13 +60,17 @@
   function handleReviewSubmitted(event) {
     const { post } = event.detail;
     if (post) {
+      // console.log(posts)
+      // console.log(post)
       const postWithLikesCount = {
         ...post,
         likes_count: post.likes_count !== undefined ? post.likes_count : 0,
       };
 
+      // console.log(postWithLikesCount)
+      console.log("posts before: ", posts)
       posts = [postWithLikesCount, ...posts];
-
+      console.log("posts after", posts)
       if (post.song_id && !songData[post.song_id]) {
         // Fetch song data for the new song_id (maybe remove it may not be necessary since we have all the information, not sure)
         fetchSongData();
@@ -180,7 +184,7 @@
   <div class="posts-wrapper {isDragOver ? 'drag-over' : ''}">
     <AddPost on:reviewSubmitted={handleReviewSubmitted} />
 
-    {#each posts as post}
+    {#each posts as post (post.id)}
       <Post
         logged_in_user_uuid={session_uuid}
         uuid={post.profile_id}
