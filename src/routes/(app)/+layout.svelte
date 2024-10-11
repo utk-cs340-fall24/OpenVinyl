@@ -31,8 +31,15 @@
       user.set({ role: 'guest' });
     }
   });
+  function hideBanner() {
+    document.getElementById("banner").style.display = "None";
+  }
 </script>
 <div class="wrapper">
+  <div id="banner" class = "banner" ><div>Note: This app is in beta so spotify auth will not work for non-developers
+<button class= "warning-button" on:click={hideBanner}>Hide Message</button></div>
+
+  </div>
   <Nav />
   <slot></slot>
   <Footer />
@@ -44,5 +51,26 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+  }
+  .banner {
+    /* height: 40px; */
+    display: flex;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    align-content: center;
+    text-align: center;
+    /* width: 100%; */
+    flex-direction: column;
+    vertical-align: center;
+    background-color: #eed202;
+    font-family: "Concert One", sans-serif;
+    color: black;
+  }
+  .warning-button {
+    background-color: black;
+    color: white;
+    border-radius: 5px; 
+    font-family: "Concert One", sans-serif;
+
   }
 </style>
