@@ -26,6 +26,7 @@
     try {
       await fetchUserData();
       await checkIfLiked();
+      console.log(post_id)
     } catch (err) {
       console.error("Error during onMount:", err);
     }
@@ -130,18 +131,23 @@
     </div>
 
     <div class="right-section">
-      <a href="/discover/{song_id}" class="discover-button">
+      <a href="/posts/{post_id}" class="discover-button">
         <i class="fa-solid fa-external-link-alt"></i>
       </a>
     </div>
   </div>
 
   <div class="content-wrapper">
-    <img
-      class="album-cover"
-      src={song_image ? song_image : "https://placehold.co/300"}
-      alt="album cover"
-    />
+    <div class="album-cover-container">
+      <img
+        class="album-cover"
+        src={song_image ? song_image : "https://placehold.co/300"}
+        alt="album cover"
+      />
+      <a href="/discover/{song_id}" class="play-button" aria-label="Play Song">
+        <i class="fa-solid fa-play"></i>
+      </a>
+    </div>
 
     <div class="song-info-wrapper">
       <p class="song-name">{song_title ? song_title : "Song Name"}</p>
@@ -290,11 +296,43 @@
     margin-top: 10px;
   }
 
-  .album-cover {
+ 
+  .album-cover-container {
+    position: relative;
     width: 100px;
     height: 100px;
-    object-fit: cover;
     margin-right: 15px;
+    flex-shrink: 0;
+  }
+
+  .album-cover {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* border-radius: 8px; */
+  }
+  .play-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 1.5rem;
+    background-color: rgba(0, 0, 0, 0.6);
+    border-radius: 50%;
+    padding: 10px;
+    opacity: 0;
+    transition: opacity 0.3s, background-color 0.3s;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .album-cover-container:hover .play-button {
+    opacity: 1;
+  }
+  .play-button:hover {
+    background-color: rgba(0, 0, 0, 0.8);
   }
 
   .song-info-wrapper {
