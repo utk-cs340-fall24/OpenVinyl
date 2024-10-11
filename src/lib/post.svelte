@@ -1,3 +1,4 @@
+
 <script>
   export let uuid;
   export let logged_in_user_uuid;
@@ -10,6 +11,7 @@
   export let song_artist;
   export let song_title;
   export let song_image;
+
   import { spotify } from "$lib/spotifyClient";
   import { onMount } from "svelte";
   import { authenticateClientCredentials } from "$lib/utils";
@@ -26,7 +28,7 @@
     try {
       await fetchUserData();
       await checkIfLiked();
-      console.log(post_id)
+      console.log(post_id);
     } catch (err) {
       console.error("Error during onMount:", err);
     }
@@ -53,7 +55,11 @@
       .eq("profile_id", logged_in_user_uuid)
       .maybeSingle();
 
-    if (error) throw error;
+    if (error && error.code !== 'PGRST116') { // 'PGRST116' means no rows found
+      console.error("Error checking if liked:", error);
+      return;
+    }
+
     liked = !!existingLike;
   }
 
@@ -76,6 +82,7 @@
       }
     } catch (err) {
       console.error("Error toggling like:", err);
+      alert("Failed to toggle like. Please try again.");
     } finally {
       processingLike = false;
     }
@@ -104,7 +111,8 @@
     liked = false;
     likes_cnt -= 1;
   }
-  //convert 10 scale to 5 for display purposes only (maybe fix later)
+
+  // Convert 10 scale to 5 for display purposes only (maybe fix later)
   function renderStars() {
     const stars = [];
     const ratingOutOfFive = rating / 2;
@@ -126,12 +134,13 @@
   <div class="top-bar">
     <div class="user-info">
       <img class="profile-pic" src={profile_pic_url} alt="profile" />
-      <!-- <span class="username">{username}</span> -->
-      <span class="username"><a class="username-link" href="/profiles/{username}">{username}</a></span>
+      <span class="username">
+        <a class="username-link" href="/profiles/{username}">{username}</a>
+      </span>
     </div>
 
     <div class="right-section">
-      <a href="/posts/{post_id}" class="discover-button">
+      <a href="/posts/{post_id}" class="discover-button" aria-label="Discover Post">
         <i class="fa-solid fa-external-link-alt"></i>
       </a>
     </div>
@@ -153,6 +162,7 @@
       <p class="song-name">{song_title ? song_title : "Song Name"}</p>
       <p class="artist-name">{song_artist ? song_artist : "Artist Name"}</p>
     </div>
+
     <div>
       <div class="rating-wrapper">
         <p>{@html renderStars()}</p>
@@ -162,8 +172,10 @@
           on:click={toggleLike}
           disabled={!logged_in_user_uuid}
           class="like-button"
+          aria-label={liked ? "Unlike" : "Like"}
         >
-          <span class="like-text" class:liked>{liked ? "Liked" : "Like"}</span>
+          <i class="fa-heart{liked ? ' liked' : ''}"></i>
+          <span class="like-text" class:liked={liked}>{liked ? "Liked" : "Like"}</span>
         </button>
         <span class="like-count">{likes_cnt}</span>
       </div>
@@ -177,6 +189,7 @@
   *::after {
     box-sizing: border-box;
   }
+
   .wrapper {
     display: flex;
     flex-direction: column;
@@ -188,6 +201,7 @@
     border: 1px solid #26282c;
     font-family: "Concert One", sans-serif;
     min-height: 150px;
+    border-radius: 8px;
   }
 
   .top-bar {
@@ -195,9 +209,10 @@
     align-items: center;
     justify-content: space-between;
     background-color: #26282c;
-    padding: 5px 10px;
+    padding: 10px;
     width: 100%;
     box-sizing: border-box;
+    border-radius: 8px 8px 0 0;
   }
 
   .user-info {
@@ -206,25 +221,118 @@
   }
 
   .profile-pic {
-    width: 25px;
-    height: 25px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
-    margin-right: 8px;
+    margin-right: 10px;
+    object-fit: cover;
   }
 
   .username {
-    font-size: 0.8rem;
+    font-size: 1rem;
     color: #b9b9b9;
   }
+
   .username-link {
     text-decoration: none;
     color: #b9b9b9;
+  }
+
+  .right-section {
+    display: flex;
+    align-items: center;
+  }
+
+  .discover-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    color: #f3f1f1;
+    font-size: 1.2rem;
+    transition: color 0.3s;
+  }
+
+  .discover-button:hover {
+    color: #6a6a6a;
+  }
+
+  .content-wrapper {
+    display: flex;
+    align-items: flex-start;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+
+  .album-cover-container {
+    position: relative;
+    /* width: 100%; */
+    max-width: 100px; /* Optional: Limit maximum width */
+    height: auto;
+    margin-right: 15px;
+    flex-shrink: 0;
+  }
+
+  .album-cover {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    /* border-radius: 8px; */
+  }
+
+  .play-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 2rem;
+    background-color: rgba(0, 0, 0, 0.6);
+    border-radius: 50%;
+    padding: 15px;
+    opacity: 0;
+    transition: opacity 0.3s, background-color 0.3s;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .album-cover-container:hover .play-button {
+    opacity: 1;
+  }
+
+  .play-button:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+
+  .song-info-wrapper {
+    flex: 1;
+    margin-left: 15px;
+  }
+
+  .song-name {
+    font-size: 1.5rem;
+    margin: 0;
+    color: #e4e4e4;
+  }
+
+  .artist-name {
+    font-size: 1rem;
+    color: #b9b9b9;
+  }
+
+  .rating-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
   }
 
   .like-section {
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-top: 10px;
   }
 
   .like-button {
@@ -236,15 +344,20 @@
     align-items: center;
     padding: 0;
     font-size: 1.2rem;
+    transition: color 0.3s;
   }
 
-  .like-button i {
+  .like-button:hover {
+    color: #007bff;
+  }
+
+  .like-button .fa-heart {
     margin-right: 5px;
-    color: #f3f1f1;
     font-size: 1rem;
+    transition: color 0.3s;
   }
 
-  .like-button i.liked {
+  .like-button .fa-heart.liked {
     color: #007bff;
   }
 
@@ -253,6 +366,7 @@
     display: inline-block;
     font-size: 0.9rem;
     color: #f3f1f1;
+    transition: color 0.3s;
   }
 
   .like-text.liked {
@@ -278,84 +392,6 @@
     opacity: 0.6;
   }
 
-  .discover-button {
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    color: #f3f1f1;
-    font-size: 1rem;
-  }
-
-  .discover-button:hover {
-    color: #6a6a6a;
-  }
-
-  .content-wrapper {
-    display: flex;
-    align-items: center;
-    margin-top: 10px;
-  }
-
- 
-  .album-cover-container {
-    position: relative;
-    width: 100px;
-    height: 100px;
-    margin-right: 15px;
-    flex-shrink: 0;
-  }
-
-  .album-cover {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    /* border-radius: 8px; */
-  }
-  .play-button {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
-    font-size: 1.5rem;
-    background-color: rgba(0, 0, 0, 0.6);
-    border-radius: 50%;
-    padding: 10px;
-    opacity: 0;
-    transition: opacity 0.3s, background-color 0.3s;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .album-cover-container:hover .play-button {
-    opacity: 1;
-  }
-  .play-button:hover {
-    background-color: rgba(0, 0, 0, 0.8);
-  }
-
-  .song-info-wrapper {
-    flex: 1;
-  }
-
-  .song-name {
-    font-size: 1.2rem;
-    color: #e4e4e4;
-    margin: 0;
-  }
-
-  .artist-name {
-    font-size: 0.9rem;
-    color: #b9b9b9;
-  }
-
-  .rating-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
   @media (max-width: 768px) {
     .wrapper {
       width: 90%;
@@ -363,12 +399,46 @@
 
     .content-wrapper {
       flex-direction: column;
+      align-items: center;
+    }
+
+    .album-cover-container {
+      width: 100%;
+      /* width: 50px; Fixed width on desktop */
+      /* height: auto; */
+      max-width: 100%;
+      margin-right: 0;
+      margin-bottom: 20px;
     }
 
     .album-cover {
       width: 100%;
       height: auto;
-      margin: 0 0 10px 0;
+      border-radius: 8px;
+    }
+
+    .song-info-wrapper {
+      margin-left: 0;
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .rating-wrapper {
+      margin-top: 15px;
+    }
+
+    .like-section {
+      justify-content: center;
+      margin-top: 15px;
+    }
+
+    .like-button .fa-heart {
+      margin-right: 5px;
+      font-size: 1rem;
+    }
+
+    .like-text {
+      font-size: 0.9rem;
     }
   }
 </style>
