@@ -48,18 +48,20 @@
     
     <div class="input-group">
       <input type="text" name="" id="fname" placeholder="first name" bind:value={fname}>
+      <button class="update" on:click={submitUserInfo}>Update</button>
       <p class="user-alert"></p>
     </div>
     <div class="input-group">
       <input type="text" name="" id="lname" placeholder="last name" bind:value={lname}>
+      <button class="update" on:click={submitUserInfo}>Update</button>
       <p class="user-alert"></p>
     </div>
     <div class="input-group">
       <input type="text" name="" id="username" placeholder="username" bind:value={username}>
+      <button class="update" on:click={submitUserInfo}>Update</button>
       <p class="user-alert" id="username-alert"></p>
     </div>
     <button class="signout" on:click={logout}>Sign out</button>
-    <button class="update" on:click={submitUserInfo}>Update</button>
   </div>
 </div>
 
@@ -70,21 +72,21 @@
     height: 100vh;
     overflow: hidden;
     width: 100vw;
-    display: flex;
+    /* display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: center; */
   }
 
   .wrapper .account-settings {
-    height: 50vh;
-    width: 25%;
+    width: 100%;
+    min-height: 100vh;
     color: #fff;
     background-color: #1d1f25;
     /* box-shadow: 0px 10px 15px -3px rgba(0,0,0,0.1); */
     border: 1px solid #26282c;
     border-radius: 8px;
     padding: 2.5em;
-    text-align: center;
+    text-align: left;
   }
 
   .wrapper .account-settings .input-group {
@@ -92,7 +94,7 @@
   }
 
   .wrapper .account-settings .input-group input {
-    width: 100%;
+    width: 300px;
     padding: 12px 20px;
     margin: 0 0 4px 0;
     display: inline-block;

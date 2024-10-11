@@ -147,12 +147,13 @@
 </div>
 
 <style>
-
   .mobile {
+    position: absolute;
     display: none;
+    background-color: #1d1f25;
+    width: 100%;
   }
   .wrapper {
-    /* position: fixed; */
     width: 100%;
     top: 0;
     z-index: 100;
