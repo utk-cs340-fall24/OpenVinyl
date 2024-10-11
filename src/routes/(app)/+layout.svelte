@@ -64,7 +64,7 @@
     vertical-align: center;
     background-color: #eed202;
     font-family: "Concert One", sans-serif;
-    color: black;
+    color: white;
   }
   .warning-button {
     background-color: black;
@@ -72,5 +72,8 @@
     border-radius: 5px; 
     font-family: "Concert One", sans-serif;
 
+  }
+  .warning-button:hover {
+    cursor: pointer;
   }
 </style>
