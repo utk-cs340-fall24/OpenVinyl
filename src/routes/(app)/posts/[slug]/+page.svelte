@@ -248,8 +248,7 @@
         disabled={!currentUser}
         class="like-button"
       >
-        <i class={`fa-heart ${liked ? 'fas liked' : 'far'}`}></i>
-        <span class="like-text">{liked ? "Liked" : "Like"}</span>
+        <span class="like-text {liked ? "liked" : ""}">{liked ? "Liked" : "Like"}</span>
       </button>
       <span class="like-count">{likesCount}</span>
     </div>
@@ -332,7 +331,7 @@
   
     .album-cover-container {
       display: flex;
-      /* position: relative; */
+      position: relative;
       width: 200px;
       height: 200px;
       flex-shrink: 0;
@@ -435,10 +434,10 @@
       min-width: 45px;
       display: inline-block;
       font-size: 1rem;
-      color: #f3f1f1;
+      color: white;
     }
   
-    .like-text.liked {
+    .liked {
       color: #007bff;
     }
   
