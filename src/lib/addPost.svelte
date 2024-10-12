@@ -467,4 +467,9 @@
     margin-top: 10px;
     font-size: 0.9rem;
   }
+  @media (max-width: 768px) {
+    .add-review {
+        width: 90%;
+    }
+  }
 </style>
