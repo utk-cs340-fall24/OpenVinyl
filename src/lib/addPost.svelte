@@ -16,6 +16,7 @@
   let searchResults = [];
   let errorMessage = "";
   let successMessage = "";
+  let profile_picture_url = null;
 
   let showAddPost = false;
   let localSelectedTrack = null;
@@ -34,7 +35,9 @@
   onDestroy(() => {
     unsubscribe();
   });
-
+  onMount( () => {
+    localSelectedTrack = null;
+  } );
   onMount(async () => {
     const {
       data: { session },
@@ -49,7 +52,7 @@
         console.log("user: ", user)
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
-        .select("username")
+        .select("username, avatar_url")
         .eq("id", user.id)
         .single();
 
@@ -57,6 +60,8 @@
         console.error("Error fetching profile:", profileError);
       } else {
         username = profile?.username || "Guest";
+        console.log("profile: ", profile)
+        profile_picture_url = profile?.avatar_url;
       }
     } else {
       showAddPost = false;
@@ -167,7 +172,7 @@
         <div class="user-info">
           <img
             class="profile-pic"
-            src={user?.user_metadata?.avatar_url || "https://placehold.co/30"}
+            src={profile_picture_url}
             alt="profile"
           />
           <span class="username">{username}</span>

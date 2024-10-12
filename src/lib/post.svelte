@@ -28,6 +28,7 @@
     try {
       await fetchUserData();
       await checkIfLiked();
+      //set profile pic url
       console.log(post_id);
     } catch (err) {
       console.error("Error during onMount:", err);
@@ -37,12 +38,16 @@
   async function fetchUserData() {
     const { data, error } = await supabase
       .from("profiles")
-      .select("username")
+      .select("username, avatar_url")
       .eq("id", uuid)
       .maybeSingle();
 
     if (error) throw error;
-    if (data) username = data.username;
+    if (data) {
+      username = data.username;
+      console.log(data)
+      profile_pic_url = data.avatar_url;
+    }
   }
 
   async function checkIfLiked() {

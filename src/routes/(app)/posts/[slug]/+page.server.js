@@ -42,7 +42,7 @@ console.log("error: ", error);
     profile_id,
     comment,
     created_at,
-    profiles(username)
+    profiles(username, avatar_url)
   `)
   .eq('post_id', slug)
   .order('created_at', { ascending: true });
@@ -50,7 +50,7 @@ console.log("error: ", error);
   if (commentsError) {
     console.error('Error fetching comments:', commentsError);
   }
-
+// console.log(post)
   return {
     post,
     comments: comments || []
