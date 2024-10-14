@@ -52,6 +52,9 @@
       selectedTrack.id,
       parseInt(rating)
     )
+    setTimeout(() => {
+      cancelPost();
+    }, 250);
   }
 
   let searchTable;
