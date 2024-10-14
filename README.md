@@ -1,38 +1,46 @@
-# create-svelte
+# OpenVinyl
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
+OpenVinyl is a project aimed at creating an open-source platform for vinyl record enthusiasts. This platform allows users to catalog their collections, discover new records, and connect with other vinyl lovers.
 
-## Creating a project
+## Features
 
-If you're seeing this, you've probably already done this step. Congrats!
+- **Discovery**: Find new music based on your preferences and browsing history
+- **Community**: Connect with other users, share collections, and discuss music
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
 
-# create a new project in my-app
-npm create svelte@latest my-app
+![OpenVinyl Preview](openvinylPreviewImg.png)
+
+## Live Website
+
+Check out the live version of OpenVinyl at [openvinyl.com](https://openvinyl.com) to explore all the features!
+
+## Installation
+
+To get started with OpenVinyl, follow these steps:
+
+1. Clone the repository:
+  ```sh
+  git clone https://github.com/yourusername/OpenVinyl.git
+  ```
+2. Navigate to the project directory:
+  ```sh
+  cd OpenVinyl
+  ```
+3. Install the dependencies:
+  ```sh
+  npm install
+  ```
+
+## Usage
+
+To run the project locally, use the following command:
+```sh
+npm start
 ```
+Open your browser and navigate to `http://localhost:3000` to access the application.
 
-## Developing
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+## License
 
-```bash
-npm run dev
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.

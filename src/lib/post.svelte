@@ -159,7 +159,7 @@
         alt="album cover"
       />
       <a href="/discover/{song_id}" class="play-button" aria-label="Play Song">
-        <i class="fa-solid fa-play"></i>
+        <i class="fa-solid fa-wand-magic-sparkles"></i>
       </a>
     </div>
 
