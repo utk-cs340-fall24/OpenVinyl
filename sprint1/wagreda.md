@@ -1,7 +1,7 @@
 # Sprint 1
 
 - Weston Agreda
-- wagreda
+- Weston49
 - OpenVinyl  
 
 ### What you planned to do
