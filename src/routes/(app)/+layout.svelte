@@ -6,6 +6,7 @@
   // import { ensureUserProfileExists } from '$lib/utils';
   import { onMount } from "svelte";
   import Sidebar from "$lib/sidebar.svelte";
+import { page } from '$app/stores'
 
   onMount(async () => {
     try {
@@ -41,6 +42,8 @@
 
   </div>
   <Nav />
+  {#if $page.url.pathname !== '/fancy'}
+  {/if}
   <slot></slot>
   <Footer />
 </div>
@@ -64,7 +67,7 @@
     vertical-align: center;
     background-color: #eed202;
     font-family: "Concert One", sans-serif;
-    color: white;
+    color: black;
   }
   .warning-button {
     background-color: black;

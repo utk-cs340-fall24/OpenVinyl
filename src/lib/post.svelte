@@ -28,6 +28,7 @@
     try {
       await fetchUserData();
       await checkIfLiked();
+      //set profile pic url
       console.log(post_id);
     } catch (err) {
       console.error("Error during onMount:", err);
@@ -37,12 +38,16 @@
   async function fetchUserData() {
     const { data, error } = await supabase
       .from("profiles")
-      .select("username")
+      .select("username, avatar_url")
       .eq("id", uuid)
       .maybeSingle();
 
     if (error) throw error;
-    if (data) username = data.username;
+    if (data) {
+      username = data.username;
+      console.log(data)
+      profile_pic_url = data.avatar_url;
+    }
   }
 
   async function checkIfLiked() {
@@ -174,7 +179,6 @@
           class="like-button"
           aria-label={liked ? "Unlike" : "Like"}
         >
-          <i class="fa-heart{liked ? ' liked' : ''}"></i>
           <span class="like-text" class:liked={liked}>{liked ? "Liked" : "Like"}</span>
         </button>
         <span class="like-count">{likes_cnt}</span>
@@ -221,15 +225,15 @@
   }
 
   .profile-pic {
-    width: 40px;
-    height: 40px;
+    width: 25px;
+    height: 25px;
     border-radius: 50%;
     margin-right: 10px;
     object-fit: cover;
   }
 
   .username {
-    font-size: 1rem;
+    font-size: 0.8rem;
     color: #b9b9b9;
   }
 

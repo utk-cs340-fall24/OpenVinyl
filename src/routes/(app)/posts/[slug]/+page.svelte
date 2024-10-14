@@ -9,6 +9,8 @@
     import "@fortawesome/fontawesome-free/css/all.css";
     import "@fortawesome/fontawesome-free/js/all.js";
     import {spotify} from "$lib/spotifyClient.js";
+    import Comment from '$lib/comment.svelte';
+
     export let data;
     let { post, comments } = data;
     //song - id, img_url, title, artist
@@ -28,7 +30,8 @@
     let liked = false;
     let likesCount = 0;
     let processingLike = false;
-  
+    let avatar_url = null;
+    let isSubmitting = false;
     onMount(async () => {
         await authenticateClientCredentials();
         const trackData = await spotify.getTrack(post.song_id);
@@ -38,10 +41,19 @@
             artist: trackData.artists[0].name,
             image_url: trackData.album.images[0].url
         }
-        console.log(song)
-        console.log(data)
+        
       fetchLikesCount();
-  
+      console.log(post)
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("username, avatar_url")
+        .eq("id", post.profile_id)
+        .maybeSingle();
+        
+        if (data) {
+            console.log(data.avatar_url)
+            avatar_url = data.avatar_url;
+        }
       if (currentUser) {
         checkIfLiked();
       }
@@ -113,8 +125,7 @@
       } finally {
         processingLike = false;
       }
-    }
-  
+    } 
     // Function to render stars based on rating
     function renderStars(rating) {
       const stars = [];
@@ -135,63 +146,73 @@
     // Comment Handling (Optional)
     let newComment = '';
   
-    async function submitComment() {
+    async function addComment() {
       if (!newComment.trim()) return;
+      isSubmitting = true;
   
-      const { error } = await supabase
-        .from('comments')
-        .insert({
-          post_id: post.id,
-          profile_id: currentUser.id,
-          comment: newComment.trim()
-        });
-  
-      if (error) {
-        console.error('Error adding comment:', error);
+      console.log("user: ", currentUser)
+      if (!currentUser) {
+        alert('You must be logged in to comment.');
+        isSubmitting = false;
         return;
       }
       
-      // Refresh comments
-      const { data: updatedComments, error: fetchError } = await supabase
+      const { data: inserted, error } = await supabase
         .from('comments')
-        .select(`
-          id,
-          profile_id,
-          comment,
-          created_at,
-          profiles(username)
-        `)
-        .eq('post_id', post.id)
-        .order('created_at', { ascending: true });
+        .insert([
+          {
+            post_id: post.id,
+            profile_id: currentUser.id,
+            comment: newComment
+          }
+        ])
+        .select(`id, profile_id, comment, created_at`)
+        .single();
   
-      if (fetchError) {
-        console.error('Error fetching comments:', fetchError);
-        return;
+      if (error) {
+        console.error('Error adding comment:', error);
+        alert('Failed to add comment. Please try again.');
+      } else {
+        // Fetch user info for the current user
+        const { data: userInfo, error: userError } = await supabase
+          .from('profiles')
+          .select(`username, avatar_url`)
+          .eq('id', currentUser.id)
+          .single();
+  
+        if (userError) {
+          console.error('Error fetching user info:', userError);
+          alert('Failed to fetch user info for the comment.');
+        } else {
+          // Assign a new array to trigger reactivity
+          console.log("comments before, ", comments)
+          console.log(inserted)
+          comments = [
+            ...comments,
+            {
+              ...inserted,
+              profiles: {
+                username: userInfo.username,
+                avatar_url: userInfo.avatar_url
+              }
+            }
+          ];
+          console.log("comments now", comments)
+        }
+        newComment = '';
       }
   
-      comments = updatedComments;
-      newComment = '';
+      isSubmitting = false;
     }
   </script>
   
-  <div class="post-detail-wrapper">
+<div class="post-detail-wrapper">
     <div class="post-header">
       <div class="user-info">
-        <img class="profile-pic" src={'https://placehold.co/30'} alt="profile" />
-        <span class="username">{post.profiles.username}</span>
+        <img class="profile-pic" src={avatar_url} alt="profile" />
+        <span class="username">{post.profiles.username}</span> 
+        <span>&nbsp;reviewed</span>
       </div>
-      <!-- <div class="post-actions"> -->
-        <!-- <button
-          on:click={toggleLike}
-          disabled={!currentUser}
-          class={`like-button ${liked ? 'liked' : ''}`}
-          aria-label={liked ? 'Unlike' : 'Like'}
-        >
-          <i class={`fa${liked ? 's' : 'r'} fa-heart`}></i>
-          <span>{liked ? 'Liked' : 'Like'}</span>
-        </button> -->
-        <!-- <span class="like-count">{likesCount}</span> -->
-      <!-- </div> -->
     </div>
   
     <div class="post-content">
@@ -221,50 +242,45 @@
       <p>{post.content || 'No content provided.'}</p>
     </div>
   
-    <div>
-        
-        <div class="like-section">
-          <button
-            on:click={toggleLike}
-            disabled={!currentUser}
-            class="like-button"
-          >
-            <span class="like-text" class:liked>{liked ? "Liked" : "Like"}</span>
-          </button>
-          <span class="like-count">{likesCount}</span>
-        </div>
-      </div>
-    <div class="comments-section">
-      <h3>Comments</h3>
-      {#if comments.length > 0}
-        {#each comments as comment}
-          <div class="comment">
-            <!-- <img class="comment-profile-pic" src={'https://placehold.co/30'} alt="profile" /> -->
-            <div class="comment-content">
-              <span class="comment-username">{comment.profiles.username}</span>
-              <p class="comment-text">{comment.comment}</p>
-            </div>
-          </div>
-        {/each}
-      {:else}
-        <p>No comments yet. Be the first to comment!</p>
-      {/if}
-  
-      {#if currentUser}
-        <div class="add-comment">
-          <form on:submit|preventDefault={submitComment}>
-            <textarea bind:value={newComment} placeholder="Add a comment..." required></textarea>
-            <button type="submit">Submit</button>
-          </form>
-        </div>
-      {:else}
-        <p>Please <a href="/login">log in</a> to add a comment.</p>
-      {/if}
+    <div class="like-section">
+      <button
+        on:click={toggleLike}
+        disabled={!currentUser}
+        class="like-button"
+      >
+        <span class="like-text {liked ? "liked" : ""}">{liked ? "Liked" : "Like"}</span>
+      </button>
+      <span class="like-count">{likesCount}</span>
     </div>
+   
+    <section class="comments-section">
+      <h2>Comments ({comments.length})</h2>
+  
+      <form on:submit|preventDefault={addComment} class="comment-form">
+        <textarea
+          bind:value={newComment}
+          placeholder="Write a comment..."
+          rows="3"
+          required
+        ></textarea>
+        <button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? 'Posting...' : 'Post Comment'}
+        </button>
+      </form>
+  
+      <!-- Display Comments -->
+      <div class="comments-list">
+        {#each comments as comment (comment.id)}
+          <Comment {comment} />
+        {/each}
+        {#if comments.length === 0}
+          <p class="no-comments">No comments yet. Be the first to comment!</p>
+        {/if}
+      </div>
+    </section>
   </div>
   
   <style>
-    /* Base Styles */
     *,
     *::before,
     *::after {
@@ -272,8 +288,6 @@
     }
   
     .post-detail-wrapper {
-      max-width: 800px;
-      margin: 40px auto;
       padding: 20px;
       background-color: #1d1f25;
       color: #f3f1f1;
@@ -284,8 +298,9 @@
   
     .post-header {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
+      /* justify-content: center; */
+      /* align-items: center; */
+      margin-bottom: 20px;
     }
   
     .user-info {
@@ -294,55 +309,33 @@
     }
   
     .profile-pic {
-      width: 40px;
-      height: 40px;
+      width: 50px; /* Increased size for better visibility */
+      height: 50px;
       border-radius: 50%;
-      margin-right: 10px;
+      margin-right: 15px;
       object-fit: cover;
     }
   
     .username {
-      font-size: 1rem;
+      font-size: 1.2rem; /* Increased font size */
       color: #b9b9b9;
-    }
-  
-    .post-actions .like-button {
-      background: none;
-      border: none;
-      color: #f3f1f1;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      font-size: 1rem;
-      transition: color 0.3s;
-    }
-  
-    .post-actions .like-button:hover {
-      color: #007bff;
-    }
-  
-    .post-actions .like-button.liked {
-      color: #007bff;
-    }
-  
-    .like-count {
-      margin-left: 8px;
-      font-size: 0.9rem;
-      color: #b9b9b9;
+      font-weight: bold;
     }
   
     .post-content {
       display: flex;
       margin-top: 20px;
       align-items: center;
+      gap: 20px; /* Added gap for better spacing */
     }
   
     .album-cover-container {
+      display: flex;
       position: relative;
       width: 200px;
       height: 200px;
-      margin-right: 20px;
       flex-shrink: 0;
+
     }
   
     .album-cover {
@@ -383,209 +376,213 @@
     }
   
     .song-title {
-      font-size: 1.5rem;
+      font-size: 2rem; /* Increased font size */
       margin: 0;
+      color: #e4e4e4;
     }
   
     .song-artist {
-      font-size: 1rem;
+      font-size: 1.2rem; /* Increased font size */
       color: #b9b9b9;
     }
   
     .post-rating {
       margin-top: 10px;
       color: #ffc107;
+      font-size: 1.2rem;
     }
   
     .post-content-section {
       margin-top: 20px;
-      font-size: 1rem;
-      line-height: 1.5;
+      font-size: 1.1rem;
+      line-height: 1.6;
     }
   
-    .likes-section {
+    .like-section {
       display: flex;
       align-items: center;
-      margin-top: 10px;
+      margin-top: 15px;
     }
   
-    .likes-section .like-button {
-      background: none;
+    .like-button {
+      background-color: transparent;
       border: none;
-      color: #f3f1f1;
       cursor: pointer;
+      color: #f3f1f1;
       display: flex;
       align-items: center;
-      font-size: 1rem;
+      padding: 0;
+      font-size: 1.2rem;
       transition: color 0.3s;
     }
   
-    .likes-section .like-button:hover {
+    .like-button:hover {
       color: #007bff;
     }
   
-    .likes-section .like-button.liked {
-      color: #007bff;
-    }
-  
-    .comments-section {
-      margin-top: 30px;
-    }
-  
-    .comments-section h3 {
-      margin-bottom: 15px;
-    }
-  
-    .comment {
-      display: flex;
-      align-items: flex-start;
-      margin-bottom: 15px;
-    }
-  
-    .comment-profile-pic {
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      margin-right: 10px;
-      object-fit: cover;
-    }
-  
-    .comment-content {
-      background-color: #26282c;
-      padding: 10px;
-      border-radius: 5px;
-      width: 100%;
-    }
-  
-    .comment-username {
-      font-weight: bold;
+    .like-button i {
+      margin-right: 8px;
       color: #f3f1f1;
+      font-size: 1.2rem;
     }
   
-    .comment-text {
-      margin: 5px 0 0 0;
-      color: #ccc;
+    .like-button i.liked {
+      color: #007bff;
     }
   
-    /* Add Comment Form Styles */
-    .add-comment {
-      margin-top: 20px;
+    .like-text {
+      min-width: 45px;
+      display: inline-block;
+      font-size: 1rem;
+      color: white;
     }
   
-    .add-comment form {
+    .liked {
+      color: #007bff;
+    }
+  
+    .like-count {
+      width: 24px;
+      height: 24px;
+      margin-left: 10px;
+      text-align: center;
+      background-color: #007bff;
+      color: white;
+      border-radius: 50%;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  
+    /* Comments Section */
+    .comments-section {
+      margin-top: 40px;
+    }
+  
+    .comments-section h2 {
+      margin-bottom: 20px;
+      color: #ffffff;
+      font-size: 1.5rem;
+    }
+  
+    .comment-form {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 30px;
+    }
+  
+    .comment-form textarea {
+      resize: vertical;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #444;
+      background-color: #2a2d35;
+      color: #f3f1f1;
+      font-size: 1rem;
+      margin-bottom: 10px;
+    }
+  
+    .comment-form textarea::placeholder {
+      color: #a9a9a9;
+    }
+  
+    .comment-form button {
+      align-self: flex-end;
+      padding: 10px 20px;
+      background-color: #007bff;
+      border: none;
+      border-radius: 6px;
+      color: #ffffff;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background-color 0.3s;
+    }
+  
+    .comment-form button:hover {
+      background-color: #0056b3;
+    }
+  
+    .comment-form button:disabled {
+      background-color: #6c757d;
+      cursor: not-allowed;
+    }
+  
+    .comments-list {
       display: flex;
       flex-direction: column;
     }
   
-    .add-comment textarea {
-      resize: vertical;
-      min-height: 60px;
-      padding: 10px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-      margin-bottom: 10px;
-      font-family: inherit;
+    .no-comments {
+      color: #a9a9a9;
+      font-style: italic;
     }
   
-    .add-comment button {
-      align-self: flex-end;
-      padding: 8px 16px;
-      background-color: #007bff;
-      border: none;
-      border-radius: 4px;
-      color: white;
-      cursor: pointer;
-    }
-  
-    .add-comment button:hover {
-      background-color: #0056b3;
-    }
-
-  .like-section {
-    display: flex;
-    align-items: center;
-    justify-content: start;
-  }
-
-  .like-button {
-    
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    color: #f3f1f1;
-    display: flex;
-    align-items: center;
-    padding: 0;
-    font-size: 1.2rem;
-  }
-
-  .like-button i {
-    margin-right: 5px;
-    color: #f3f1f1;
-    font-size: 1rem;
-  }
-
-  .like-button i.liked {
-    color: #007bff;
-  }
-
-  .like-text {
-    min-width: 45px;
-    display: inline-block;
-    font-size: 0.9rem;
-    color: #f3f1f1;
-  }
-
-  .like-text.liked {
-    color: #007bff;
-  }
-
-  .like-count {
-    width: 24px;
-    height: 24px;
-    margin-left: 5px;
-    text-align: center;
-    background-color: #007bff;
-    color: white;
-    border-radius: 50%;
-    font-size: 0.8rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .like-button:disabled {
-    cursor: not-allowed;
-    opacity: 0.6;
-  }
-
-  
-    /* Responsive Styles */
     @media (max-width: 768px) {
+      .post-detail-wrapper {
+        padding: 15px;
+      }
+  
+      .post-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+  
+      .user-info {
+        margin-bottom: 15px;
+      }
+  
       .post-content {
         flex-direction: column;
         align-items: center;
+        gap: 10px;
       }
   
       .album-cover-container {
         width: 100%;
         height: auto;
         margin-right: 0;
-        margin-bottom: 20px;
-      }
-  
-      .play-button {
-        font-size: 1.5rem;
-        padding: 10px;
+        margin-bottom: 15px;
       }
   
       .song-info {
         text-align: center;
       }
   
-      .likes-section {
+      .song-title {
+        font-size: 1.8rem;
+      }
+  
+      .song-artist {
+        font-size: 1.1rem;
+      }
+  
+      .post-rating {
+        font-size: 1rem;
+      }
+  
+      .post-content-section {
+        font-size: 1rem;
+      }
+  
+      .like-section {
         justify-content: center;
+      }
+  
+      .like-button i {
+        font-size: 1rem;
+        margin-right: 5px;
+      }
+  
+      .like-text {
+        font-size: 0.9rem;
+      }
+  
+      .like-count {
+        width: 20px;
+        height: 20px;
+        margin-left: 8px;
+        font-size: 0.8rem;
       }
     }
   </style>
-  
