@@ -1,11 +1,12 @@
 <script>  
     export let tracklist;
     console.log(tracklist);
+    let region = "Global"
     
 </script>
 
 <div class="wrapper">
-    <p class="title">Top Songs</p>
+    <p class="title">Top Songs - {region}</p>
     <div class="top-song-list">
         {#each tracklist as song, index}
             <div class="song-listing">
@@ -80,21 +81,28 @@
         flex-direction: column;
         padding-top: 3px;
         gap: 0px;
-        text-overflow: ellipsis;
     }
     
     .song-title {
+        text-overflow: ellipsis;
         font-weight: bold;
         font-size: 1.2rem;
         color: #e4e4e4;
         margin: 3px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     
     .artist-name {
+        text-overflow: ellipsis;
         font-size: 1rem;
         font-weight: normal;
         color: #b9b9b9;
         margin: 3px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
 </style>
