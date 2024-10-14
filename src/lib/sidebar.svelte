@@ -291,20 +291,27 @@ function updateRecentSongs(track) {
           <button
             on:click={playPrev}
             class="control-button"
-            aria-label="Previous Track">⏮️</button>
+            aria-label="Previous Track">
+            
+            <i class="fa-solid fa-backward"></i>
+          </button>
 
           {#if isPlaying}
-            <button on:click={pause} class="control-button" aria-label="Pause"
-              >⏸️</button>
+            <button on:click={pause} class="control-button" aria-label="Pause">
+              <i class="fa-solid fa-pause"></i>
+            </button>
           {:else}
-            <button on:click={play} class="control-button" aria-label="Play"
-              >▶️</button>
+            <button on:click={play} class="control-button" aria-label="Play">
+              <i class="fa-solid fa-play"></i>
+            </button>
           {/if}
 
           <button
             on:click={playNext}
             class="control-button"
-            aria-label="Next Track">⏭️</button>
+            aria-label="Next Track">
+            <i class="fa-solid fa-forward"></i>
+          </button>
         </div>
       </div>
 
