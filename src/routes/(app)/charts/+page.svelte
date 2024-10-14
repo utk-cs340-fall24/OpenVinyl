@@ -1,6 +1,6 @@
 <script>
     import Sidebar from "$lib/sidebar.svelte";
-    import TopSongs from "$lib/topsongs.svelte";
+    import TopSongs from "$lib/topSongs.svelte";
     import { authenticateClientCredentials } from "$lib/utils";
     import { getPlaylist } from "$lib/utils";
     import { onMount } from "svelte";
