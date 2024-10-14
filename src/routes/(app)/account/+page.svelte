@@ -1,16 +1,113 @@
-<script>
+<script lang="js">
   import { supabase } from '$lib/supabaseClient.js';
   import { updateUsername, updateFirstName, updateLastName } from '$lib/utils.js';
+  import { onMount } from 'svelte';
 
   let fname = '';
+  let fnametracker = 0;
   let lname = '';
+  let lnametracker = 0;
   let username = '';
+  let usernametracker = 0;
+
+  onMount(async () => {
+    try {
+      const session = await supabase.auth.getSession();
+      const user = session?.data?.session?.user;
+
+      if (user) {
+        const { data, error } = await supabase.from("profiles").select("username, first_name, last_name").eq("id", user.id).single();
+        if (data) {
+          document.getElementById("username").placeholder = data.username;
+          document.getElementById("fname").placeholder = data.first_name;
+          document.getElementById("lname").placeholder = data.last_name;
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching username profile:", error);
+    }
+  });
 
   supabase.auth.onAuthStateChange((event, session) => {
     if (event === 'SIGNED_OUT') {
         window.location.href = '/'; // redirect to account page
     }
   });
+
+  async function editFirstName() {
+    if (fnametracker == 0) {
+      fnametracker = 1;
+
+      document.getElementById("fname-wrapper").classList.toggle("not-active");
+      document.getElementById("fname").style.pointerEvents = "auto";
+      document.getElementById("updatefname").innerHTML = "Submit";
+    } else if (fnametracker == 1) {
+      const user = await supabase.auth.getUser();
+
+      try {
+        const {data, error} = await updateFirstName(user.data.user.id, fname);
+
+        fnametracker = 0;
+
+        document.getElementById("fname-wrapper").classList.toggle("not-active");
+        document.getElementById("fname").style.pointerEvents = "none";
+        document.getElementById("updatefname").innerHTML = "Edit";
+      } catch (error) {
+        console.error("Error updating first name:", error);
+        document.getElementById('fname-alert').innerHTML = "<i class=\"fa-solid fa-xmark\"></i>Error updating first name. Please try again";
+      }
+    }
+  }
+
+  async function editLastName() {
+    if (lnametracker == 0) {
+      lnametracker = 1;
+
+      document.getElementById("lname-wrapper").classList.toggle("not-active");
+      document.getElementById("lname").style.pointerEvents = "auto";
+      document.getElementById("updatelname").innerHTML = "Submit";
+    } else if (lnametracker == 1) {
+      const user = await supabase.auth.getUser();
+
+      try {
+        const {data, error} = await updateLastName(user.data.user.id, lname);
+
+        lnametracker = 0;
+
+        document.getElementById("lname-wrapper").classList.toggle("not-active");
+        document.getElementById("lname").style.pointerEvents = "none";
+        document.getElementById("updatelname").innerHTML = "Edit";
+      } catch (error) {
+        console.error("Error updating last name:", error);
+        document.getElementById('lname-alert').innerHTML = "<i class=\"fa-solid fa-xmark\"></i>Error updating last name. Please try again";
+      }
+    }
+  }
+
+  async function editUsername() {
+    if (usernametracker == 0) {
+      usernametracker = 1;
+
+      document.getElementById("uname-wrapper").classList.toggle("not-active");
+      document.getElementById("username").style.pointerEvents = "auto";
+      document.getElementById("updateuname").innerHTML = "Submit";
+    } else if (usernametracker == 1) {
+      const user = await supabase.auth.getUser();
+
+      try {
+        const {data, error} = await updateUsername(user.data.user.id, username);
+
+        usernametracker = 0;
+
+        document.getElementById("uname-wrapper").classList.toggle("not-active");
+        document.getElementById("username").style.pointerEvents = "none";
+        document.getElementById("updateuname").innerHTML = "Edit";
+      } catch (error) {
+        console.error("Error updating user name:", error);
+        document.getElementById('username-alert').innerHTML = "<i class=\"fa-solid fa-xmark\"></i>Error updating user name. Please try again";
+      }
+    }
+  }
 
   async function submitUserInfo() {
     const user = await supabase.auth.getUser();
@@ -26,10 +123,7 @@
       return;
     }
 
-    const {data, error} = await updateUsername(user.data.user.id, username);
-    if (error == "duplicate key value violates unique constraint \"profiles_username_key\"") {
-      document.getElementById('username-alert').innerHTML = "<i class=\"fa-solid fa-xmark\"></i>Username taken. Please try again";
-    }
+
     updateFirstName(user.data.user.id, fname);
     updateLastName(user.data.user.id, lname);
   }
@@ -47,20 +141,21 @@
     <p>Update your information below</p>
     
     <div class="input-group">
-      <input type="text" name="" id="fname" placeholder="first name" bind:value={fname}>
-      <button class="update" on:click={submitUserInfo}>Update</button>
-      <p class="user-alert"></p>
+      <div class="input-wrapper" id="fname-wrapper"><input type="text" name="" id="fname" placeholder="first name" bind:value={fname}></div>
+      <button class="update" id="updatefname" on:click={editFirstName}>Edit</button>
+      <p class="user-alert" id="fname-alert"></p>
     </div>
     <div class="input-group">
-      <input type="text" name="" id="lname" placeholder="last name" bind:value={lname}>
-      <button class="update" on:click={submitUserInfo}>Update</button>
-      <p class="user-alert"></p>
+      <div class="input-wrapper" id="lname-wrapper"><input type="text" name="" id="lname" placeholder="last name" bind:value={lname}></div>
+      <button class="update" id="updatelname" on:click={editLastName}>Edit</button>
+      <p class="user-alert" id="lname-alert"></p>
     </div>
     <div class="input-group">
-      <input type="text" name="" id="username" placeholder="username" bind:value={username}>
-      <button class="update" on:click={submitUserInfo}>Update</button>
+      <div class="input-wrapper" id="uname-wrapper"><input type="text" name="" id="username" placeholder="username" bind:value={username}></div>
+      <button class="update" id="updateuname" on:click={editUsername}>Edit</button>
       <p class="user-alert" id="username-alert"></p>
     </div>
+    <!-- <p>Color Theme</p> -->
     <button class="signout" on:click={logout}>Sign out</button>
   </div>
 </div>
@@ -95,12 +190,24 @@
 
   .wrapper .account-settings .input-group input {
     width: 300px;
+    height:  2.5em;
+    font-size: 14px;
     padding: 12px 20px;
     margin: 0 0 4px 0;
     display: inline-block;
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
+    pointer-events: none;
+  }
+
+  .wrapper .account-settings .input-group .input-wrapper {
+    cursor: not-allowed;
+    display: inline-block;
+  }
+
+  .wrapper .account-settings .input-group .input-wrapper.not-active {
+    cursor: text;
   }
 
   .wrapper .account-settings .user-alert {
@@ -109,8 +216,19 @@
   }
 
   .wrapper .account-settings button {
-    width: 49%;
+    width: 100px;
     height: 2.5em;
-    font-size: 18px;
+    font-size: 14px;
+    background-color: #1d1f25;
+    color: #fff;
+    border: 2px solid #c5c5c5;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .wrapper .account-settings button:hover {
+    color: #1c1c1c;
+    background-color: #c5c5c5;
+    border: 2px solid #c5c5c5;
   }
 </style>
