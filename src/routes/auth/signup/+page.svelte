@@ -1,5 +1,6 @@
 <script>
   import { supabase } from '$lib/supabaseClient.js';
+  import logo from '$lib/logo.svg';
 
   let email;
   let pass;
@@ -23,6 +24,7 @@
 
 <div class="container">
   <div class="login-window">
+    <a href="/"><img src={logo} alt="logo" class="logo"></a>
     <h1>Create Account</h1>
     <p>Enter your information below</p>
   
@@ -39,7 +41,7 @@
   }
 
   .container {
-    background-color: #f3f4f6;
+    background-color: #121212;
     height: 100vh;
     overflow: hidden;
     width: 100vw;
@@ -48,10 +50,19 @@
     align-items: center;
   }
 
+  .logo {
+    width: 100px;
+    padding-bottom: 20px;
+    height: auto;
+    cursor: pointer;
+  }
+
   .container div {
-    height: 50vh;
+    max-height: 80vh;
+    overflow-y: auto;
+    height: auto;
     max-width: 30vw;
-    background-color: #fff;
+    background-color: #1D1F25;
     box-shadow: 0px 10px 15px -3px rgba(0,0,0,0.1);
     border-radius: 8px;
     padding: 2.5em;
@@ -67,6 +78,14 @@
     text-align: left;
     margin: 0 0 1em 0;
     opacity: 0.3;
+  }
+
+  .login-window button {
+    width: 100%;
+    margin-top: 8px;
+    height: 2.5em;
+    font-size: 18px;
+    cursor: pointer;
   }
 
   .login-window input {
