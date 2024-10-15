@@ -1,5 +1,6 @@
 <script>
   import { supabase } from '$lib/supabaseClient.js';
+  import logo from '$lib/logo.svg';
   import '@fortawesome/fontawesome-free/css/all.css';
   import '@fortawesome/fontawesome-free/js/all';
   import {signInWithGoogle, signInWithSpotify} from "$lib/utils.js";
@@ -25,6 +26,7 @@
 
 <div class="container">
   <div class="login-window">
+    <a href="/"><img src={logo} alt="logo" class="logo"></a>
     <h1>Welcome Back!</h1>
     <p>Enter your information below</p>
   
@@ -55,7 +57,7 @@
   }
 
   .container {
-    background-color: #f3f4f6;
+    background-color: #121212;
     height: 100vh;
     overflow: hidden;
     width: 100vw;
@@ -65,9 +67,11 @@
   }
 
   .container .login-window {
-    height: 50vh;
+    max-height: 80vh;
+    height: auto;
+    overflow-y: auto;
     max-width: 30vw;
-    background-color: #fff;
+    background-color: #1D1F25;
     box-shadow: 0px 10px 15px -3px rgba(0,0,0,0.1);
     border-radius: 8px;
     padding: 2.5em;
@@ -76,13 +80,15 @@
 
   .login-window h1 {
     text-align: left;
+    color: #fff;
     margin: 0;
   }
 
   .login-window p {
+    color: #dddddd;
     text-align: left;
     margin: 0 0 1em 0;
-    opacity: 0.3;
+    opacity: 0.6;
   }
 
   .login-window input {
@@ -97,8 +103,10 @@
 
   .login-window .emailbuttons button {
     width: 100%;
+    margin-top: 8px;
     height: 2.5em;
     font-size: 18px;
+    cursor: pointer;
   }
 
   button:hover {
@@ -124,6 +132,13 @@
     height: 1.5em;
     opacity: .5;
   }
+
+  .logo {
+    width: 100px;
+    padding-bottom: 20px;
+    height: auto;
+    cursor: pointer;
+  }
   
   .hr-text::before {
     content: '';
@@ -139,11 +154,10 @@
     content: attr(data-content);
     position: relative;
     display: inline-block;
-    color: black;
     padding: 0 .5em;
     line-height: 1.5em;
-    color: #818078;
-    background-color: #fcfcfa;
+    color: #ffffff;
+    background-color: #1D1F25;
   }
 </style>
 
