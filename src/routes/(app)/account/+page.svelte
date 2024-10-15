@@ -8,6 +8,7 @@
   let lname = '';
   let lnametracker = 0;
   let username = '';
+  let avatar_url = '';
   let usernametracker = 0;
 
   onMount(async () => {
@@ -18,11 +19,12 @@
       let filename = user.id + '.png'
 
       if (user) {
-        const { data, error } = await supabase.from("profiles").select("username, first_name, last_name").eq("id", user.id).single();
+        const { data, error } = await supabase.from("profiles").select("username, first_name, last_name, avatar_url").eq("id", user.id).single();
         if (data) {
           document.getElementById("username").placeholder = data.username;
           document.getElementById("fname").placeholder = data.first_name;
           document.getElementById("lname").placeholder = data.last_name;
+          avatar_url = data.avatar_url;
         }
       }
     } catch (error) {
@@ -164,6 +166,8 @@
     <h1>Account Settings</h1>
 
     <p>Update your information below</p>
+
+    <img src={avatar_url || 'https://placehold.co/150'} alt={`user's avatar`} id="">
     
     <div class="input-group">
       <div class="input-wrapper" id="fname-wrapper"><input type="text" name="" id="fname" placeholder="first name" bind:value={fname}></div>
