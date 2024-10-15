@@ -204,6 +204,172 @@
   
       isSubmitting = false;
     }
+
+
+  // State variables
+  let upvotesCount = 0;
+  let downvotesCount = 0;
+  let userVote = null; // 'upvote', 'downvote', or null
+  let processingVote = false;
+
+  $: netVotes = upvotesCount - downvotesCount;
+
+  onMount(async () => {
+    try {
+      await fetchVoteCounts();
+      await checkUserVote();
+    } catch (err) {
+      console.error("Error during onMount:", err);
+    }
+  });
+
+  async function fetchVoteCounts() {
+    // Fetch upvotes count
+    const { count: upvotesCountData, error: upvotesError } = await supabase
+      .from("likes")
+      .select("id", { count: "exact" })
+      .eq("post_id", post.id)
+      .eq("isLiked", true);
+
+    if (upvotesError) throw upvotesError;
+    upvotesCount = upvotesCountData || 0;
+
+    // Fetch downvotes count
+    const { count: downvotesCountData, error: downvotesError } = await supabase
+      .from("likes")
+      .select("id", { count: "exact" })
+      .eq("post_id", post.id)
+      .eq("isLiked", false);
+
+    if (downvotesError) throw downvotesError;
+    downvotesCount = downvotesCountData || 0;
+  }
+
+  async function checkUserVote() {
+    if (!currentUser) return;
+
+    const { data: existingVote, error } = await supabase
+      .from("likes")
+      .select("id, isLiked")
+      .eq("post_id", post.id)
+      .eq("profile_id", currentUser.id)
+      .maybeSingle();
+
+    if (error) {
+      console.error("Error checking user vote:", error);
+      return;
+    }
+
+    if (existingVote) {
+      userVote = existingVote.isLiked ? "upvote" : "downvote";
+    } else {
+      userVote = null;
+    }
+  }
+
+  async function toggleVote(voteType) {
+    if (processingVote || !currentUser) return;
+
+    processingVote = true;
+    try {
+      const { data: existingVote, error } = await supabase
+        .from("likes")
+        .select("*")
+        .eq("post_id", post.id)
+        .eq("profile_id", currentUser.id)
+        .maybeSingle();
+
+      if (error) throw error;
+
+      if (existingVote) {
+        if (
+          (existingVote.isLiked && voteType === "upvote") ||
+          (!existingVote.isLiked && voteType === "downvote")
+        ) {
+          // Remove the vote
+          await removeVote(existingVote.id, existingVote.isLiked);
+        } else {
+          // Update the vote
+          await updateVote(
+            existingVote.id,
+            voteType === "upvote",
+            existingVote.isLiked
+          );
+        }
+      } else {
+        // Add new vote
+        await addVote(voteType === "upvote");
+      }
+    } catch (err) {
+      console.error("Error toggling vote:", err);
+      alert("Failed to process your vote. Please try again.");
+    } finally {
+      processingVote = false;
+    }
+  }
+
+  async function addVote(isUpvote) {
+    const { error } = await supabase
+      .from("likes")
+      .insert({
+        post_id: post.id,
+        profile_id: currentUser.id,
+        isLiked: isUpvote,
+      });
+
+    if (error) throw error;
+
+    if (isUpvote) {
+      upvotesCount += 1;
+      userVote = "upvote";
+    } else {
+      downvotesCount += 1;
+      userVote = "downvote";
+    }
+  }
+
+  async function updateVote(voteId, isUpvote, wasUpvote) {
+    const { data, error } = await supabase
+      .from("likes")
+      .update({ isLiked: isUpvote })
+      .eq("id", voteId)
+      .eq("profile_id", currentUser.id)
+      .select();
+
+    if (error) throw error;
+
+    if (!data || data.length === 0) {
+      console.error("Update failed: No rows affected.");
+      return;
+    }
+
+    if (wasUpvote && !isUpvote) {
+      upvotesCount -= 1;
+      downvotesCount += 1;
+    } else if (!wasUpvote && isUpvote) {
+      upvotesCount += 1;
+      downvotesCount -= 1;
+    }
+
+    userVote = isUpvote ? "upvote" : "downvote";
+  }
+
+  async function removeVote(voteId, wasUpvote) {
+    const { error } = await supabase
+      .from("likes")
+      .delete()
+      .eq("id", voteId)
+      .eq("profile_id", currentUser.id);
+
+    if (error) throw error;
+
+    if (wasUpvote) {
+      upvotesCount -= 1;
+    } else {
+      downvotesCount -= 1;
+    }
+    userVote = null;
+  }
   </script>
   
 <div class="post-detail-wrapper">
@@ -241,16 +407,28 @@
     <div class="post-content-section">
       <p>{post.content || 'No content provided.'}</p>
     </div>
-  
-    <div class="like-section">
+    <div class="vote-section">
       <button
-        on:click={toggleLike}
-        disabled={!currentUser}
-        class="like-button"
+        on:click={() => toggleVote('upvote')}
+        disabled={!currentUser || processingVote}
+        class="vote-button upvote-button"
+        aria-label="Upvote"
+        class:selected={userVote === 'upvote'}
       >
-        <span class="like-text {liked ? "liked" : ""}">{liked ? "Liked" : "Like"}</span>
+        <i class="fa-solid fa-arrow-up"></i>
       </button>
-      <span class="like-count">{likesCount}</span>
+  
+      <span class="net-vote-count">{netVotes}</span>
+  
+      <button
+        on:click={() => toggleVote('downvote')}
+        disabled={!currentUser || processingVote}
+        class="vote-button downvote-button"
+        aria-label="Downvote"
+        class:selected={userVote === 'downvote'}
+      >
+        <i class="fa-solid fa-arrow-down"></i>
+      </button>
     </div>
    
     <section class="comments-section">
@@ -286,7 +464,44 @@
     *::after {
       box-sizing: border-box;
     }
-  
+    .vote-section {
+    display: flex;
+    align-items: start;
+    margin-top: 10px;
+    justify-content: start;
+  }
+
+  .vote-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    color: #f3f1f1;
+    font-size: 1.5rem;
+    margin: 0 10px;
+    transition: color 0.3s, transform 0.1s;
+  }
+
+  .vote-button:hover {
+    color: #1db954;
+  }
+
+  .vote-button.selected {
+    color: #1db954;
+    transform: translateY(2px);
+  }
+
+  .net-vote-count {
+    font-size: 1.2rem;
+    margin: 0 10px;
+    color: #f3f1f1;
+    min-width: 20px;
+    text-align: center;
+  }
+
+  .vote-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
     .post-detail-wrapper {
       padding: 20px;
       background-color: #1d1f25;
