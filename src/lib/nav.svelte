@@ -51,7 +51,6 @@
           }
         }
       } else {
-        // User is not logged in, hide the Spotify button
         showSpotifyButton = false;
       }
     } catch (error) {
@@ -62,6 +61,7 @@
 
   const authenticateSpotify = () => {
     window.location.href = '/spotify-login';
+    showSpotifyButton = false;
   };
 </script>
 
