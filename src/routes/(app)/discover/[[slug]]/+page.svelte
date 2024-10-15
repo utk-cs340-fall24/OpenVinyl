@@ -94,7 +94,7 @@
     boxes[4].songId = $page.params.slug;
   } else {
     centerSongId = "6ebkx7Q5tTxrCxKq4GYj0Y";
-
+    //random song
   }
   const showTutorial = writable(false);
   const userReady = derived(user, $user => $user); 
@@ -386,114 +386,164 @@
       console.error("Error creating playlist:", err);
     }
   }
-
-  function moveGrid(direction) {
-    if (isRefreshingCache) {
-      console.log("Cache is refreshing, please wait...");
-      return;
-    }
-    let newBoxes = [...boxes];
-    showCheckmark = false;
-    clearTimeout(checkmarkTimeout);
-    switch (direction) {
-      case "up":
-        newBoxes = newBoxes.slice(0, 6);
-        for (let i = 0; i < 3; i++) {
-          const newBox = fetchFromCache();
-          newBoxes.unshift(newBox);
-        }
-        break;
-      case "down":
-        newBoxes = newBoxes.slice(3);
-        for (let i = 0; i < 3; i++) {
-          const newBox = fetchFromCache();
-          newBoxes.push(newBox);
-        }
-        break;
-      case "left":
-        for (let i = 0; i < 9; i += 3) {
-          const newBox = fetchFromCache();
-          newBoxes.splice(i, 1);
-          newBoxes.splice(i + 2, 0, newBox);
-        }
-        break;
-      case "right":
-        for (let i = 0; i < 9; i += 3) {
-          const newBox = fetchFromCache();
-          newBoxes.splice(i + 2, 1);
-          newBoxes.splice(i, 0, newBox);
-        }
-        break;
-    }
-
-    centerSongId = newBoxes[4].songId;
-    playPreview(newBoxes[4].previewUrl);
-    boxes = newBoxes;
+  function moveGrid(deltaRow, deltaCol) {
+  if (isRefreshingCache) {
+    console.log("Cache is refreshing, please wait...");
+    return;
   }
+
+  let newBoxes = [...boxes];
+
+  // Shift rows
+  if (deltaRow !== 0) {
+    const rows = [];
+    while (newBoxes.length) rows.push(newBoxes.splice(0, 3));
+
+    if (deltaRow > 0) {
+      for (let i = 0; i < deltaRow; i++) {
+        rows.unshift(rows.pop()); // Move last row to the front
+        for (let j = 0; j < 3; j++) {
+          rows[0][j] = fetchFromCache();
+        }
+      }
+    } else {
+      for (let i = 0; i < -deltaRow; i++) {
+        rows.push(rows.shift()); // Move first row to the end
+        for (let j = 0; j < 3; j++) {
+          rows[rows.length - 1][j] = fetchFromCache();
+        }
+      }
+    }
+
+    newBoxes = rows.flat();
+  }
+
+  // Shift columns
+  if (deltaCol !== 0) {
+    const rows = [];
+    while (newBoxes.length) rows.push(newBoxes.splice(0, 3));
+
+    if (deltaCol > 0) {
+      for (let i = 0; i < deltaCol; i++) {
+        for (let row of rows) {
+          row.unshift(row.pop()); // Move last column to the front
+          row[0] = fetchFromCache();
+        }
+      }
+    } else {
+      for (let i = 0; i < -deltaCol; i++) {
+        for (let row of rows) {
+          row.push(row.shift()); // Move first column to the end
+          row[row.length - 1] = fetchFromCache();
+        }
+      }
+    }
+
+    newBoxes = rows.flat();
+  }
+
+  // Update the center song ID and play the preview
+  centerSongId = newBoxes[4].songId;
+  playPreview(newBoxes[4].previewUrl);
+  boxes = newBoxes;
+}
+
+  // function moveGrid(direction) {
+  //   if (isRefreshingCache) {
+  //     console.log("Cache is refreshing, please wait...");
+  //     return;
+  //   }
+  //   let newBoxes = [...boxes];
+  //   showCheckmark = false;
+  //   clearTimeout(checkmarkTimeout);
+  //   switch (direction) {
+  //     case "up":
+  //       newBoxes = newBoxes.slice(0, 6);
+  //       for (let i = 0; i < 3; i++) {
+  //         const newBox = fetchFromCache();
+  //         newBoxes.unshift(newBox);
+  //       }
+  //       break;
+  //     case "down":
+  //       newBoxes = newBoxes.slice(3);
+  //       for (let i = 0; i < 3; i++) {
+  //         const newBox = fetchFromCache();
+  //         newBoxes.push(newBox);
+  //       }
+  //       break;
+  //     case "left":
+  //       for (let i = 0; i < 9; i += 3) {
+  //         const newBox = fetchFromCache();
+  //         newBoxes.splice(i, 1);
+  //         newBoxes.splice(i + 2, 0, newBox);
+  //       }
+  //       break;
+  //     case "right":
+  //       for (let i = 0; i < 9; i += 3) {
+  //         const newBox = fetchFromCache();
+  //         newBoxes.splice(i + 2, 1);
+  //         newBoxes.splice(i, 0, newBox);
+  //       }
+  //       break;
+  //   }
+
+  //   centerSongId = newBoxes[4].songId;
+  //   playPreview(newBoxes[4].previewUrl);
+  //   boxes = newBoxes;
+  // }
 
  
 
   const debouncedMoveGrid = debounce(moveGrid, 0);
+  async function dismissTutorial(event) {
+    const { dontShowAgain } = event.detail;
+    showTutorial.set(false);
 
-  async function dismissTutorial() {
-  showTutorial.set(false);
+    if (dontShowAgain) {
+      const { data, error } = await supabase.auth.getUser();
+      const user = data.user;
 
-  const { data, error } = await supabase.auth.getUser();
-  
-  if (error) {
-    console.error("Error fetching user:", error);
-    return;
+      if (user) {
+        await supabase
+          .from("profiles")
+          .update({ has_seen_discover_tutorial: true })
+          .eq("id", user.id);
+      }
+    }
   }
 
-  const user = data.user;
-
-  if (user) {
-    const { data: updateData, error: updateError } = await supabase
-      .from("profiles")
-      .update({ has_seen_discover_tutorial: true })
-      .eq("id", user.id);
-
-    if (updateError) {
-      console.error("Error updating tutorial flag:", updateError);
-    } else {
-      console.log("Tutorial flag updated successfully.");
-    }
-  } else {
-    console.log("No authenticated user found.");
+  function onKeyDown(e) {
+  switch (e.keyCode) {
+    case 87:
+    case 38:
+      moveGridDirection("up");
+      break;
+    case 83:
+    case 40:
+      moveGridDirection("down");
+      break;
+    case 65:
+    case 37: 
+      moveGridDirection("right");
+      break;
+    case 68:
+    case 39: 
+      moveGridDirection("left");
+      break;
+    case 32:
+      togglePlayPause();
+      break;
+    case 13: 
+      console.log("is logged in: ", isLoggedIn);
+      if (isLoggedIn && accessToken) {
+        addCenterSongToPlaylist();
+      } else {
+        console.log("User must be logged in with Spotify access.");
+      }
+      break;
   }
 }
 
-  function onKeyDown(e) {
-    switch (e.keyCode) {
-      case 87:
-      case 38:
-        debouncedMoveGrid("up");
-        break;
-      case 83:
-      case 40:
-        debouncedMoveGrid("down");
-        break;
-      case 65:
-      case 37:
-        debouncedMoveGrid("right");
-        break;
-      case 32: // Spacebar to toggle play/pause
-        togglePlayPause();
-        break;
-      case 68:
-      case 39:
-        debouncedMoveGrid("left");
-        break;
-      case 13: // Enter key to add song to playlist
-      console.log("is logged in: ", isLoggedIn)
-        if (isLoggedIn && accessToken) {
-          addCenterSongToPlaylist();
-        } else {
-          console.log("User must be logged in with Spotify access.");
-        }
-        break;
-    }
-  }
   let touchStartX = 0;
   let touchStartY = 0;
   let touchEndX = 0;
@@ -532,6 +582,22 @@
       }
     }
   }
+  function moveGridToIndex(clickedIndex) {
+  const centerIndex = 4; // Index of the center box in the 3x3 grid
+  const gridSize = 3;    // Since it's a 3x3 grid
+
+  const clickedRow = Math.floor(clickedIndex / gridSize);
+  const clickedCol = clickedIndex % gridSize;
+
+  const centerRow = Math.floor(centerIndex / gridSize);
+  const centerCol = centerIndex % gridSize;
+
+  const deltaRow = centerRow - clickedRow;
+  const deltaCol = centerCol - clickedCol;
+
+  moveGrid(deltaRow, deltaCol);
+}
+
   async function addCenterSongToPlaylist() {
     console.log("playlistid: ", playlistId)
       console.log("songid: ", boxes[4].songId)
@@ -577,7 +643,30 @@
       console.log("Playlist ID or song ID is missing.");
     }
   }
+  function moveGridDirection(direction) {
+  let deltaRow = 0;
+  let deltaCol = 0;
 
+  switch (direction) {
+    case "up":
+      deltaRow = 1;
+      break;
+    case "down":
+      deltaRow = -1;
+      break;
+    case "left":
+      deltaCol = -1;
+      break;
+    case "right":
+      deltaCol = 1;
+      break;
+    default:
+      console.error("Invalid direction:", direction);
+      return;
+  }
+
+  moveGrid(deltaRow, deltaCol);
+}
   function togglePlayPause() {
     if (audio) {
       if (audio.paused) {
@@ -589,10 +678,15 @@
       }
     }
   }
+  function openTutorial() {
+    showTutorial.set(true);
+  }
 </script>
 
 <div class="wrapper">
-
+  <button class="info-button" on:click={openTutorial} aria-label="Open Tutorial">
+    ℹ️
+  </button>
   {#if $showTutorial}
     <TutorialOverlay on:close={dismissTutorial} />
   {/if}
@@ -612,7 +706,13 @@
   </div>
   <div class="game-board">
     {#each boxes as box, index (box.id)}
-      <div class="box" class:highlight={index === 4}>
+      <!-- svelte-ignore a11y-click-events-have-key-events -->
+      <!-- svelte-ignore a11y-no-static-element-interactions -->
+      <div
+        class="box"
+        class:highlight={index === 4}
+        on:click={() => moveGridToIndex(index)}
+      >
         <img src={box.imageUrl} alt="{box.songName} by {box.artistName}" />
         {#if index === 4 && showCheckmark}
           <div class="overlay">
@@ -649,6 +749,23 @@
     font-family: "Concert One", sans-serif;
 
   }
+  .info-button {
+   
+    /* stylig is absolutely cooked */
+    background: transparent;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    text-align: end;
+    align-items: end;
+    width: 95vw;
+    margin-right: 40px;
+    margin-top: 20px;
+  }
+
 
   .game-board {
     display: grid;
