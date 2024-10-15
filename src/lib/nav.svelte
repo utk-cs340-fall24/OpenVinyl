@@ -7,6 +7,7 @@
 
   let user = null;
   let showSpotifyButton = true; // Default state to show the Spotify button
+  let avatar_url = '';
 
   let active = 0;
 
@@ -30,12 +31,14 @@
       // console.log(user.app_metadata.provider)
      
       if (user) {
-        const { data, error } = await supabase.from("profiles").select("username, spotify_access_token").eq("id", user.id).single();
+        const { data, error } = await supabase.from("profiles").select("username, spotify_access_token, avatar_url").eq("id", user.id).single();
         if (data) {
           // Update login button with username
           const loginButton = document.getElementById("login-button");
           loginButton.innerHTML = data.username;
           loginButton.href = "/account";
+
+          avatar_url = data.avatar_url;
          
           console.log("data: ", data)
           const accessToken = await getValidSpotifyAccessToken(user.id);
@@ -106,6 +109,7 @@
       {/if}
       <div class="login-wrapper">
         <a class="login-href" href="/auth/signin" id="login-button">Login</a>
+        <img src={avatar_url || 'https://placehold.co/150'} class="avatar" alt="">
 
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -169,21 +173,26 @@
     align-items: center;
   }
   .spotify-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #1db954; 
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  font-size: 1rem;
-  font-weight: 600;
-  border-radius: 20px; 
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  margin-right: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #1db954; 
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 20px; 
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    margin-right: 15px;
 }
+
+  .avatar {
+    height: 50px;
+    width: auto;
+  }
 
   .hamburger {
     display: none;
@@ -287,6 +296,11 @@
       font-size: 1.2rem;
     }
 
+    .avatar {
+      width: 40px;
+      height: auto;
+    }
+
     .logo {
       width: 40px; 
     }
@@ -308,6 +322,10 @@
 
     .login-href {
       padding-right: 0; 
+    }
+
+    .avatar {
+      margin-right: 10px;
     }
 
     .hamburger .line{
