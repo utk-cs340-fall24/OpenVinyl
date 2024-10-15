@@ -2,9 +2,10 @@
     import { createEventDispatcher } from "svelte";
   
     const dispatch = createEventDispatcher();
-  
+    let dontShowAgain = false;
+
     function closeTutorial() {
-      dispatch("close");
+      dispatch("close", { dontShowAgain });
     }
 </script>
 
@@ -20,6 +21,12 @@
     <p>
       <span class="key">Enter</span> to add a song to your OpenVinyl Discover playlist.
     </p>
+
+    <label>
+      <input type="checkbox" bind:checked={dontShowAgain}>
+      Don't show this again
+    </label>
+
     <button on:click={closeTutorial}>Got it!</button>
   </div>
 </div>

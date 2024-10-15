@@ -402,25 +402,32 @@ export async function getValidSpotifyAccessToken(userId) {
   }
 }
 
-// export async function ensureUserProfileExists(userId, additionalData = {}) {
-//   try {
-//     // Combine the userId with any additional data provided
-//     const profileData = { id: userId, ...additionalData };
-//     console.log("checking if user exists")
-//     // Perform the upsert operation
-//     const { data, error } = await supabase
-//       .from('profiles')
-//       .upsert(profileData, { onConflict: 'id' })
-//       .select(); // Select to get the updated or inserted record
-//     console.log("returned from check")
-//     if (error) {
-//       console.error('Error ensuring user profile exists:', error.message);
-//       return { success: false, error: error.message };
-//     }
-//     console.log("return one", data)
-//     return { success: true, data };
-//   } catch (err) {
-//     console.error('Unexpected error ensuring user profile exists:', err);
-//     return { success: false, error: err.message };
-//   }
-// }
+export async function fetchSongsDetails(songIds) {
+  try {
+    // Ensure the Spotify client is authenticated
+      // await authenticateClientCredentials();
+      console.log("data: beofre")
+
+    const data = await spotify.getTracks(songIds);
+    console.log("data: ", data)
+    if (data && data.body && data.body.tracks) {
+      const songDetailsMap = {};
+      data.body.tracks.forEach((track) => {
+        if (track) {
+          songDetailsMap[track.id] = {
+            title: track.name,
+            artist: track.artists.map((artist) => artist.name).join(', '),
+            image_url: track.album.images[0]?.url || 'https://placehold.co/300',
+          };
+        }
+      });
+      return songDetailsMap;
+    } else {
+      console.log('No tracks found for the given IDs.');
+      return {};
+    }
+  } catch (error) {
+    console.error('Error fetching tracks:', error);
+    return {};
+  }
+}

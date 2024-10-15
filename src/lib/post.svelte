@@ -1,35 +1,34 @@
-
 <script>
   export let uuid;
   export let logged_in_user_uuid;
   export let rating;
   export let post_id;
   export let song_id;
-  export let likes_cnt;
   export let desc;
   export let profile_pic_url = "https://placehold.co/30";
   export let song_artist;
   export let song_title;
   export let song_image;
 
-  import { spotify } from "$lib/spotifyClient";
   import { onMount } from "svelte";
-  import { authenticateClientCredentials } from "$lib/utils";
   import { supabase } from "$lib/supabaseClient";
   import "@fortawesome/fontawesome-free/css/all.css";
   import "@fortawesome/fontawesome-free/js/all.js";
 
-  let trackData = null;
-  let liked = false;
-  let processingLike = false;
+  let upvotesCount = 0;
+  let downvotesCount = 0;
+  let userVote = null; // 'upvote', 'downvote', or null
+
   let username = "";
+  let processingVote = false;
+
+  $: netVotes = upvotesCount - downvotesCount;
 
   onMount(async () => {
     try {
       await fetchUserData();
-      await checkIfLiked();
-      //set profile pic url
-      console.log(post_id);
+      await fetchVoteCounts();
+      await checkUserVote();
     } catch (err) {
       console.error("Error during onMount:", err);
     }
@@ -45,76 +44,164 @@
     if (error) throw error;
     if (data) {
       username = data.username;
-      console.log(data)
       profile_pic_url = data.avatar_url;
     }
   }
 
-  async function checkIfLiked() {
+  async function fetchVoteCounts() {
+    const { count: upvotesCountData, error: upvotesError } = await supabase
+      .from("likes")
+      .select("id", { count: "exact" })
+      .eq("post_id", post_id)
+      .eq("isLiked", true);
+
+    if (upvotesError) throw upvotesError;
+    upvotesCount = upvotesCountData || 0;
+
+    const { count: downvotesCountData, error: downvotesError } = await supabase
+      .from("likes")
+      .select("id", { count: "exact" })
+      .eq("post_id", post_id)
+      .eq("isLiked", false);
+
+    if (downvotesError) throw downvotesError;
+    downvotesCount = downvotesCountData || 0;
+  }
+
+  async function checkUserVote() {
     if (!logged_in_user_uuid) return;
 
-    const { data: existingLike, error } = await supabase
+    const { data: existingVote, error } = await supabase
+      .from("likes")
+      .select("id, isLiked")
+      .eq("post_id", post_id)
+      .eq("profile_id", logged_in_user_uuid)
+      .maybeSingle();
+
+    if (error) {
+      console.error("Error checking user vote:", error);
+      return;
+    }
+
+    if (existingVote) {
+      userVote = existingVote.isLiked ? "upvote" : "downvote";
+    } else {
+      userVote = null;
+    }
+  }
+
+  async function toggleVote(voteType) {
+  if (processingVote || !logged_in_user_uuid) return;
+
+  processingVote = true;
+  try {
+    const { data: existingVote, error } = await supabase
       .from("likes")
       .select("*")
       .eq("post_id", post_id)
       .eq("profile_id", logged_in_user_uuid)
       .maybeSingle();
 
-    if (error && error.code !== 'PGRST116') { // 'PGRST116' means no rows found
-      console.error("Error checking if liked:", error);
-      return;
-    }
+    if (error) throw error;
 
-    liked = !!existingLike;
-  }
-
-  async function toggleLike() {
-    if (processingLike || !logged_in_user_uuid) return;
-
-    processingLike = true;
-    try {
-      const { data: existingLike } = await supabase
-        .from("likes")
-        .select("*")
-        .eq("post_id", post_id)
-        .eq("profile_id", logged_in_user_uuid)
-        .maybeSingle();
-
-      if (existingLike) {
-        await removeLike();
+    if (existingVote) {
+      if (
+        (existingVote.isLiked && voteType === "upvote") ||
+        (!existingVote.isLiked && voteType === "downvote")
+      ) {
+        // Remove the vote
+        await removeVote(existingVote.id, existingVote.isLiked);
       } else {
-        await addLike();
+        // Update the vote
+        await updateVote(
+          existingVote.id,
+          voteType === "upvote",
+          existingVote.isLiked
+        );
       }
-    } catch (err) {
-      console.error("Error toggling like:", err);
-      alert("Failed to toggle like. Please try again.");
-    } finally {
-      processingLike = false;
+    } else {
+      // Add new vote
+      await addVote(voteType === "upvote");
     }
+  } catch (err) {
+    console.error("Error toggling vote:", err);
+    alert("Failed to process your vote. Please try again.");
+  } finally {
+    processingVote = false;
   }
+}
 
-  async function addLike() {
+
+  async function addVote(isUpvote) {
     const { error } = await supabase
       .from("likes")
-      .insert({ post_id, profile_id: logged_in_user_uuid });
+      .insert({
+        post_id,
+        profile_id: logged_in_user_uuid,
+        isLiked: isUpvote,
+      });
 
     if (error) throw error;
 
-    liked = true;
-    likes_cnt += 1;
+    if (isUpvote) {
+      upvotesCount += 1;
+      userVote = "upvote";
+    } else {
+      downvotesCount += 1;
+      userVote = "downvote";
+    }
   }
 
-  async function removeLike() {
+  async function updateVote(voteId, isUpvote, wasUpvote) {
+  console.log("Attempting to update vote:", { voteId, isUpvote, wasUpvote });
+
+  const { data, error } = await supabase
+    .from("likes")
+    .update({ isLiked: isUpvote })
+    .eq("id", voteId)
+    .eq("profile_id", logged_in_user_uuid)
+    .select();
+
+  if (error) {
+    console.error("Error updating vote:", error);
+    throw error;
+  }
+
+  if (!data || data.length === 0) {
+    console.error("Update failed: No rows affected.");
+    return;
+  }
+
+  console.log("Update successful:", data);
+
+  // Adjust counts
+  if (wasUpvote && !isUpvote) {
+    upvotesCount -= 1;
+    downvotesCount += 1;
+  } else if (!wasUpvote && isUpvote) {
+    upvotesCount += 1;
+    downvotesCount -= 1;
+  }
+
+  userVote = isUpvote ? "upvote" : "downvote";
+}
+
+
+
+  async function removeVote(voteId, wasUpvote) {
     const { error } = await supabase
       .from("likes")
       .delete()
-      .eq("post_id", post_id)
-      .eq("profile_id", logged_in_user_uuid);
+      .eq("id", voteId);
 
     if (error) throw error;
 
-    liked = false;
-    likes_cnt -= 1;
+    if (wasUpvote) {
+      upvotesCount -= 1;
+    } else {
+      downvotesCount -= 1;
+    }
+    userVote = null;
   }
 
   // Convert 10 scale to 5 for display purposes only (maybe fix later)
@@ -159,7 +246,7 @@
         alt="album cover"
       />
       <a href="/discover/{song_id}" class="play-button" aria-label="Play Song">
-        <i class="fa-solid fa-wand-magic-sparkles"></i>
+        <i class="fa-solid fa-play"></i>
       </a>
     </div>
 
@@ -172,16 +259,30 @@
       <div class="rating-wrapper">
         <p>{@html renderStars()}</p>
       </div>
-      <div class="like-section">
+    
+
+      <div class="vote-section">
         <button
-          on:click={toggleLike}
-          disabled={!logged_in_user_uuid}
-          class="like-button"
-          aria-label={liked ? "Unlike" : "Like"}
+          on:click={() => toggleVote('upvote')}
+          disabled={!logged_in_user_uuid || processingVote}
+          class="vote-button upvote-button"
+          aria-label="Upvote"
+          class:selected={userVote === 'upvote'}
         >
-          <span class="like-text" class:liked={liked}>{liked ? "Liked" : "Like"}</span>
+          <i class="fa-solid fa-arrow-up"></i>
         </button>
-        <span class="like-count">{likes_cnt}</span>
+    
+        <span class="net-vote-count">{netVotes}</span>
+    
+        <button
+          on:click={() => toggleVote('downvote')}
+          disabled={!logged_in_user_uuid || processingVote}
+          class="vote-button downvote-button"
+          aria-label="Downvote"
+          class:selected={userVote === 'downvote'}
+        >
+          <i class="fa-solid fa-arrow-down"></i>
+        </button>
       </div>
     </div>
   </div>
@@ -192,6 +293,45 @@
   *::before,
   *::after {
     box-sizing: border-box;
+  }
+
+  .vote-section {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    justify-content: center;
+  }
+
+  .vote-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    color: #f3f1f1;
+    font-size: 1.5rem;
+    margin: 0 10px;
+    transition: color 0.3s, transform 0.1s;
+  }
+
+  .vote-button:hover {
+    color: #1db954;
+  }
+
+  .vote-button.selected {
+    color: #1db954;
+    transform: translateY(2px);
+  }
+
+  .net-vote-count {
+    font-size: 1.2rem;
+    margin: 0 10px;
+    color: #f3f1f1;
+    min-width: 20px;
+    text-align: center;
+  }
+
+  .vote-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
   }
 
   .wrapper {
