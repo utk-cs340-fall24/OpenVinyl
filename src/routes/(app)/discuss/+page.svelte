@@ -63,7 +63,6 @@
 {/if}
 
 <style>
-    /* Your styles here */
     .songs-list {
       display: flex;
       flex-wrap: wrap;
