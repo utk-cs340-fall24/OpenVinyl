@@ -1,6 +1,6 @@
 <script lang="js">
   import { supabase } from '$lib/supabaseClient.js';
-  import { updateUsername, updateFirstName, updateLastName } from '$lib/utils.js';
+  import { updateUsername, updateFirstName, updateLastName, updateAvatar } from '$lib/utils.js';
   import { onMount } from 'svelte';
 
   let fname = '';
@@ -14,6 +14,8 @@
     try {
       const session = await supabase.auth.getSession();
       const user = session?.data?.session?.user;
+
+      let filename = user.id + '.png'
 
       if (user) {
         const { data, error } = await supabase.from("profiles").select("username, first_name, last_name").eq("id", user.id).single();
@@ -128,6 +130,29 @@
     updateLastName(user.data.user.id, lname);
   }
 
+  async function fileUpload() {
+    console.log(document.getElementById("fupload").files[0])
+    const user = await supabase.auth.getUser();
+    let filename = user.data.user.id + '.png'
+
+    const { data, error } = await supabase
+      .storage
+      .from('avatars')
+      .upload(filename, document.getElementById("fupload").files[0], {
+        cacheControl: '3600',
+        upsert: false
+    })
+
+    const { data: avatarData, error: avatarError } = supabase.storage.from('avatars').getPublicUrl(filename);
+
+    if (avatarData) {
+      updateAvatar(user.data.user.id, avatarData.publicUrl);
+    }
+    console.log(avatarData, avatarError)
+
+    console.log(error)
+  }
+
   async function logout() {
     const { error } = await supabase.auth.signOut();
   }
@@ -155,6 +180,8 @@
       <button class="update" id="updateuname" on:click={editUsername}>Edit</button>
       <p class="user-alert" id="username-alert"></p>
     </div>
+
+    <input type="file" name="" id="fupload" on:change={fileUpload}>
     <!-- <p>Color Theme</p> -->
     <button class="signout" on:click={logout}>Sign out</button>
   </div>
@@ -224,6 +251,11 @@
     border: 2px solid #c5c5c5;
     border-radius: 4px;
     cursor: pointer;
+  }
+
+  #fupload {
+    display: block;
+    margin-bottom: 10px;
   }
 
   .wrapper .account-settings button:hover {

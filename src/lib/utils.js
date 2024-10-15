@@ -157,7 +157,7 @@ export async function updateFirstName(profile_id, fname) {
       console.log("Error updating first name: ", error);
       return { success: false, error: error.message };
     }
-    console.log("Username updated successfully:", data);
+    console.log("First name updated successfully:", data);
     return { success: true, data };
   } catch (err) {
     console.error("Unexpected error:", err);
@@ -172,10 +172,10 @@ export async function updateLastName(profile_id, lname) {
       .update({ last_name: lname })
       .eq("id", profile_id);
     if (error) {
-      console.log("Error updating first name: ", error);
+      console.log("Error updating last name: ", error);
       return { success: false, error: error.message };
     }
-    console.log("Username updated successfully:", data);
+    console.log("Last name updated successfully:", data);
     return { success: true, data };
   } catch (err) {
     console.error("Unexpected error:", err);
@@ -184,6 +184,24 @@ export async function updateLastName(profile_id, lname) {
      };
     }
   }
+
+export async function updateAvatar(profile_id, url) {
+  try {
+    const { data, error } = await supabase
+      .from("profiles")
+      .update({ avatar_url: url })
+      .eq("id", profile_id);
+    if (error) {
+      console.log("Error updating avatar url: ", error);
+      return { success: false, error: error.message };
+    }
+    console.log("Avatar URL updated successfully:", data);
+    return { success: true, data };
+  } catch (err) {
+    console.error("Unexpected error:", err);
+    return { success: false, error: err.message};
+  }
+}
 // Provide with an array on song id's (MAX 50)
 export async function getSongs(song_list) {
   try {
