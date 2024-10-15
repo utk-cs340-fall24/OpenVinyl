@@ -10,6 +10,7 @@
   let username = '';
   let avatar_url = '';
   let usernametracker = 0;
+  let spotifytracker = 0;
 
   onMount(async () => {
     try {
@@ -19,12 +20,16 @@
       let filename = user.id + '.png'
 
       if (user) {
-        const { data, error } = await supabase.from("profiles").select("username, first_name, last_name, avatar_url").eq("id", user.id).single();
+        const { data, error } = await supabase.from("profiles").select("username, first_name, last_name, avatar_url, spotify_access_token").eq("id", user.id).single();
         if (data) {
           document.getElementById("username").placeholder = data.username;
           document.getElementById("fname").placeholder = data.first_name;
           document.getElementById("lname").placeholder = data.last_name;
           avatar_url = data.avatar_url;
+          if (data.spotify_access_token != 'null') {
+            document.getElementById("updatespotify").innerHTML = "Unlink";
+            spotifytracker = 1;
+          }
         }
       }
     } catch (error) {
@@ -61,6 +66,10 @@
         document.getElementById('fname-alert').innerHTML = "<i class=\"fa-solid fa-xmark\"></i>Error updating first name. Please try again";
       }
     }
+  }
+
+  async function manageSpotify() {
+    return;
   }
 
   async function editLastName() {
@@ -186,6 +195,10 @@
     </div>
 
     <input type="file" name="" id="fupload" on:change={fileUpload}>
+
+    <h2>Account Integrations</h2>
+    <p>Spotify</p>
+    <button class="link" id="updatespotify" on:click={manageSpotify}>Link</button>
     <!-- <p>Color Theme</p> -->
     <button class="signout" on:click={logout}>Sign out</button>
   </div>

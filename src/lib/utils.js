@@ -339,6 +339,24 @@ export async function refreshTokenIfNeeded() {
   }
 }
 
+// export async function unlinkSpotify() {
+//   try {
+//     const { data, error } = await supabase
+//       .from("profiles")
+//       .update({ st: username })
+//       .eq("id", profile_id);
+//     if (error) {
+//       console.log("Error updating username: ", error);
+//       return { success: false, error: error.message };
+//     }
+//     console.log("Username updated successfully:", data);
+//     return { success: true, data };
+//   } catch (err) {
+//     console.error("Unexpected error:", err);
+//     return { success: false, error: err.message };
+//   }
+// }
+
 // Function to follow a user
 export const followUser = async (userId) => {
   const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
