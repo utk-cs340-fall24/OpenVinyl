@@ -78,6 +78,7 @@
 
       document.getElementById("updatespotify").innerHTML = "<i class=\"fa-solid fa-link\"></i> Link";
       spotifytracker = 0;
+      location.reload();
     }
 
     return;

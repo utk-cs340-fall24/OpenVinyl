@@ -1,0 +1,483 @@
++page.svelte (grant johnson on 10/14/2024 at 22:34):   import logo from '$lib/logo.svg';
++page.svelte (grant johnson on 10/16/2024 at 11:51):     <a href="/" class="back"><i class="fa-solid fa-arrow-left"></i> Back</a>
++page.svelte (grant johnson on 10/14/2024 at 22:34):     <a href="/"><img src={logo} alt="logo" class="logo"></a>
++page.svelte (grant johnson on 10/14/2024 at 22:34):     background-color: #121212;
++page.svelte (grant johnson on 10/16/2024 at 11:51):   .container .login-window .back {
++page.svelte (grant johnson on 10/16/2024 at 11:51):     text-align: left !important;
++page.svelte (grant johnson on 10/16/2024 at 11:51):     display: block;
++page.svelte (grant johnson on 10/16/2024 at 11:51):     text-decoration: none;
++page.svelte (grant johnson on 10/16/2024 at 11:51):     color: #fff;
++page.svelte (grant johnson on 10/16/2024 at 11:51):   }
++page.svelte (grant johnson on 10/16/2024 at 11:51):   .container .login-window .back:visited {
++page.svelte (grant johnson on 10/16/2024 at 11:51):     color: #fff;
++page.svelte (grant johnson on 10/16/2024 at 11:51):   }
++page.svelte (grant johnson on 10/14/2024 at 22:34):   .logo {
++page.svelte (grant johnson on 10/14/2024 at 22:34):     width: 100px;
++page.svelte (grant johnson on 10/14/2024 at 22:34):     padding-bottom: 20px;
++page.svelte (grant johnson on 10/14/2024 at 22:34):     height: auto;
++page.svelte (grant johnson on 10/14/2024 at 22:34):     cursor: pointer;
++page.svelte (grant johnson on 10/14/2024 at 22:34):   }
++page.svelte (grant johnson on 10/14/2024 at 22:34):     max-height: 80vh;
++page.svelte (grant johnson on 10/14/2024 at 22:34):     overflow-y: auto;
++page.svelte (grant johnson on 10/14/2024 at 22:34):     height: auto;
++page.svelte (grant johnson on 10/14/2024 at 22:34):     background-color: #1D1F25;
++page.svelte (grant johnson on 10/16/2024 at 11:51):     color: #fff;
++page.svelte (grant johnson on 10/16/2024 at 11:51):     color: #fff;
++page.svelte (grant johnson on 10/14/2024 at 22:34):   .login-window button {
++page.svelte (grant johnson on 10/14/2024 at 22:34):     width: 100%;
++page.svelte (grant johnson on 10/14/2024 at 22:34):     margin-top: 8px;
++page.svelte (grant johnson on 10/14/2024 at 22:34):     height: 2.5em;
++page.svelte (grant johnson on 10/14/2024 at 22:34):     font-size: 18px;
++page.svelte (grant johnson on 10/14/2024 at 22:34):     cursor: pointer;
++page.svelte (grant johnson on 10/14/2024 at 22:34):   }
+nav.svelte   (grant johnson on 10/15/2024 at 16:08):   let avatar_url = '';
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):   let active = 0;
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):   function hamburgerMenu() {
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     if (active == 0) {
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):       active = 1;
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     } else if (active == 1) {
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):       active = 0;
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     }
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     return;
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):   }
+nav.svelte   (grant johnson on 10/15/2024 at 16:08):         const { data, error } = await supabase.from("profiles").select("username, spotify_access_token, avatar_url").eq("id", user.id).single();
+nav.svelte   (grant johnson on 10/15/2024 at 16:08):           avatar_url = data.avatar_url;
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):       <div class="links desktop">
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):         <a 
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):         </a>
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):       </div>
+nav.svelte   (grant johnson on 10/15/2024 at 16:08):         <img src={avatar_url || 'https://placehold.co/150'} class="avatar" alt="">
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):         <!-- svelte-ignore a11y-click-events-have-key-events -->
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):         <!-- svelte-ignore a11y-no-static-element-interactions -->
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):         <div class="hamburger {active === 1 ? "is-active" : ""}" id="hamburger" on:click={hamburgerMenu}>
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):           <span class="line"></span>
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):           <span class="line"></span>
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):           <span class="line"></span>
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):         </div>
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):   <div class="links mobile {active === 1 ? "is-active" : ""}">
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     <a 
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     href="/" 
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     class="nav-link" 
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     class:active={$page.url.pathname === "/"}
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):   >
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     Home
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):   </a>
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):   <a 
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     href="/discover" 
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     class="nav-link" 
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     class:active={$page.url.pathname.startsWith("/discover")}
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):   >
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     Discover
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):   </a>
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):   <a 
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     href="/charts" 
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     class="nav-link" 
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     class:active={$page.url.pathname.startsWith("/charts")}
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):   >
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     Charts
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):   </a>
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     <a href="/network" class="nav-link" class:active={$page.url.pathname.startsWith("/network")}>
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):       Network
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     </a>
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):   </div>
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):   .mobile {
+nav.svelte   (grant johnson on 10/11/2024 at 14:26):     position: absolute;
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     display: none;
+nav.svelte   (grant johnson on 10/11/2024 at 14:26):     background-color: #1d1f25;
+nav.svelte   (grant johnson on 10/11/2024 at 14:26):     width: 100%;
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):   }
+nav.svelte   (grant johnson on 10/15/2024 at 16:08):     display: flex;
+nav.svelte   (grant johnson on 10/15/2024 at 16:08):     align-items: center;
+nav.svelte   (grant johnson on 10/15/2024 at 16:08):     justify-content: center;
+nav.svelte   (grant johnson on 10/15/2024 at 16:08):     background-color: #1db954; 
+nav.svelte   (grant johnson on 10/15/2024 at 16:08):     color: white;
+nav.svelte   (grant johnson on 10/15/2024 at 16:08):     border: none;
+nav.svelte   (grant johnson on 10/15/2024 at 16:08):     padding: 6px 12px;
+nav.svelte   (grant johnson on 10/15/2024 at 16:08):     font-size: 1rem;
+nav.svelte   (grant johnson on 10/15/2024 at 16:08):     font-weight: 600;
+nav.svelte   (grant johnson on 10/15/2024 at 16:08):     border-radius: 20px; 
+nav.svelte   (grant johnson on 10/15/2024 at 16:08):     cursor: pointer;
+nav.svelte   (grant johnson on 10/15/2024 at 16:08):     transition: background-color 0.3s ease, transform 0.2s ease;
+nav.svelte   (grant johnson on 10/15/2024 at 16:08):     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+nav.svelte   (grant johnson on 10/15/2024 at 16:08):     margin-right: 15px;
+nav.svelte   (grant johnson on 10/15/2024 at 16:08):   .avatar {
+nav.svelte   (grant johnson on 10/15/2024 at 16:08):     height: 50px;
+nav.svelte   (grant johnson on 10/15/2024 at 16:08):     width: auto;
+nav.svelte   (grant johnson on 10/15/2024 at 16:08):   }
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):   .hamburger {
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     display: none;
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     margin-right: 1rem;
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):   }
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):   .hamburger:hover{
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     cursor: pointer;
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):   }
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):   .is-active .line:nth-child(2){
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     opacity: 0;
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):   }
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):   .is-active .line:nth-child(1){
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     -webkit-transform: translateY(13px) rotate(45deg);
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     -ms-transform: translateY(13px) rotate(45deg);
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     -o-transform: translateY(13px) rotate(45deg);
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     transform: translateY(13px) rotate(45deg);
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):   }
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):   .is-active .line:nth-child(3){
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     -webkit-transform: translateY(-13px) rotate(-45deg);
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     -ms-transform: translateY(-13px) rotate(-45deg);
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     -o-transform: translateY(-13px) rotate(-45deg);
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     transform: translateY(-13px) rotate(-45deg);
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):   }
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):   .spotify-button:hover {
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     background-color: #1aa34a;
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     transform: scale(1.03); 
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):   }
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):   .spotify-button:active {
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     background-color: #188a3e;
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     transform: scale(1); 
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):   }
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):   .spotify-button:focus {
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     outline: none;
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     box-shadow: 0 0 0 3px rgba(29, 185, 84, 0.4);
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):   }
+nav.svelte   (grant johnson on 10/15/2024 at 16:08):     .avatar {
+nav.svelte   (grant johnson on 10/15/2024 at 16:08):       width: 40px;
+nav.svelte   (grant johnson on 10/15/2024 at 16:08):       height: auto;
+nav.svelte   (grant johnson on 10/15/2024 at 16:08):     }
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):       /* flex-direction: ; */
+nav.svelte   (grant johnson on 10/15/2024 at 16:08):     .avatar {
+nav.svelte   (grant johnson on 10/15/2024 at 16:08):       margin-right: 10px;
+nav.svelte   (grant johnson on 10/15/2024 at 16:08):     }
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     .hamburger .line{
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):       width: 40px;
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):       height: 5px;
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):       background-color: #ecf0f1;
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):       display: block;
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):       margin: 8px auto;
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):       -webkit-transition: all 0.3s ease-in-out;
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):       -o-transition: all 0.3s ease-in-out;
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):       transition: all 0.3s ease-in-out;
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     }
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     .left-nav {
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):       flex-direction: column;
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     }
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     .links {
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):       display: none;
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     }
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     .links.is-active {
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):       display: flex;
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):       flex-direction: column;
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):       padding-left: 2rem;
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     }
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     .login-href {
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):       display: none;
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     }
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     .hamburger {
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):       display: block;
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     }
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     .hamburger:hover{
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):       cursor: pointer;
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     }
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     .hamburger.is-active .line:nth-child(2){
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):       opacity: 0;
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     }
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     .hamburger.is-active .line:nth-child(1){
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):       -webkit-transform: translateY(13px) rotate(45deg);
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):       -ms-transform: translateY(13px) rotate(45deg);
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):       -o-transform: translateY(13px) rotate(45deg);
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):       transform: translateY(13px) rotate(45deg);
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     }
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     .hamburger.is-active .line:nth-child(3){
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):       -webkit-transform: translateY(-13px) rotate(-45deg);
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):       -ms-transform: translateY(-13px) rotate(-45deg);
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):       -o-transform: translateY(-13px) rotate(-45deg);
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):       transform: translateY(-13px) rotate(-45deg);
+nav.svelte   (grant johnson on 10/11/2024 at 13:44):     }
++page.svelte (grant johnson on 10/14/2024 at 22:34):   import logo from '$lib/logo.svg';
++page.svelte (grant johnson on 10/16/2024 at 11:51):     <a href="/" class="back"><i class="fa-solid fa-arrow-left"></i> Back</a>
++page.svelte (grant johnson on 10/14/2024 at 22:34):     <a href="/"><img src={logo} alt="logo" class="logo"></a>
++page.svelte (grant johnson on 10/14/2024 at 22:34):     background-color: #121212;
++page.svelte (grant johnson on 10/14/2024 at 22:34):     max-height: 80vh;
++page.svelte (grant johnson on 10/14/2024 at 22:34):     height: auto;
++page.svelte (grant johnson on 10/14/2024 at 22:34):     overflow-y: auto;
++page.svelte (grant johnson on 10/14/2024 at 22:34):     background-color: #1D1F25;
++page.svelte (grant johnson on 10/16/2024 at 11:51):   .container .login-window .back {
++page.svelte (grant johnson on 10/16/2024 at 11:51):     text-align: left !important;
++page.svelte (grant johnson on 10/16/2024 at 11:51):     display: block;
++page.svelte (grant johnson on 10/16/2024 at 11:51):     text-decoration: none;
++page.svelte (grant johnson on 10/16/2024 at 11:51):     color: #fff;
++page.svelte (grant johnson on 10/16/2024 at 11:51):   }
++page.svelte (grant johnson on 10/16/2024 at 11:51):   .container .login-window .back:visited {
++page.svelte (grant johnson on 10/16/2024 at 11:51):     color: #fff;
++page.svelte (grant johnson on 10/16/2024 at 11:51):   }
++page.svelte (grant johnson on 10/14/2024 at 22:34):     color: #fff;
++page.svelte (grant johnson on 10/14/2024 at 22:34):     color: #dddddd;
++page.svelte (grant johnson on 10/14/2024 at 22:34):     opacity: 0.6;
++page.svelte (grant johnson on 10/14/2024 at 22:34):     margin-top: 8px;
++page.svelte (grant johnson on 10/14/2024 at 22:34):     cursor: pointer;
++page.svelte (grant johnson on 10/14/2024 at 22:34):   .logo {
++page.svelte (grant johnson on 10/14/2024 at 22:34):     width: 100px;
++page.svelte (grant johnson on 10/14/2024 at 22:34):     padding-bottom: 20px;
++page.svelte (grant johnson on 10/14/2024 at 22:34):     height: auto;
++page.svelte (grant johnson on 10/14/2024 at 22:34):     cursor: pointer;
++page.svelte (grant johnson on 10/14/2024 at 22:34):   }
++page.svelte (grant johnson on 10/14/2024 at 22:34):     color: #ffffff;
++page.svelte (grant johnson on 10/14/2024 at 22:34):     background-color: #1D1F25;
+utils.js     (grant johnson on 10/16/2024 at 11:34): import { local } from "d3";
+utils.js     (grant johnson on 10/15/2024 at 11:23):     console.log("First name updated successfully:", data);
+utils.js     (grant johnson on 10/15/2024 at 11:23):       console.log("Error updating last name: ", error);
+utils.js     (grant johnson on 10/15/2024 at 11:23):     console.log("Last name updated successfully:", data);
+utils.js     (grant johnson on 10/15/2024 at 11:23): export async function updateAvatar(profile_id, url) {
+utils.js     (grant johnson on 10/15/2024 at 11:23):   try {
+utils.js     (grant johnson on 10/15/2024 at 11:23):     const { data, error } = await supabase
+utils.js     (grant johnson on 10/15/2024 at 11:23):       .from("profiles")
+utils.js     (grant johnson on 10/15/2024 at 11:23):       .update({ avatar_url: url })
+utils.js     (grant johnson on 10/15/2024 at 11:23):       .eq("id", profile_id);
+utils.js     (grant johnson on 10/15/2024 at 11:23):     if (error) {
+utils.js     (grant johnson on 10/15/2024 at 11:23):       console.log("Error updating avatar url: ", error);
+utils.js     (grant johnson on 10/15/2024 at 11:23):       return { success: false, error: error.message };
+utils.js     (grant johnson on 10/15/2024 at 11:23):     }
+utils.js     (grant johnson on 10/15/2024 at 11:23):     console.log("Avatar URL updated successfully:", data);
+utils.js     (grant johnson on 10/15/2024 at 11:23):     return { success: true, data };
+utils.js     (grant johnson on 10/15/2024 at 11:23):   } catch (err) {
+utils.js     (grant johnson on 10/15/2024 at 11:23):     console.error("Unexpected error:", err);
+utils.js     (grant johnson on 10/15/2024 at 11:23):     return { success: false, error: err.message};
+utils.js     (grant johnson on 10/15/2024 at 11:23):   }
+utils.js     (grant johnson on 10/15/2024 at 11:23): }
+utils.js     (grant johnson on 10/16/2024 at 11:34): export async function unlinkSpotify(profile_id) {
+utils.js     (grant johnson on 10/16/2024 at 11:34):   try {
+utils.js     (grant johnson on 10/16/2024 at 11:34):     const { data, error } = await supabase
+utils.js     (grant johnson on 10/16/2024 at 11:34):       .from("profiles")
+utils.js     (grant johnson on 10/16/2024 at 11:34):       .update({ spotify_access_token: null, spotify_refresh_token: null, spotify_token_expires: null })
+utils.js     (grant johnson on 10/16/2024 at 11:34):       .eq("id", profile_id);
+utils.js     (grant johnson on 10/16/2024 at 11:34):     if (error) {
+utils.js     (grant johnson on 10/16/2024 at 11:34):       console.log("Error clearing token: ", error);
+utils.js     (grant johnson on 10/16/2024 at 11:34):       return { success: false, error: error.message };
+utils.js     (grant johnson on 10/16/2024 at 11:34):     }
+utils.js     (grant johnson on 10/16/2024 at 11:34):     console.log("Token cleared successfully:", data);
+utils.js     (grant johnson on 10/16/2024 at 11:34):     localStorage.removeItem('spotify_access_token');
+utils.js     (grant johnson on 10/16/2024 at 11:34):     localStorage.removeItem('spotify_expires_at');
+utils.js     (grant johnson on 10/16/2024 at 11:34):     return { success: true, data };
+utils.js     (grant johnson on 10/16/2024 at 11:34):   } catch (err) {
+utils.js     (grant johnson on 10/16/2024 at 11:34):     console.error("Unexpected error:", err);
+utils.js     (grant johnson on 10/16/2024 at 11:34):     return { success: false, error: err.message };
+utils.js     (grant johnson on 10/16/2024 at 11:34):   }
+utils.js     (grant johnson on 10/16/2024 at 11:34): }
++page.svelte (grant johnson on 10/14/2024 at 18:29): <script lang="js">
++page.svelte (grant johnson on 10/16/2024 at 11:34):   import { updateUsername, updateFirstName, updateLastName, updateAvatar, unlinkSpotify } from '$lib/utils.js';
++page.svelte (grant johnson on 10/14/2024 at 18:29):   import { onMount } from 'svelte';
++page.svelte (grant johnson on 10/14/2024 at 18:29):   let fnametracker = 0;
++page.svelte (grant johnson on 10/14/2024 at 18:29):   let lnametracker = 0;
++page.svelte (grant johnson on 10/15/2024 at 11:38):   let avatar_url = '';
++page.svelte (grant johnson on 10/14/2024 at 18:29):   let usernametracker = 0;
++page.svelte (grant johnson on 10/15/2024 at 16:08):   let spotifytracker = 0;
++page.svelte (grant johnson on 10/14/2024 at 18:29):   onMount(async () => {
++page.svelte (grant johnson on 10/14/2024 at 18:29):     try {
++page.svelte (grant johnson on 10/14/2024 at 18:29):       const session = await supabase.auth.getSession();
++page.svelte (grant johnson on 10/14/2024 at 18:29):       const user = session?.data?.session?.user;
++page.svelte (grant johnson on 10/15/2024 at 11:23):       let filename = user.id + '.png'
++page.svelte (grant johnson on 10/14/2024 at 18:29):       if (user) {
++page.svelte (grant johnson on 10/15/2024 at 16:08):         const { data, error } = await supabase.from("profiles").select("username, first_name, last_name, avatar_url, spotify_access_token").eq("id", user.id).single();
++page.svelte (grant johnson on 10/14/2024 at 18:29):         if (data) {
++page.svelte (grant johnson on 10/14/2024 at 18:29):           document.getElementById("username").placeholder = data.username;
++page.svelte (grant johnson on 10/14/2024 at 18:29):           document.getElementById("fname").placeholder = data.first_name;
++page.svelte (grant johnson on 10/14/2024 at 18:29):           document.getElementById("lname").placeholder = data.last_name;
++page.svelte (grant johnson on 10/15/2024 at 11:38):           avatar_url = data.avatar_url;
++page.svelte (grant johnson on 10/16/2024 at 11:34):           if (data.spotify_access_token != null) {
++page.svelte (grant johnson on 10/16/2024 at 11:34):             document.getElementById("updatespotify").innerHTML = "<i class=\"fa-solid fa-link-slash\"></i> Unlink";
++page.svelte (grant johnson on 10/15/2024 at 16:08):             spotifytracker = 1;
++page.svelte (grant johnson on 10/15/2024 at 16:08):           }
++page.svelte (grant johnson on 10/14/2024 at 18:29):         }
++page.svelte (grant johnson on 10/14/2024 at 18:29):       }
++page.svelte (grant johnson on 10/14/2024 at 18:29):     } catch (error) {
++page.svelte (grant johnson on 10/14/2024 at 18:29):       console.error("Error fetching username profile:", error);
++page.svelte (grant johnson on 10/14/2024 at 18:29):     }
++page.svelte (grant johnson on 10/14/2024 at 18:29):   });
++page.svelte (grant johnson on 10/14/2024 at 18:29):   async function editFirstName() {
++page.svelte (grant johnson on 10/14/2024 at 18:29):     if (fnametracker == 0) {
++page.svelte (grant johnson on 10/14/2024 at 18:29):       fnametracker = 1;
++page.svelte (grant johnson on 10/14/2024 at 18:29):       document.getElementById("fname-wrapper").classList.toggle("not-active");
++page.svelte (grant johnson on 10/14/2024 at 18:29):       document.getElementById("fname").style.pointerEvents = "auto";
++page.svelte (grant johnson on 10/14/2024 at 18:29):       document.getElementById("updatefname").innerHTML = "Submit";
++page.svelte (grant johnson on 10/14/2024 at 18:29):     } else if (fnametracker == 1) {
++page.svelte (grant johnson on 10/14/2024 at 18:29):       const user = await supabase.auth.getUser();
++page.svelte (grant johnson on 10/14/2024 at 18:29):       try {
++page.svelte (grant johnson on 10/14/2024 at 18:29):         const {data, error} = await updateFirstName(user.data.user.id, fname);
++page.svelte (grant johnson on 10/14/2024 at 18:29):         fnametracker = 0;
++page.svelte (grant johnson on 10/14/2024 at 18:29):         document.getElementById("fname-wrapper").classList.toggle("not-active");
++page.svelte (grant johnson on 10/14/2024 at 18:29):         document.getElementById("fname").style.pointerEvents = "none";
++page.svelte (grant johnson on 10/14/2024 at 18:29):         document.getElementById("updatefname").innerHTML = "Edit";
++page.svelte (grant johnson on 10/14/2024 at 18:29):       } catch (error) {
++page.svelte (grant johnson on 10/14/2024 at 18:29):         console.error("Error updating first name:", error);
++page.svelte (grant johnson on 10/14/2024 at 18:29):         document.getElementById('fname-alert').innerHTML = "<i class=\"fa-solid fa-xmark\"></i>Error updating first name. Please try again";
++page.svelte (grant johnson on 10/14/2024 at 18:29):       }
++page.svelte (grant johnson on 10/14/2024 at 18:29):     }
++page.svelte (grant johnson on 10/14/2024 at 18:29):   }
++page.svelte (grant johnson on 10/15/2024 at 16:08):   async function manageSpotify() {
++page.svelte (grant johnson on 10/16/2024 at 11:34):     if (!spotifytracker) {
++page.svelte (grant johnson on 10/16/2024 at 11:34):       window.location.href = '/spotify-login';
++page.svelte (grant johnson on 10/16/2024 at 11:34):       spotifytracker = 1;
++page.svelte (grant johnson on 10/16/2024 at 11:34):     } else {
++page.svelte (grant johnson on 10/16/2024 at 11:34):       const user = await supabase.auth.getUser();
++page.svelte (grant johnson on 10/16/2024 at 11:34):       unlinkSpotify(user.data.user.id);
++page.svelte (grant johnson on 10/16/2024 at 11:34):       document.getElementById("updatespotify").innerHTML = "<i class=\"fa-solid fa-link\"></i> Link";
++page.svelte (grant johnson on 10/16/2024 at 11:34):       spotifytracker = 0;
++page.svelte (grant johnson on 10/16/2024 at 11:34):     }
++page.svelte (grant johnson on 10/15/2024 at 16:08):     return;
++page.svelte (grant johnson on 10/15/2024 at 16:08):   }
++page.svelte (grant johnson on 10/14/2024 at 18:29):   async function editLastName() {
++page.svelte (grant johnson on 10/14/2024 at 18:29):     if (lnametracker == 0) {
++page.svelte (grant johnson on 10/14/2024 at 18:29):       lnametracker = 1;
++page.svelte (grant johnson on 10/14/2024 at 18:29):       document.getElementById("lname-wrapper").classList.toggle("not-active");
++page.svelte (grant johnson on 10/14/2024 at 18:29):       document.getElementById("lname").style.pointerEvents = "auto";
++page.svelte (grant johnson on 10/14/2024 at 18:29):       document.getElementById("updatelname").innerHTML = "Submit";
++page.svelte (grant johnson on 10/14/2024 at 18:29):     } else if (lnametracker == 1) {
++page.svelte (grant johnson on 10/14/2024 at 18:29):       const user = await supabase.auth.getUser();
++page.svelte (grant johnson on 10/14/2024 at 18:29):       try {
++page.svelte (grant johnson on 10/14/2024 at 18:29):         const {data, error} = await updateLastName(user.data.user.id, lname);
++page.svelte (grant johnson on 10/14/2024 at 18:29):         lnametracker = 0;
++page.svelte (grant johnson on 10/14/2024 at 18:29):         document.getElementById("lname-wrapper").classList.toggle("not-active");
++page.svelte (grant johnson on 10/14/2024 at 18:29):         document.getElementById("lname").style.pointerEvents = "none";
++page.svelte (grant johnson on 10/14/2024 at 18:29):         document.getElementById("updatelname").innerHTML = "Edit";
++page.svelte (grant johnson on 10/14/2024 at 18:29):       } catch (error) {
++page.svelte (grant johnson on 10/14/2024 at 18:29):         console.error("Error updating last name:", error);
++page.svelte (grant johnson on 10/14/2024 at 18:29):         document.getElementById('lname-alert').innerHTML = "<i class=\"fa-solid fa-xmark\"></i>Error updating last name. Please try again";
++page.svelte (grant johnson on 10/14/2024 at 18:29):       }
++page.svelte (grant johnson on 10/14/2024 at 18:29):     }
++page.svelte (grant johnson on 10/14/2024 at 18:29):   }
++page.svelte (grant johnson on 10/14/2024 at 18:29):   async function editUsername() {
++page.svelte (grant johnson on 10/14/2024 at 18:29):     if (usernametracker == 0) {
++page.svelte (grant johnson on 10/14/2024 at 18:29):       usernametracker = 1;
++page.svelte (grant johnson on 10/14/2024 at 18:29):       document.getElementById("uname-wrapper").classList.toggle("not-active");
++page.svelte (grant johnson on 10/14/2024 at 18:29):       document.getElementById("username").style.pointerEvents = "auto";
++page.svelte (grant johnson on 10/14/2024 at 18:29):       document.getElementById("updateuname").innerHTML = "Submit";
++page.svelte (grant johnson on 10/14/2024 at 18:29):     } else if (usernametracker == 1) {
++page.svelte (grant johnson on 10/14/2024 at 18:29):       const user = await supabase.auth.getUser();
++page.svelte (grant johnson on 10/14/2024 at 18:29):       try {
++page.svelte (grant johnson on 10/14/2024 at 18:29):         const {data, error} = await updateUsername(user.data.user.id, username);
++page.svelte (grant johnson on 10/14/2024 at 18:29):         usernametracker = 0;
++page.svelte (grant johnson on 10/14/2024 at 18:29):         document.getElementById("uname-wrapper").classList.toggle("not-active");
++page.svelte (grant johnson on 10/14/2024 at 18:29):         document.getElementById("username").style.pointerEvents = "none";
++page.svelte (grant johnson on 10/14/2024 at 18:29):         document.getElementById("updateuname").innerHTML = "Edit";
++page.svelte (grant johnson on 10/14/2024 at 18:29):       } catch (error) {
++page.svelte (grant johnson on 10/14/2024 at 18:29):         console.error("Error updating user name:", error);
++page.svelte (grant johnson on 10/14/2024 at 18:29):         document.getElementById('username-alert').innerHTML = "<i class=\"fa-solid fa-xmark\"></i>Error updating user name. Please try again";
++page.svelte (grant johnson on 10/14/2024 at 18:29):       }
++page.svelte (grant johnson on 10/14/2024 at 18:29):     }
++page.svelte (grant johnson on 10/14/2024 at 18:29):   }
++page.svelte (grant johnson on 10/10/2024 at 10:04):     updateFirstName(user.data.user.id, fname);
++page.svelte (grant johnson on 10/10/2024 at 10:04):     updateLastName(user.data.user.id, lname);
++page.svelte (grant johnson on 10/15/2024 at 11:23):   async function fileUpload() {
++page.svelte (grant johnson on 10/15/2024 at 11:23):     console.log(document.getElementById("fupload").files[0])
++page.svelte (grant johnson on 10/15/2024 at 11:23):     const user = await supabase.auth.getUser();
++page.svelte (grant johnson on 10/15/2024 at 11:23):     let filename = user.data.user.id + '.png'
++page.svelte (grant johnson on 10/15/2024 at 11:23):     const { data, error } = await supabase
++page.svelte (grant johnson on 10/15/2024 at 11:23):       .storage
++page.svelte (grant johnson on 10/15/2024 at 11:23):       .from('avatars')
++page.svelte (grant johnson on 10/15/2024 at 11:23):       .upload(filename, document.getElementById("fupload").files[0], {
++page.svelte (grant johnson on 10/15/2024 at 11:23):         cacheControl: '3600',
++page.svelte (grant johnson on 10/15/2024 at 11:23):         upsert: false
++page.svelte (grant johnson on 10/15/2024 at 11:23):     })
++page.svelte (grant johnson on 10/15/2024 at 11:23):     const { data: avatarData, error: avatarError } = supabase.storage.from('avatars').getPublicUrl(filename);
++page.svelte (grant johnson on 10/15/2024 at 11:23):     if (avatarData) {
++page.svelte (grant johnson on 10/15/2024 at 11:23):       updateAvatar(user.data.user.id, avatarData.publicUrl);
++page.svelte (grant johnson on 10/15/2024 at 11:23):     }
++page.svelte (grant johnson on 10/15/2024 at 11:23):     console.log(avatarData, avatarError)
++page.svelte (grant johnson on 10/15/2024 at 11:23):     console.log(error)
++page.svelte (grant johnson on 10/15/2024 at 11:23):   }
++page.svelte (grant johnson on 10/16/2024 at 11:34):     <a href="/" class="back"><i class="fa-solid fa-arrow-left"></i> Back</a>
++page.svelte (grant johnson on 10/15/2024 at 11:38):     <img src={avatar_url || 'https://placehold.co/150'} alt={`user's avatar`} id="">
++page.svelte (grant johnson on 10/10/2024 at 10:04):     <div class="input-group">
++page.svelte (grant johnson on 10/14/2024 at 18:29):       <div class="input-wrapper" id="fname-wrapper"><input type="text" name="" id="fname" placeholder="first name" bind:value={fname}></div>
++page.svelte (grant johnson on 10/14/2024 at 18:29):       <button class="update" id="updatefname" on:click={editFirstName}>Edit</button>
++page.svelte (grant johnson on 10/14/2024 at 18:29):       <p class="user-alert" id="fname-alert"></p>
++page.svelte (grant johnson on 10/10/2024 at 10:04):     </div>
++page.svelte (grant johnson on 10/10/2024 at 10:04):     <div class="input-group">
++page.svelte (grant johnson on 10/14/2024 at 18:29):       <div class="input-wrapper" id="lname-wrapper"><input type="text" name="" id="lname" placeholder="last name" bind:value={lname}></div>
++page.svelte (grant johnson on 10/14/2024 at 18:29):       <button class="update" id="updatelname" on:click={editLastName}>Edit</button>
++page.svelte (grant johnson on 10/14/2024 at 18:29):       <p class="user-alert" id="lname-alert"></p>
++page.svelte (grant johnson on 10/10/2024 at 10:04):     </div>
++page.svelte (grant johnson on 10/10/2024 at 10:04):     <div class="input-group">
++page.svelte (grant johnson on 10/14/2024 at 18:29):       <div class="input-wrapper" id="uname-wrapper"><input type="text" name="" id="username" placeholder="username" bind:value={username}></div>
++page.svelte (grant johnson on 10/14/2024 at 18:29):       <button class="update" id="updateuname" on:click={editUsername}>Edit</button>
++page.svelte (grant johnson on 10/10/2024 at 10:04):       <p class="user-alert" id="username-alert"></p>
++page.svelte (grant johnson on 10/10/2024 at 10:04):     </div>
++page.svelte (grant johnson on 10/15/2024 at 11:23):     <input type="file" name="" id="fupload" on:change={fileUpload}>
++page.svelte (grant johnson on 10/15/2024 at 16:08):     <h2>Account Integrations</h2>
++page.svelte (grant johnson on 10/16/2024 at 11:34):     <div class="int-wrapper">
++page.svelte (grant johnson on 10/16/2024 at 11:34):       <p class="spotify-label">Spotify</p>
++page.svelte (grant johnson on 10/16/2024 at 11:34):       <button class="link" id="updatespotify" on:click={manageSpotify}><i class="fa-solid fa-link"></i> Link</button>
++page.svelte (grant johnson on 10/16/2024 at 11:34):     </div>
++page.svelte (grant johnson on 10/14/2024 at 18:29):     <!-- <p>Color Theme</p> -->
++page.svelte (grant johnson on 10/16/2024 at 11:34):     background-color: #1d1f25;
++page.svelte (grant johnson on 10/16/2024 at 11:34):     height: auto;
++page.svelte (grant johnson on 10/16/2024 at 11:34):     overflow: auto;
++page.svelte (grant johnson on 10/11/2024 at 14:26):     min-height: 100vh;
++page.svelte (grant johnson on 10/16/2024 at 11:34):     margin-left: 20vw;
++page.svelte (grant johnson on 10/10/2024 at 10:04):     color: #fff;
++page.svelte (grant johnson on 10/16/2024 at 11:34):     /* background-color: #1d1f25; */
++page.svelte (grant johnson on 10/16/2024 at 11:34):     border-left: 1px solid #26282c;
++page.svelte (grant johnson on 10/16/2024 at 11:34):     /* border-radius: 8px; */
++page.svelte (grant johnson on 10/11/2024 at 14:26):     text-align: left;
++page.svelte (grant johnson on 10/16/2024 at 11:34):   .wrapper .account-settings .back {
++page.svelte (grant johnson on 10/16/2024 at 11:34):     text-decoration: none;
++page.svelte (grant johnson on 10/16/2024 at 11:34):     color: #fff;
++page.svelte (grant johnson on 10/16/2024 at 11:34):   }
++page.svelte (grant johnson on 10/16/2024 at 11:34):   .wrapper .account-settings .back:visited {
++page.svelte (grant johnson on 10/16/2024 at 11:34):     color: #fff;
++page.svelte (grant johnson on 10/16/2024 at 11:34):   }
++page.svelte (grant johnson on 10/10/2024 at 10:04):   .wrapper .account-settings .input-group {
++page.svelte (grant johnson on 10/10/2024 at 10:04):     margin: 8px 0;
++page.svelte (grant johnson on 10/10/2024 at 10:04):   }
++page.svelte (grant johnson on 10/10/2024 at 10:04):   .wrapper .account-settings .input-group input {
++page.svelte (grant johnson on 10/11/2024 at 14:26):     width: 300px;
++page.svelte (grant johnson on 10/14/2024 at 18:29):     height:  2.5em;
++page.svelte (grant johnson on 10/14/2024 at 18:29):     font-size: 14px;
++page.svelte (grant johnson on 10/10/2024 at 10:04):     margin: 0 0 4px 0;
++page.svelte (grant johnson on 10/14/2024 at 18:29):     pointer-events: none;
++page.svelte (grant johnson on 10/14/2024 at 18:29):   }
++page.svelte (grant johnson on 10/14/2024 at 18:29):   .wrapper .account-settings .input-group .input-wrapper {
++page.svelte (grant johnson on 10/14/2024 at 18:29):     cursor: not-allowed;
++page.svelte (grant johnson on 10/14/2024 at 18:29):     display: inline-block;
++page.svelte (grant johnson on 10/14/2024 at 18:29):   }
++page.svelte (grant johnson on 10/14/2024 at 18:29):   .wrapper .account-settings .input-group .input-wrapper.not-active {
++page.svelte (grant johnson on 10/14/2024 at 18:29):     cursor: text;
++page.svelte (grant johnson on 10/16/2024 at 11:34):   .wrapper .account-settings .int-wrapper {
++page.svelte (grant johnson on 10/16/2024 at 11:34):     display: flex;
++page.svelte (grant johnson on 10/16/2024 at 11:34):     flex-direction: row;
++page.svelte (grant johnson on 10/16/2024 at 11:34):     justify-content: space-between;
++page.svelte (grant johnson on 10/16/2024 at 11:34):     width: 200px;
++page.svelte (grant johnson on 10/16/2024 at 11:34):     height: 40px;
++page.svelte (grant johnson on 10/16/2024 at 11:34):     vertical-align: middle;
++page.svelte (grant johnson on 10/16/2024 at 11:34):     border: 2px solid #26282c;
++page.svelte (grant johnson on 10/16/2024 at 11:34):     padding: 1rem;
++page.svelte (grant johnson on 10/16/2024 at 11:34):     border-radius: 5px;
++page.svelte (grant johnson on 10/16/2024 at 11:34):     margin-bottom: 20px;
++page.svelte (grant johnson on 10/16/2024 at 11:34):   }
++page.svelte (grant johnson on 10/16/2024 at 11:34):   .int-wrapper .link {
++page.svelte (grant johnson on 10/16/2024 at 11:34):     margin: auto 0 auto 0;
++page.svelte (grant johnson on 10/16/2024 at 11:34):   }
++page.svelte (grant johnson on 10/16/2024 at 11:34):   .int-wrapper p {
++page.svelte (grant johnson on 10/16/2024 at 11:34):     margin: auto 0 auto 0;
++page.svelte (grant johnson on 10/16/2024 at 11:34):   }
++page.svelte (grant johnson on 10/10/2024 at 10:04):   .wrapper .account-settings .user-alert {
++page.svelte (grant johnson on 10/10/2024 at 10:04):     text-align: left;
++page.svelte (grant johnson on 10/10/2024 at 10:04):     margin: 0;
++page.svelte (grant johnson on 10/10/2024 at 10:04):   }
++page.svelte (grant johnson on 10/14/2024 at 18:29):     width: 100px;
++page.svelte (grant johnson on 10/14/2024 at 18:29):     font-size: 14px;
++page.svelte (grant johnson on 10/14/2024 at 18:29):     background-color: #1d1f25;
++page.svelte (grant johnson on 10/14/2024 at 18:29):     color: #fff;
++page.svelte (grant johnson on 10/14/2024 at 18:29):     border: 2px solid #c5c5c5;
++page.svelte (grant johnson on 10/14/2024 at 18:29):     border-radius: 4px;
++page.svelte (grant johnson on 10/14/2024 at 18:29):     cursor: pointer;
++page.svelte (grant johnson on 10/14/2024 at 18:29):   }
++page.svelte (grant johnson on 10/16/2024 at 11:34):   .wrapper .account-settings .signout {
++page.svelte (grant johnson on 10/16/2024 at 11:34):     display: block;
++page.svelte (grant johnson on 10/16/2024 at 11:34):   }
++page.svelte (grant johnson on 10/15/2024 at 11:23):   #fupload {
++page.svelte (grant johnson on 10/15/2024 at 11:23):     display: block;
++page.svelte (grant johnson on 10/15/2024 at 11:23):     margin-bottom: 10px;
++page.svelte (grant johnson on 10/15/2024 at 11:23):   }
++page.svelte (grant johnson on 10/14/2024 at 18:29):   .wrapper .account-settings button:hover {
++page.svelte (grant johnson on 10/14/2024 at 18:29):     color: #1c1c1c;
++page.svelte (grant johnson on 10/14/2024 at 18:29):     background-color: #c5c5c5;
++page.svelte (grant johnson on 10/14/2024 at 18:29):     border: 2px solid #c5c5c5;
