@@ -1,6 +1,5 @@
 <script>  
     export let tracklist;
-    console.log(tracklist);
     let region = "Global"
     
 </script>
@@ -75,7 +74,6 @@
     }
 
     .song-info {
-        white-space: nowrap;
         overflow: hidden;
         display: flex;
         flex-direction: column;
@@ -84,25 +82,23 @@
     }
     
     .song-title {
-        text-overflow: ellipsis;
         font-weight: bold;
         font-size: 1.2rem;
         color: #e4e4e4;
         margin: 3px;
+        text-overflow: ellipsis;
         white-space: nowrap;
         overflow: hidden;
-        text-overflow: ellipsis;
     }
     
     .artist-name {
-        text-overflow: ellipsis;
         font-size: 1rem;
         font-weight: normal;
         color: #b9b9b9;
         margin: 3px;
+        text-overflow: ellipsis;
         white-space: nowrap;
         overflow: hidden;
-        text-overflow: ellipsis;
     }
 
 </style>
