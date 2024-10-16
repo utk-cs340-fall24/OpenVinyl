@@ -253,6 +253,7 @@
     <div class="song-info-wrapper" on:click={() => window.location.href = `/posts/${post_id}`}>
       <p class="song-name">{song_title ? song_title : "Song Name"}</p>
       <p class="artist-name">{song_artist ? song_artist : "Artist Name"}</p>
+      <p class="review-preview">{desc}</p>
     </div>
 
     <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -456,17 +457,32 @@
   .song-info-wrapper {
     flex: 1;
     margin-left: 15px;
+    overflow: hidden;
   }
 
   .song-name {
     font-size: 1.5rem;
     margin: 0;
     color: #e4e4e4;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
   }
 
   .artist-name {
     font-size: 1rem;
     color: #b9b9b9;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .review-preview {
+    font-size: 1rem;
+    color: #e4e4e4;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
   }
 
   .rating-wrapper {
