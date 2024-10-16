@@ -211,6 +211,7 @@
   function openReview(event) {
     if (event.key === "p") {
       startReview();
+      event.preventDefault();
     }
   }
 
@@ -512,33 +513,45 @@
     }
   }
 
+  function handleKeyDown(event) {
+    openReview(event);
+    onKeyDown(event);
+  }
+
   function onKeyDown(e) {
   switch (e.keyCode) {
     case 87:
     case 38:
       moveGridDirection("up");
+      event.preventDefault();
       break;
     case 83:
     case 40:
       moveGridDirection("down");
+      event.preventDefault();
       break;
     case 65:
     case 37: 
       moveGridDirection("right");
+      event.preventDefault();
       break;
     case 68:
     case 39: 
       moveGridDirection("left");
+      event.preventDefault();
       break;
     case 32:
       togglePlayPause();
+      event.preventDefault();
       break;
     case 13: 
       console.log("is logged in: ", isLoggedIn);
       if (isLoggedIn && accessToken) {
         addCenterSongToPlaylist();
+        event.preventDefault();
       } else {
         console.log("User must be logged in with Spotify access.");
+        event.preventDefault();
       }
       break;
   }
@@ -724,15 +737,14 @@
   </div>
 </div>
 <svelte:window
-  on:keydown|preventDefault={onKeyDown}
-  on:keydown|preventDefault={openReview}
+  on:keydown={handleKeyDown}
   on:touchstart={handleTouchStart}
   on:touchend={handleTouchEnd}
 />
 
 <style>
   .wrapper {
-    height: 100vh;
+    height: 90vh;
   }
   .info {
     display: flex;

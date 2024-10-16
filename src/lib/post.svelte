@@ -222,6 +222,7 @@
   }
 </script>
 
+
 <div class="wrapper">
   <div class="top-bar">
     <div class="user-info">
@@ -231,11 +232,9 @@
       </span>
     </div>
 
-    <div class="right-section">
-      <a href="/posts/{post_id}" class="discover-button" aria-label="Discover Post">
-        <i class="fa-solid fa-external-link-alt"></i>
-      </a>
-    </div>
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
+    <!-- svelte-ignore a11y-no-static-element-interactions -->
+    <div class="right-section" on:click={() => window.location.href = `/posts/${post_id}`}></div>
   </div>
 
   <div class="content-wrapper">
@@ -249,14 +248,17 @@
         <i class="fa-solid fa-play"></i>
       </a>
     </div>
-
-    <div class="song-info-wrapper">
+    <!-- svelte-ignore a11y-no-static-element-interactions -->
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
+    <div class="song-info-wrapper" on:click={() => window.location.href = `/posts/${post_id}`}>
       <p class="song-name">{song_title ? song_title : "Song Name"}</p>
       <p class="artist-name">{song_artist ? song_artist : "Artist Name"}</p>
     </div>
 
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
+    <!-- svelte-ignore a11y-no-static-element-interactions -->
     <div>
-      <div class="rating-wrapper">
+      <div class="rating-wrapper" on:click={() => window.location.href = `/posts/${post_id}`}>
         <p>{@html renderStars()}</p>
       </div>
     
@@ -385,6 +387,8 @@
   .right-section {
     display: flex;
     align-items: center;
+    width: 80%;
+    height:30px;
   }
 
   .discover-button {
