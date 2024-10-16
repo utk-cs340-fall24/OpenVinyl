@@ -38,7 +38,7 @@
     }
   });
 </script>
-
+<div class="wrapper" >
 <h1>Discuss - Popular Songs</h1>
 
 
@@ -61,8 +61,12 @@
     {/each}
   </div>
 {/if}
+</div>
 
 <style>
+    .wrapper {
+        height: 100vh;
+    }
     .songs-list {
       display: flex;
       flex-wrap: wrap;
