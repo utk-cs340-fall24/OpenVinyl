@@ -234,7 +234,7 @@
 
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <!-- svelte-ignore a11y-no-static-element-interactions -->
-    <div class="right-section" on:click={() => window.location.href = `/posts/${post_id}`}></div>
+    <div class="right-section" on:click={() => window.location.href = `/posts/${post_id}`} style="cursor: pointer;"></div>
   </div>
 
   <div class="content-wrapper">
@@ -250,7 +250,7 @@
     </div>
     <!-- svelte-ignore a11y-no-static-element-interactions -->
     <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <div class="song-info-wrapper" on:click={() => window.location.href = `/posts/${post_id}`}>
+    <div class="song-info-wrapper" on:click={() => window.location.href = `/posts/${post_id}`} style="cursor: pointer;">
       <p class="song-name">{song_title ? song_title : "Song Name"}</p>
       <p class="artist-name">{song_artist ? song_artist : "Artist Name"}</p>
       <p class="review-preview">{desc}</p>
@@ -259,7 +259,7 @@
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <!-- svelte-ignore a11y-no-static-element-interactions -->
     <div>
-      <div class="rating-wrapper" on:click={() => window.location.href = `/posts/${post_id}`}>
+      <div class="rating-wrapper" on:click={() => window.location.href = `/posts/${post_id}`} style="cursor: pointer;">
         <p>{@html renderStars()}</p>
       </div>
     
