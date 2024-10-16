@@ -1,6 +1,6 @@
 <script lang="js">
   import { supabase } from '$lib/supabaseClient.js';
-  import { updateUsername, updateFirstName, updateLastName, updateAvatar } from '$lib/utils.js';
+  import { updateUsername, updateFirstName, updateLastName, updateAvatar, unlinkSpotify } from '$lib/utils.js';
   import { onMount } from 'svelte';
 
   let fname = '';
@@ -26,8 +26,8 @@
           document.getElementById("fname").placeholder = data.first_name;
           document.getElementById("lname").placeholder = data.last_name;
           avatar_url = data.avatar_url;
-          if (data.spotify_access_token != 'null') {
-            document.getElementById("updatespotify").innerHTML = "Unlink";
+          if (data.spotify_access_token != null) {
+            document.getElementById("updatespotify").innerHTML = "<i class=\"fa-solid fa-link-slash\"></i> Unlink";
             spotifytracker = 1;
           }
         }
@@ -69,6 +69,17 @@
   }
 
   async function manageSpotify() {
+    if (!spotifytracker) {
+      window.location.href = '/spotify-login';
+      spotifytracker = 1;
+    } else {
+      const user = await supabase.auth.getUser();
+      unlinkSpotify(user.data.user.id);
+
+      document.getElementById("updatespotify").innerHTML = "<i class=\"fa-solid fa-link\"></i> Link";
+      spotifytracker = 0;
+    }
+
     return;
   }
 
@@ -172,6 +183,8 @@
 
 <div class="wrapper">
   <div class="account-settings">
+    <a href="/" class="back"><i class="fa-solid fa-arrow-left"></i> Back</a>
+
     <h1>Account Settings</h1>
 
     <p>Update your information below</p>
@@ -197,8 +210,11 @@
     <input type="file" name="" id="fupload" on:change={fileUpload}>
 
     <h2>Account Integrations</h2>
-    <p>Spotify</p>
-    <button class="link" id="updatespotify" on:click={manageSpotify}>Link</button>
+    <div class="int-wrapper">
+      <p class="spotify-label">Spotify</p>
+      <button class="link" id="updatespotify" on:click={manageSpotify}><i class="fa-solid fa-link"></i> Link</button>
+    </div>
+    
     <!-- <p>Color Theme</p> -->
     <button class="signout" on:click={logout}>Sign out</button>
   </div>
@@ -207,25 +223,30 @@
 
 <style>
   .wrapper{
-    /* background-color: #f3f4f6; */
-    height: 100vh;
-    overflow: hidden;
-    width: 100vw;
-    /* display: flex;
-    justify-content: center;
-    align-items: center; */
+    background-color: #1d1f25;
+    height: auto;
+    overflow: auto;
   }
 
   .wrapper .account-settings {
-    width: 100%;
     min-height: 100vh;
+    margin-left: 20vw;
     color: #fff;
-    background-color: #1d1f25;
+    /* background-color: #1d1f25; */
     /* box-shadow: 0px 10px 15px -3px rgba(0,0,0,0.1); */
-    border: 1px solid #26282c;
-    border-radius: 8px;
+    border-left: 1px solid #26282c;
+    /* border-radius: 8px; */
     padding: 2.5em;
     text-align: left;
+  }
+
+  .wrapper .account-settings .back {
+    text-decoration: none;
+    color: #fff;
+  }
+
+  .wrapper .account-settings .back:visited {
+    color: #fff;
   }
 
   .wrapper .account-settings .input-group {
@@ -254,6 +275,27 @@
     cursor: text;
   }
 
+  .wrapper .account-settings .int-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 200px;
+    height: 40px;
+    vertical-align: middle;
+    border: 2px solid #26282c;
+    padding: 1rem;
+    border-radius: 5px;
+    margin-bottom: 20px;
+  }
+
+  .int-wrapper .link {
+    margin: auto 0 auto 0;
+  }
+
+  .int-wrapper p {
+    margin: auto 0 auto 0;
+  }
+
   .wrapper .account-settings .user-alert {
     text-align: left;
     margin: 0;
@@ -268,6 +310,10 @@
     border: 2px solid #c5c5c5;
     border-radius: 4px;
     cursor: pointer;
+  }
+
+  .wrapper .account-settings .signout {
+    display: block;
   }
 
   #fupload {

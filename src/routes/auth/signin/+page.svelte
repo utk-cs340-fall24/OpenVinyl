@@ -26,6 +26,7 @@
 
 <div class="container">
   <div class="login-window">
+    <a href="/" class="back"><i class="fa-solid fa-arrow-left"></i> Back</a>
     <a href="/"><img src={logo} alt="logo" class="logo"></a>
     <h1>Welcome Back!</h1>
     <p>Enter your information below</p>
@@ -76,6 +77,16 @@
     border-radius: 8px;
     padding: 2.5em;
     text-align: center;
+  }
+
+  .container .login-window .back {
+    text-align: left !important;
+    display: block;
+    text-decoration: none;
+    color: #fff;
+  }
+  .container .login-window .back:visited {
+    color: #fff;
   }
 
   .login-window h1 {
