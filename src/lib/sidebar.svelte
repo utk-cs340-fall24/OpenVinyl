@@ -47,7 +47,7 @@
 
           const profileData = await profileResponse.json();
           console.log("Spotify profile:", profileData);
-
+          
           if (profileData.product !== "premium") {
             showPlayer = false;
             showPremiumMessage = true;
