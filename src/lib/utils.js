@@ -1,5 +1,6 @@
 import { supabase } from "./supabaseClient";
 import { spotify, setAccessToken } from "./spotifyClient";
+import { local } from "d3";
 
 // Currently this function must be called on any page that uses spotify
 export async function authenticateClientCredentials() {
@@ -339,23 +340,27 @@ export async function refreshTokenIfNeeded() {
   }
 }
 
-// export async function unlinkSpotify() {
-//   try {
-//     const { data, error } = await supabase
-//       .from("profiles")
-//       .update({ st: username })
-//       .eq("id", profile_id);
-//     if (error) {
-//       console.log("Error updating username: ", error);
-//       return { success: false, error: error.message };
-//     }
-//     console.log("Username updated successfully:", data);
-//     return { success: true, data };
-//   } catch (err) {
-//     console.error("Unexpected error:", err);
-//     return { success: false, error: err.message };
-//   }
-// }
+export async function unlinkSpotify(profile_id) {
+  try {
+    const { data, error } = await supabase
+      .from("profiles")
+      .update({ spotify_access_token: null, spotify_refresh_token: null, spotify_token_expires: null })
+      .eq("id", profile_id);
+    if (error) {
+      console.log("Error clearing token: ", error);
+      return { success: false, error: error.message };
+    }
+    console.log("Token cleared successfully:", data);
+
+    localStorage.removeItem('spotify_access_token');
+    localStorage.removeItem('spotify_expires_at');
+
+    return { success: true, data };
+  } catch (err) {
+    console.error("Unexpected error:", err);
+    return { success: false, error: err.message };
+  }
+}
 
 // Function to follow a user
 export const followUser = async (userId) => {
