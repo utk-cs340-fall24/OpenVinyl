@@ -11,12 +11,13 @@
   let user = null;
   let username = "Guest";
   let content = "";
-  let rating = "";
+  let rating = -1;
   let search = "";
   let searchResults = [];
   let errorMessage = "";
   let successMessage = "";
   let profile_picture_url = null;
+  let searchBarOpen = false;
 
   let showAddPost = false;
   let localSelectedTrack = null;
@@ -112,6 +113,19 @@
     search = ""; 
   }
 
+  function openSearchBar(){
+    searchBarOpen = true;
+  }
+
+  function closeSearchBar(){
+    searchBarOpen = false;
+  }
+
+  function updateRating(starID){
+    rating = starID+1;
+    console.log(rating);
+  }
+
   async function makePost() {
     errorMessage = "";
     successMessage = "";
@@ -177,18 +191,21 @@
           />
           <span class="username">{username}</span>
         </div>
-        <div class="top-bar-text">Create Review</div>
+        <div class="top-bar-text"><button on:click={openSearchBar}>Create Review</button></div>
       </div>
 
-      <div class="content-wrapper">
+      <div class="content-wrapper" style="margin-top:{searchBarOpen ? '10px' : '0px'}">
         {#if !localSelectedTrack}
-          <div class="song-search">
+          <div class="song-search" style="display:{searchBarOpen ? 'block' : 'none'}">
             <input
               type="text"
               bind:value={search}
               on:input={getSearch}
               placeholder="Search for a song..."
             />
+            <!-- svelte-ignore a11y-no-static-element-interactions -->
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
+            <div class="close-review" on:click={closeSearchBar}><i class="fa-solid fa-x"></i></div>
             {#if searchResults.length > 0}
               <ul class="search-results">
                 <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
@@ -225,14 +242,18 @@
           </div>
 
           <div class="rating-wrapper">
-            <label for="rating">Rating (1-10):</label>
-            <input
-              type="number"
-              id="rating"
-              min="1"
-              max="10"
-              bind:value={rating}
-            />
+            <label for="rating">Rating:</label>
+            <div class="star-rating">
+              {#each Array(5) as _, i}
+                <button class="star-button" on:click={() => updateRating(i)} class:filled={rating > i}>
+                  {#if rating > i}
+                    ★
+                  {:else}
+                    ☆
+                  {/if}
+                </button>
+              {/each}
+            </div>
           </div>
 
           <div class="description-wrapper">
@@ -326,12 +347,25 @@
     color: #b9b9b9;
   }
 
+  .top-bar-text button{
+    background-color: #4b4f56;
+    border: none;
+    color: #b9b9b9;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .top-bar-text button:hover{
+    background-color: #5b5f66;
+  }
+
   .content-wrapper {
-    margin-top: 10px;
+    /* margin-top: 10px; */
   }
 
   .song-search input {
-    width: 100%;
+    width: 92%;
     padding: 8px;
     margin: 0;
     background-color: #2e2e2e;
@@ -339,6 +373,17 @@
     color: #fff;
     font-size: 1rem;
     border-radius: 5px;
+  }
+
+  .close-review {
+    padding-top:2px;
+    width: 5%;
+    display:inline-block;
+    color: #b9b9b9;
+    font-size: 1.1rem;
+    text-align: center;
+    cursor: pointer;
+    border-radius:5px;
   }
 
   .search-results {
@@ -418,6 +463,7 @@
   .rating-wrapper,
   .description-wrapper {
     margin-top: 10px;
+    color:#ccc;
   }
 
   .rating-wrapper label,
@@ -437,6 +483,31 @@
     color: #fff;
     font-size: 1rem;
     border-radius: 5px;
+  }
+
+  .rating-wrapper p{
+    margin:0;
+    padding:0;
+  }
+
+  .star-rating {
+    display: flex;
+    gap: 5px;
+  }
+
+  .star-rating button{
+    background-color: #00000000;
+    border: none;
+  }
+
+  .star-button {
+    font-size: 1.9rem;
+    cursor: pointer;
+    color:#ccc;
+  }
+
+  .filled {
+    color: #ffcc00;
   }
 
   .description-wrapper textarea {
