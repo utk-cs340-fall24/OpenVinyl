@@ -1,8 +1,8 @@
 # Sprint 2
 
-Name - Weston Agreda
-Github id - Weston49
-Group name - OpenVinyl
+- Name - Weston Agreda
+- Github id - Weston49
+- Group name - OpenVinyl
 
 ### What you planned to do
 
