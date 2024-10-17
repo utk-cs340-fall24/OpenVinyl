@@ -122,7 +122,7 @@
   }
 
   function updateRating(starID){
-    rating = starID+1;
+    rating = (starID+1)*2;
     console.log(rating);
   }
 
@@ -146,12 +146,13 @@
         localSelectedTrack.id,
         parseInt(rating)
       );
+      closeSearchBar();
 
       if (error) {
         console.error("Error submitting review:", error);
         errorMessage = "Error submitting review.";
       } else {
-        successMessage = "Review submitted successfully!";
+        // successMessage = "Review submitted successfully!";
 
         const newPost = {
           id: Date.now(), // tmp value
@@ -246,7 +247,7 @@
             <div class="star-rating">
               {#each Array(5) as _, i}
                 <button class="star-button" on:click={() => updateRating(i)} class:filled={rating > i}>
-                  {#if rating > i}
+                  {#if rating > i*2}
                     ★
                   {:else}
                     ☆
@@ -483,11 +484,6 @@
     color: #fff;
     font-size: 1rem;
     border-radius: 5px;
-  }
-
-  .rating-wrapper p{
-    margin:0;
-    padding:0;
   }
 
   .star-rating {
