@@ -120,6 +120,8 @@
     centerSongId = $page.params.slug;
     boxes[4].songId = $page.params.slug;
   }
+
+  
   
   try {
     unsubscribeUser = userReady.subscribe(async (value) => {
@@ -184,7 +186,28 @@
     fetchCenterSong();
     await cacheRecommendations();
     initializeGridWithCache();
+
 });
+
+  function handleMouseMove(e) {
+    const box = e.target;
+    const rect = box.getBoundingClientRect();
+    const x = e.clientX - rect.left; 
+    const y = e.clientY - rect.top;  
+    
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    
+    const rotateX = (y - centerY) / 7;
+    const rotateY = (centerX - x) / 7;
+  
+    box.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    box.addEventListener('mouseleave', resetBoxTransform);
+  }
+
+  function resetBoxTransform(e) {
+    e.target.style.transform = "rotateX(0deg) rotateY(0deg)";
+  }
 
 
   function debounce(func, delay) {
@@ -449,52 +472,6 @@
   boxes = newBoxes;
 }
 
-  // function moveGrid(direction) {
-  //   if (isRefreshingCache) {
-  //     console.log("Cache is refreshing, please wait...");
-  //     return;
-  //   }
-  //   let newBoxes = [...boxes];
-  //   showCheckmark = false;
-  //   clearTimeout(checkmarkTimeout);
-  //   switch (direction) {
-  //     case "up":
-  //       newBoxes = newBoxes.slice(0, 6);
-  //       for (let i = 0; i < 3; i++) {
-  //         const newBox = fetchFromCache();
-  //         newBoxes.unshift(newBox);
-  //       }
-  //       break;
-  //     case "down":
-  //       newBoxes = newBoxes.slice(3);
-  //       for (let i = 0; i < 3; i++) {
-  //         const newBox = fetchFromCache();
-  //         newBoxes.push(newBox);
-  //       }
-  //       break;
-  //     case "left":
-  //       for (let i = 0; i < 9; i += 3) {
-  //         const newBox = fetchFromCache();
-  //         newBoxes.splice(i, 1);
-  //         newBoxes.splice(i + 2, 0, newBox);
-  //       }
-  //       break;
-  //     case "right":
-  //       for (let i = 0; i < 9; i += 3) {
-  //         const newBox = fetchFromCache();
-  //         newBoxes.splice(i + 2, 1);
-  //         newBoxes.splice(i, 0, newBox);
-  //       }
-  //       break;
-  //   }
-
-  //   centerSongId = newBoxes[4].songId;
-  //   playPreview(newBoxes[4].previewUrl);
-  //   boxes = newBoxes;
-  // }
-
- 
-
   const debouncedMoveGrid = debounce(moveGrid, 0);
   async function dismissTutorial(event) {
     const { dontShowAgain } = event.detail;
@@ -723,10 +700,9 @@
       <!-- svelte-ignore a11y-no-static-element-interactions -->
       <div
         class="box"
-        class:highlight={index === 4}
         on:click={() => moveGridToIndex(index)}
       >
-        <img src={box.imageUrl} alt="{box.songName} by {box.artistName}" />
+        <img class="box-img" src={box.imageUrl} alt="{box.songName} by {box.artistName}" on:mousemove={handleMouseMove} class:highlight={index === 4}/>
         {#if index === 4 && showCheckmark}
           <div class="overlay">
             <div class="checkmark"></div>
@@ -778,7 +754,6 @@
     margin-top: 20px;
   }
 
-
   .game-board {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -795,26 +770,35 @@
   .box {
     position: relative;
     overflow: hidden;
-    background: #444;
-    border: 1px solid #555;
+    background: #44444400;
+    border: none;
     width: 100%;
     max-width: 200px;
     height: auto;
     aspect-ratio: 1 / 1;
     margin: 0 auto;
+    transition-duration: 0.2s;
+    transform: scale(1);
+  }
+
+  .box:hover {
+    transform: scale(1.1);
+    transition-duration: 0.2s;
   }
 
   .box img {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 90%;
+    height: 90%;
     object-fit: cover;
+    border: 3px solid #444;
+    transition-duration: 0.2s;
   }
 
   .highlight {
-    border: 4px solid #1db954;
+    border: 4px solid #1db954 !important;
   }
   .overlay {
     position: absolute;
