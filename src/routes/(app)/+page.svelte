@@ -201,7 +201,7 @@
         likes_cnt={post.likes_count}
         post_id={post.id}
       ></Post>
-    {/each}l
+    {/each}
 
     {#if loading}
       <div class="loading-spinner">Loading... </div>
@@ -248,8 +248,7 @@
     margin-left: 0;
     width: calc(100% - 300px);
     padding: 0px;
-    overflow-y: auto;
-    height: 100vh;
+    height: fit-content;
     background-color: #121212;
     transition: background-color 0.3s;
   }
