@@ -21,8 +21,6 @@
     </div>
 </div>
 
-
-
 <style>
     .layout {
         display: flex;

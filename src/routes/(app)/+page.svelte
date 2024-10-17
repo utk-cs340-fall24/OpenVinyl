@@ -1,7 +1,5 @@
 <script lang="js">
-  import AddPostBtn from "$lib/addPostBtn.svelte";
   import { supabase } from "$lib/supabaseClient";
-  import PostCreation from "$lib/postCreation.svelte";
   import Post from "$lib/post.svelte";
   import Sidebar from "$lib/sidebar.svelte";
   import { onMount, onDestroy } from "svelte";
@@ -23,6 +21,7 @@
   let isDroppableArea = false;
   let localSelectedTrack;
   let hasMorePosts = data.nextPage !== null;
+  let loadingPage = true;
   const dispatch = createEventDispatcher();
   const unsubscribe = selectedSong.subscribe((song) => {
     if (song) {
@@ -141,6 +140,9 @@
   }
 
   onMount(async () => {
+    setTimeout(() => {
+      loadingPage = false;
+    }, 1500);
     await fetchSongData();
 
     const {
@@ -172,6 +174,9 @@
   });
 </script>
 
+<div class="loading-screen" style="display:{loadingPage ? 'block' : 'none'}">
+  <div class="loading-spinner"><span class="loader"></span></div>
+</div>
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
   class="wrapper"
@@ -180,7 +185,6 @@
   on:drop={handleDrop}
 >
   <Sidebar />
-
   <div class="posts-wrapper {isDragOver ? 'drag-over' : ''}">
     <AddPost on:reviewSubmitted={handleReviewSubmitted} />
 
@@ -197,10 +201,10 @@
         likes_cnt={post.likes_count}
         post_id={post.id}
       ></Post>
-    {/each}
+    {/each}l
 
     {#if loading}
-      <div class="loading-spinner">Loading...</div>
+      <div class="loading-spinner">Loading... </div>
     {/if}
 
     {#if hasMorePosts}
@@ -214,7 +218,6 @@
     {/if}
   </div>
 
-  <PostCreation></PostCreation>
 </div>
 
 <style>
@@ -251,6 +254,26 @@
     transition: background-color 0.3s;
   }
 
+  .loader {
+    width: 100px;
+    height: 100px;
+    border: 10px solid #FFF;
+    border-bottom-color: #8d22f9;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+  } 
+
+  @keyframes rotation {
+  0% {
+      transform: rotate(0deg);
+  }
+  100% {
+      transform: rotate(360deg);
+  }
+  } 
+
   @media (max-width: 768px) {
     .sidebar {
       display: none;
@@ -271,6 +294,7 @@
   }
 
   .loading-spinner {
+    margin-top: 40vh;
     text-align: center;
     padding: 20px;
     color: #b9b9b9;
@@ -296,6 +320,14 @@
   }
 
   .load-more-button:hover:not(:disabled) {
+    background-color: #121212;
+  }
+
+  .loading-screen{
+    position:absolute;
+    z-index: 1000;
+    width:100vw;
+    height:150vh;
     background-color: #121212;
   }
 </style>

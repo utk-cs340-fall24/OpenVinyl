@@ -198,8 +198,8 @@
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
     
-    const rotateX = (y - centerY) / 7;
-    const rotateY = (centerX - x) / 7;
+    const rotateX = (y - centerY) / 5;
+    const rotateY = (centerX - x) / 5;
   
     box.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
     box.addEventListener('mouseleave', resetBoxTransform);
