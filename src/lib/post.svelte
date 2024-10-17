@@ -591,6 +591,23 @@
       margin-top: 15px;
     }
 
+    .song-info-wrapper {
+      overflow: hidden;
+      width: 100%;
+    }
+
+    .artist-name {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    .song-name {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
     .like-section {
       justify-content: center;
       margin-top: 15px;
