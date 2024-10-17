@@ -50,7 +50,7 @@
     if (session) {
       user = session.user;
       showAddPost = true;
-        console.log("user: ", user)
+      // console.log("user: ", user)
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
         .select("username, avatar_url")
@@ -61,7 +61,7 @@
         console.error("Error fetching profile:", profileError);
       } else {
         username = profile?.username || "Guest";
-        console.log("profile: ", profile)
+        // console.log("profile: ", profile)
         profile_picture_url = profile?.avatar_url;
       }
     } else {
@@ -123,7 +123,7 @@
 
   function updateRating(starID){
     rating = (starID+1)*2;
-    console.log(rating);
+    // console.log(rating);
   }
 
   async function makePost() {
@@ -246,7 +246,7 @@
             <label for="rating">Rating:</label>
             <div class="star-rating">
               {#each Array(5) as _, i}
-                <button class="star-button" on:click={() => updateRating(i)} class:filled={rating > i}>
+                <button class="star-button" on:click={() => updateRating(i)} class:filled={rating > (i*2)+1}>
                   {#if rating > i*2}
                     ★
                   {:else}
@@ -273,9 +273,7 @@
             <p class="success-message">{successMessage}</p>
           {/if}
 
-          <button class="submit-button" on:click={makePost}
-            >Submit Review</button
-          >
+          <button class="submit-button" on:click={makePost}>Submit Review</button>
         {/if}
       </div>
     </div>

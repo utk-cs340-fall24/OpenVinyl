@@ -720,7 +720,7 @@
 
 <style>
   .wrapper {
-    height: 90vh;
+    height: 87.5vh;
   }
   .info {
     display: flex;
@@ -763,7 +763,6 @@
     width: 100%;
     max-width: 620px;
     margin: 0 auto;
-    padding-bottom: 50px;
     box-sizing: border-box;
   }
 
@@ -897,6 +896,11 @@
     100% {
       width: 15px;
       height: 30px;
+    }
+  }
+  @media (max-width: 767px) {
+    .wrapper {
+      height: 89vh;
     }
   }
 </style>

@@ -153,38 +153,38 @@
   }
 
   async function updateVote(voteId, isUpvote, wasUpvote) {
-  console.log("Attempting to update vote:", { voteId, isUpvote, wasUpvote });
+    // console.log("Attempting to update vote:", { voteId, isUpvote, wasUpvote });
 
-  const { data, error } = await supabase
-    .from("likes")
-    .update({ isLiked: isUpvote })
-    .eq("id", voteId)
-    .eq("profile_id", logged_in_user_uuid)
-    .select();
+    const { data, error } = await supabase
+      .from("likes")
+      .update({ isLiked: isUpvote })
+      .eq("id", voteId)
+      .eq("profile_id", logged_in_user_uuid)
+      .select();
 
-  if (error) {
-    console.error("Error updating vote:", error);
-    throw error;
+    if (error) {
+      console.error("Error updating vote:", error);
+      throw error;
+    }
+
+    if (!data || data.length === 0) {
+      console.error("Update failed: No rows affected.");
+      return;
+    }
+
+    // console.log("Update successful:", data);
+
+    // Adjust counts
+    if (wasUpvote && !isUpvote) {
+      upvotesCount -= 1;
+      downvotesCount += 1;
+    } else if (!wasUpvote && isUpvote) {
+      upvotesCount += 1;
+      downvotesCount -= 1;
+    }
+
+    userVote = isUpvote ? "upvote" : "downvote";
   }
-
-  if (!data || data.length === 0) {
-    console.error("Update failed: No rows affected.");
-    return;
-  }
-
-  console.log("Update successful:", data);
-
-  // Adjust counts
-  if (wasUpvote && !isUpvote) {
-    upvotesCount -= 1;
-    downvotesCount += 1;
-  } else if (!wasUpvote && isUpvote) {
-    upvotesCount += 1;
-    downvotesCount -= 1;
-  }
-
-  userVote = isUpvote ? "upvote" : "downvote";
-}
 
 
 
