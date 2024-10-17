@@ -171,7 +171,7 @@ function updateRecentSongs(track) {
     recentSongs = [song, ...recentSongs]; 
 
     if (recentSongs.length > 3) {
-      recentSongs = recentSongs.slice(0, 3); // Limit to 3 recent songs
+      recentSongs = recentSongs.slice(0, 6); // Limit to 6 recent songs
     }
   }
 }

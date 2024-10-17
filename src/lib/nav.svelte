@@ -17,10 +17,6 @@
     } else if (active == 1) {
       active = 0;
     }
-
-
-
-
     return;
   }
 
@@ -28,8 +24,7 @@
     try {
       const session = await supabase.auth.getSession();
       user = session?.data?.session?.user;
-      // console.log(user.app_metadata.provider)
-     
+      // console.log(user.app_metadata.provider);
       if (user) {
         const { data, error } = await supabase.from("profiles").select("username, spotify_access_token, avatar_url").eq("id", user.id).single();
         if (data) {
@@ -107,9 +102,11 @@
         Connect with Spotify
       </button>
       {/if}
+      <!-- svelte-ignore a11y-click-events-have-key-events -->
       <div class="login-wrapper">
         <a class="login-href" href="/auth/signin" id="login-button">Login</a>
-        <img src={avatar_url || 'https://placehold.co/150'} class="avatar" alt="">
+        <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+        <img style="display:{user ? 'block' : 'none'}" src={avatar_url || 'https://placehold.co/150'} class="avatar" alt="" on:click={() => window.location.href = `/account`}>
 
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -192,6 +189,7 @@
   .avatar {
     height: 50px;
     width: auto;
+    cursor: pointer;
   }
 
   .hamburger {
