@@ -1,5 +1,5 @@
 <script>
-  import { SupabaseAuthClient } from "@supabase/supabase-js/dist/module/lib/SupabaseAuthClient";
+//   import { SupabaseAuthClient } from "@supabase/supabase-js/dist/module/lib/SupabaseAuthClient";
   import { supabase } from "$lib/supabaseClient";
   import { onMount } from "svelte";
 

@@ -13,10 +13,7 @@
         await authenticateClientCredentials();
         let topSongs = await getPlaylist("37i9dQZEVXbMDoHDwVN2tF"); //Top 50 Global songs via Spotify
         tracklist = topSongs.data.tracks.items;
-
     });
-
-
 </script>
 
 <div class="layout">
@@ -46,6 +43,5 @@
         margin-right: 0px;
         margin-left: auto;
     }
-
 
 </style>
