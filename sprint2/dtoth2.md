@@ -41,3 +41,6 @@
 
 ### What you accomplished
 
+This sprint I feel like I accomplished a lot with regard to big features for the app. I added comment functionality so users could comment on people's music reviews. I added the option to upvote or downvote posts which was a feature added on top of sprint 1's like feature. I improved the discover page to link with your spotify and allow you to add songs from discover directly into your spotify playlist. I also created a new page called discuss which is like a forum for holding all the popular songs and their reviews, so you could see them in one place.
+
+
