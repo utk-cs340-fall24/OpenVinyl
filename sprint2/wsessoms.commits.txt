@@ -1,0 +1,291 @@
+sidebar.svelte (wessoms on 10/14/2024 at 16:30):             aria-label="Previous Track">
+sidebar.svelte (wessoms on 10/14/2024 at 16:30):             <i class="fa-solid fa-backward"></i>
+sidebar.svelte (wessoms on 10/14/2024 at 16:30):           </button>
+sidebar.svelte (wessoms on 10/14/2024 at 16:30):             <button on:click={pause} class="control-button" aria-label="Pause">
+sidebar.svelte (wessoms on 10/14/2024 at 16:30):               <i class="fa-solid fa-pause"></i>
+sidebar.svelte (wessoms on 10/14/2024 at 16:30):             </button>
+sidebar.svelte (wessoms on 10/14/2024 at 16:30):             <button on:click={play} class="control-button" aria-label="Play">
+sidebar.svelte (wessoms on 10/14/2024 at 16:30):               <i class="fa-solid fa-play"></i>
+sidebar.svelte (wessoms on 10/14/2024 at 16:30):             </button>
+sidebar.svelte (wessoms on 10/14/2024 at 16:30):             aria-label="Next Track">
+sidebar.svelte (wessoms on 10/14/2024 at 16:30):             <i class="fa-solid fa-forward"></i>
+sidebar.svelte (wessoms on 10/14/2024 at 16:30):           </button>
+
+topSongs.svelte (wessoms on 10/08/2024 at 20:16): <script>  
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):     export let tracklist;
+topSongs.svelte (wessoms on 10/14/2024 at 17:16):     let region = "Global"
+topSongs.svelte (wessoms on 10/08/2024 at 20:16): </script>
+topSongs.svelte (wessoms on 10/08/2024 at 20:16): <div class="wrapper">
+topSongs.svelte (wessoms on 10/14/2024 at 17:16):     <p class="title">Top Songs - {region}</p>
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):     <div class="top-song-list">
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):         {#each tracklist as song, index}
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):             <div class="song-listing">
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):                 <span class="ranking-number">{index+1}</span>
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):                 <img 
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):                     class="song-image" 
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):                     src={song.track ? song.track.album.images[0]?.url : "https://placehold.co/300}"}
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):                     alt="album cover"
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):                 <div class="song-info">
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):                     <span class="song-title">{song.track.name}</span>
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):                     <span class="artist-name">{song.track.artists[0].name}</span>
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):                 </div>
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):             </div>
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):         {/each}
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):     </div>
+topSongs.svelte (wessoms on 10/08/2024 at 20:16): </div>
+topSongs.svelte (wessoms on 10/08/2024 at 20:16): <style>
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):     .wrapper {
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):         border-radius: 10px;
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):         background-color: #1d1f25;
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):         width: 20vw;
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):         height: 80vh;
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):         margin: 20px;
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):         padding: 0px;
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):         overflow: hidden;
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):     }
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):     .title {
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):         text-align: center;
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):         font-size: 30px;
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):     }
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):     .top-song-list {
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):         overflow-y: scroll;
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):         height: 70vh;
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):         padding-left: 20px;
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):         padding-right: 20px;
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):         display: flex;
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):         flex-direction: column;
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):         flex-wrap: nowrap;
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):         gap: 0px;
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):     }
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):     .song-listing {
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):         display: flex;
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):         flex-direction: row;
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):         flex-wrap: nowrap;
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):         padding: 0px;
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):         gap: 10px;
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):     }
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):     .ranking-number {
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):         font-size: 35px;
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):         font-weight: bold;
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):         text-align: center;
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):         min-width: 40px;
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):         margin-bottom: 25px;
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):         margin-top: 12px;
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):     }
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):     .song-image {
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):         height: 64px;
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):         width: 64px;
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):     }
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):     .song-info {
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):         overflow: hidden;
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):         display: flex;
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):         flex-direction: column;
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):         padding-top: 3px;
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):         gap: 0px;
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):     }
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):     .song-title {
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):         font-weight: bold;
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):         font-size: 1.2rem;
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):         color: #e4e4e4;
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):         margin: 3px;
+topSongs.svelte (wessoms on 10/16/2024 at 16:03):         text-overflow: ellipsis;
+topSongs.svelte (wessoms on 10/14/2024 at 17:16):         white-space: nowrap;
+topSongs.svelte (wessoms on 10/14/2024 at 17:16):         overflow: hidden;
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):     }
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):     .artist-name {
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):         font-size: 1rem;
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):         font-weight: normal;
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):         color: #b9b9b9;
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):         margin: 3px;
+topSongs.svelte (wessoms on 10/16/2024 at 16:03):         text-overflow: ellipsis;
+topSongs.svelte (wessoms on 10/14/2024 at 17:16):         white-space: nowrap;
+topSongs.svelte (wessoms on 10/14/2024 at 17:16):         overflow: hidden;
+topSongs.svelte (wessoms on 10/08/2024 at 20:16):     }
+topSongs.svelte (wessoms on 10/08/2024 at 20:16): </style>
+
+post.svelte  (wessoms on 10/16/2024 at 16:03):       <p class="review-preview">{desc}</p>
+post.svelte  (wessoms on 10/16/2024 at 16:03):     overflow: hidden;
+post.svelte  (wessoms on 10/16/2024 at 16:03):     text-overflow: ellipsis;
+post.svelte  (wessoms on 10/16/2024 at 16:03):     white-space: nowrap;
+post.svelte  (wessoms on 10/16/2024 at 16:03):     overflow: hidden;
+post.svelte  (wessoms on 10/16/2024 at 16:03):     text-overflow: ellipsis;
+post.svelte  (wessoms on 10/16/2024 at 16:03):     white-space: nowrap;
+post.svelte  (wessoms on 10/16/2024 at 16:03):     overflow: hidden;
+post.svelte  (wessoms on 10/16/2024 at 16:03):   }
+post.svelte  (wessoms on 10/16/2024 at 16:03):   .review-preview {
+post.svelte  (wessoms on 10/16/2024 at 16:03):     font-size: 1rem;
+post.svelte  (wessoms on 10/16/2024 at 16:03):     color: #e4e4e4;
+post.svelte  (wessoms on 10/16/2024 at 16:03):     text-overflow: ellipsis;
+post.svelte  (wessoms on 10/16/2024 at 16:03):     white-space: nowrap;
+post.svelte  (wessoms on 10/16/2024 at 16:03):     overflow: hidden;
+post.svelte  (wessoms on 10/16/2024 at 17:31):     .song-info-wrapper {
+post.svelte  (wessoms on 10/16/2024 at 17:31):       overflow: hidden;
+post.svelte  (wessoms on 10/16/2024 at 17:31):       width: 100%;
+post.svelte  (wessoms on 10/16/2024 at 17:31):     }
+post.svelte  (wessoms on 10/16/2024 at 17:31):     .artist-name {
+post.svelte  (wessoms on 10/16/2024 at 17:31):       text-overflow: ellipsis;
+post.svelte  (wessoms on 10/16/2024 at 17:31):       white-space: nowrap;
+post.svelte  (wessoms on 10/16/2024 at 17:31):       overflow: hidden;
+post.svelte  (wessoms on 10/16/2024 at 17:31):     }
+post.svelte  (wessoms on 10/16/2024 at 17:31):     .song-name {
+post.svelte  (wessoms on 10/16/2024 at 17:31):       text-overflow: ellipsis;
+post.svelte  (wessoms on 10/16/2024 at 17:31):       white-space: nowrap;
+post.svelte  (wessoms on 10/16/2024 at 17:31):       overflow: hidden;
+post.svelte  (wessoms on 10/16/2024 at 17:31):     }
+
+podium.svelte (wessoms on 10/16/2024 at 23:42): <script>
+podium.svelte (wessoms on 10/16/2024 at 23:42):   import { supabase } from "$lib/supabaseClient";
+podium.svelte (wessoms on 10/16/2024 at 23:42):   import { onMount } from "svelte";
+podium.svelte (wessoms on 10/16/2024 at 23:42): export let podiumData;
+podium.svelte (wessoms on 10/16/2024 at 23:42): let profile_pic_url = [];
+podium.svelte (wessoms on 10/16/2024 at 23:42): let username = [];
+podium.svelte (wessoms on 10/16/2024 at 23:42):     onMount(async () => {
+podium.svelte (wessoms on 10/16/2024 at 23:42):         await fetchMultipleUsers(podiumData);
+podium.svelte (wessoms on 10/16/2024 at 23:42):     });
+podium.svelte (wessoms on 10/16/2024 at 23:42):     async function fetchMultipleUsers(userIds) {
+podium.svelte (wessoms on 10/16/2024 at 23:42):         const { data, error } = await supabase
+podium.svelte (wessoms on 10/16/2024 at 23:42):             .from('profiles')
+podium.svelte (wessoms on 10/16/2024 at 23:42):             .select('id, username, avatar_url')
+podium.svelte (wessoms on 10/16/2024 at 23:42):             .in('id', userIds);
+podium.svelte (wessoms on 10/16/2024 at 23:42):         if (error) {
+podium.svelte (wessoms on 10/16/2024 at 23:42):             console.error('Error fetching users:', error);
+podium.svelte (wessoms on 10/16/2024 at 23:42):         }
+podium.svelte (wessoms on 10/16/2024 at 23:42):         if(data) {
+podium.svelte (wessoms on 10/16/2024 at 23:42):             const orderedData = userIds.map(id => data.find(user => user.id === id));
+podium.svelte (wessoms on 10/16/2024 at 23:42):             orderedData.forEach((user, index) => {
+podium.svelte (wessoms on 10/16/2024 at 23:42):                 username[index] = user?.username || 'Unknown';
+podium.svelte (wessoms on 10/16/2024 at 23:42):                 profile_pic_url[index] = user?.avatar_url || 'https://placehold.co/100'; 
+podium.svelte (wessoms on 10/16/2024 at 23:42):             });
+podium.svelte (wessoms on 10/16/2024 at 23:42):         }
+podium.svelte (wessoms on 10/16/2024 at 23:42):     }
+podium.svelte (wessoms on 10/16/2024 at 23:42): </script>
+podium.svelte (wessoms on 10/16/2024 at 23:42): <div class="wrapper">
+podium.svelte (wessoms on 10/16/2024 at 23:42):     <div>
+podium.svelte (wessoms on 10/16/2024 at 23:42):         <p class="header">Top users</p>
+podium.svelte (wessoms on 10/16/2024 at 23:42):     </div>
+podium.svelte (wessoms on 10/16/2024 at 23:42):     <div class="podium-wrapper">
+podium.svelte (wessoms on 10/16/2024 at 23:42):         {#each username as user, index}
+podium.svelte (wessoms on 10/16/2024 at 23:42):         <div class="podium-position">
+podium.svelte (wessoms on 10/16/2024 at 23:42):             <div class="profile-picture-wrapper">
+podium.svelte (wessoms on 10/16/2024 at 23:42):                 <div class="profile-picture">
+podium.svelte (wessoms on 10/16/2024 at 23:42):                     <img class=profile-picture src={profile_pic_url[index]} alt="profile-pic" />
+podium.svelte (wessoms on 10/16/2024 at 23:42):                 </div>
+podium.svelte (wessoms on 10/16/2024 at 23:42):             </div>
+podium.svelte (wessoms on 10/16/2024 at 23:42):                 <div>
+podium.svelte (wessoms on 10/16/2024 at 23:42):                     <p class="username">{username[index]}</p>
+podium.svelte (wessoms on 10/16/2024 at 23:42):                 </div>
+podium.svelte (wessoms on 10/16/2024 at 23:42):                 <div class="podium-bar"></div>
+podium.svelte (wessoms on 10/16/2024 at 23:42):             </div>
+podium.svelte (wessoms on 10/16/2024 at 23:42):         {/each}
+podium.svelte (wessoms on 10/16/2024 at 23:42):     </div>
+podium.svelte (wessoms on 10/16/2024 at 23:42):     <div class="divider"></div>
+podium.svelte (wessoms on 10/16/2024 at 23:42): </div>
+podium.svelte (wessoms on 10/16/2024 at 23:42): <style>
+podium.svelte (wessoms on 10/16/2024 at 23:42):     .wrapper {
+podium.svelte (wessoms on 10/16/2024 at 23:42):         display: flex;
+podium.svelte (wessoms on 10/16/2024 at 23:42):         flex-direction: column;
+podium.svelte (wessoms on 10/16/2024 at 23:42):         align-items: center;
+podium.svelte (wessoms on 10/16/2024 at 23:42):     }
+podium.svelte (wessoms on 10/16/2024 at 23:42):     .header {
+podium.svelte (wessoms on 10/16/2024 at 23:42):         font-size: 50px;
+podium.svelte (wessoms on 10/16/2024 at 23:42):         text-align: center;
+podium.svelte (wessoms on 10/16/2024 at 23:42):         position: relative;
+podium.svelte (wessoms on 10/16/2024 at 23:42):         margin-bottom: 180px;
+podium.svelte (wessoms on 10/16/2024 at 23:42):     }
+podium.svelte (wessoms on 10/16/2024 at 23:42):     .podium-wrapper {
+podium.svelte (wessoms on 10/16/2024 at 23:42):         display: flex;
+podium.svelte (wessoms on 10/16/2024 at 23:42):         justify-content: center;
+podium.svelte (wessoms on 10/16/2024 at 23:42):         align-items: flex-end;
+podium.svelte (wessoms on 10/16/2024 at 23:42):         gap: 20px;
+podium.svelte (wessoms on 10/16/2024 at 23:42):         color: #121212;
+podium.svelte (wessoms on 10/16/2024 at 23:42):     }
+podium.svelte (wessoms on 10/16/2024 at 23:42):     .profile-picture-wrapper {
+podium.svelte (wessoms on 10/16/2024 at 23:42):         position: absolute;
+podium.svelte (wessoms on 10/16/2024 at 23:42):         top: -120px;
+podium.svelte (wessoms on 10/16/2024 at 23:42):         overflow: hidden;
+podium.svelte (wessoms on 10/16/2024 at 23:42):     }
+podium.svelte (wessoms on 10/16/2024 at 23:42):     .profile-picture {
+podium.svelte (wessoms on 10/16/2024 at 23:42):         color: white;
+podium.svelte (wessoms on 10/16/2024 at 23:42):         width: 100px;
+podium.svelte (wessoms on 10/16/2024 at 23:42):         height: 100px;
+podium.svelte (wessoms on 10/16/2024 at 23:42):         border-radius: 50%;
+podium.svelte (wessoms on 10/16/2024 at 23:42):         margin-bottom: 10px;
+podium.svelte (wessoms on 10/16/2024 at 23:42):     }
+podium.svelte (wessoms on 10/16/2024 at 23:42):     .username {
+podium.svelte (wessoms on 10/16/2024 at 23:42):         text-overflow: ellipsis;
+podium.svelte (wessoms on 10/16/2024 at 23:42):         white-space: nowrap;
+podium.svelte (wessoms on 10/16/2024 at 23:42):         overflow: hidden;
+podium.svelte (wessoms on 10/16/2024 at 23:42):     }
+podium.svelte (wessoms on 10/16/2024 at 23:42):     .podium-position {
+podium.svelte (wessoms on 10/16/2024 at 23:42):         display: flex;
+podium.svelte (wessoms on 10/16/2024 at 23:42):         flex-direction: column;
+podium.svelte (wessoms on 10/16/2024 at 23:42):         align-items: center;
+podium.svelte (wessoms on 10/16/2024 at 23:42):         width: 200px;
+podium.svelte (wessoms on 10/16/2024 at 23:42):         padding: 10px;
+podium.svelte (wessoms on 10/16/2024 at 23:42):         text-align: center;
+podium.svelte (wessoms on 10/16/2024 at 23:42):         border-top-left-radius: 20px;
+podium.svelte (wessoms on 10/16/2024 at 23:42):         border-top-right-radius: 20px;
+podium.svelte (wessoms on 10/16/2024 at 23:42):         position: relative;
+podium.svelte (wessoms on 10/16/2024 at 23:42):     }
+podium.svelte (wessoms on 10/16/2024 at 23:42):     .podium-bar {
+podium.svelte (wessoms on 10/16/2024 at 23:42):         width: 100%;
+podium.svelte (wessoms on 10/16/2024 at 23:42):     }
+podium.svelte (wessoms on 10/16/2024 at 23:42):     .podium-position:nth-child(1) {
+podium.svelte (wessoms on 10/16/2024 at 23:42):         height: 280px;
+podium.svelte (wessoms on 10/16/2024 at 23:42):         background-color: silver;
+podium.svelte (wessoms on 10/16/2024 at 23:42):     }
+podium.svelte (wessoms on 10/16/2024 at 23:42):     .podium-position:nth-child(2) {
+podium.svelte (wessoms on 10/16/2024 at 23:42):         height: 360px;
+podium.svelte (wessoms on 10/16/2024 at 23:42):         background-color: gold;
+podium.svelte (wessoms on 10/16/2024 at 23:42):     }
+podium.svelte (wessoms on 10/16/2024 at 23:42):     .podium-position:nth-child(3) {
+podium.svelte (wessoms on 10/16/2024 at 23:42):         height: 200px;
+podium.svelte (wessoms on 10/16/2024 at 23:42):         background-color: #cd7f32;
+podium.svelte (wessoms on 10/16/2024 at 23:42):     }
+podium.svelte (wessoms on 10/16/2024 at 23:42):     .divider {
+podium.svelte (wessoms on 10/16/2024 at 23:42):         width: 80%;
+podium.svelte (wessoms on 10/16/2024 at 23:42):         height: 3px; 
+podium.svelte (wessoms on 10/16/2024 at 23:42):         background-color: #2c2f34; 
+podium.svelte (wessoms on 10/16/2024 at 23:42):     }
+podium.svelte (wessoms on 10/16/2024 at 23:42): </style>
+
++page.svelte (wessoms on 10/08/2024 at 20:16): <script>
++page.svelte (wessoms on 10/08/2024 at 20:16):     import Sidebar from "$lib/sidebar.svelte";
++page.svelte (wessoms on 10/16/2024 at 23:42):     import Podium from "$lib/podium.svelte";
++page.svelte (wessoms on 10/08/2024 at 20:16):     import { authenticateClientCredentials } from "$lib/utils";
++page.svelte (wessoms on 10/08/2024 at 20:16):     import { getPlaylist } from "$lib/utils";
++page.svelte (wessoms on 10/08/2024 at 20:16):     import { onMount } from "svelte";
++page.svelte (wessoms on 10/08/2024 at 20:16):     let tracklist = [];
++page.svelte (wessoms on 10/16/2024 at 23:42):     //temporary, will later be sorted by users with the most like/upvotes/karma/whatever
++page.svelte (wessoms on 10/16/2024 at 23:42):     let podiumData = ["dd5eff79-7e05-400e-8c2c-3d934679bb0e", "c157bef8-eaba-4ef4-95e1-511bd48dfede", "80241ea9-5636-46ac-af11-96eee2e5cf07"];
++page.svelte (wessoms on 10/08/2024 at 20:16):     onMount(async () => {
++page.svelte (wessoms on 10/08/2024 at 20:16):         await authenticateClientCredentials();
++page.svelte (wessoms on 10/08/2024 at 20:16):         let topSongs = await getPlaylist("37i9dQZEVXbMDoHDwVN2tF"); //Top 50 Global songs via Spotify
++page.svelte (wessoms on 10/08/2024 at 20:16):         tracklist = topSongs.data.tracks.items;
++page.svelte (wessoms on 10/08/2024 at 20:16):     });
++page.svelte (wessoms on 10/08/2024 at 20:16): </script>
++page.svelte (wessoms on 10/08/2024 at 20:16): <div class="layout">
++page.svelte (wessoms on 10/08/2024 at 20:16):     <Sidebar />
++page.svelte (wessoms on 10/16/2024 at 23:42):     <div class="podium">
++page.svelte (wessoms on 10/16/2024 at 23:42):         <Podium podiumData={podiumData}/>
++page.svelte (wessoms on 10/16/2024 at 23:42):     </div>
++page.svelte (wessoms on 10/08/2024 at 20:16):     <div class="top-songs">
++page.svelte (wessoms on 10/08/2024 at 20:16):         <TopSongs class="top-songs" tracklist={tracklist}/>
++page.svelte (wessoms on 10/08/2024 at 20:16):     </div>
++page.svelte (wessoms on 10/08/2024 at 20:16): </div>
++page.svelte (wessoms on 10/08/2024 at 20:16): <style>
++page.svelte (wessoms on 10/08/2024 at 20:16):     .layout {
++page.svelte (wessoms on 10/08/2024 at 20:16):         display: flex;
++page.svelte (wessoms on 10/08/2024 at 20:16):         height:88.6vh; /* temporary, add popular posts to fill page later */
++page.svelte (wessoms on 10/08/2024 at 20:16):     }
++page.svelte (wessoms on 10/16/2024 at 23:42):     .podium {
++page.svelte (wessoms on 10/16/2024 at 23:42):         width: 100%;
++page.svelte (wessoms on 10/16/2024 at 23:42):         padding-top: 0vh;
++page.svelte (wessoms on 10/16/2024 at 23:42):     }
++page.svelte (wessoms on 10/08/2024 at 20:16):     .top-songs {
++page.svelte (wessoms on 10/08/2024 at 20:16):         display: flex;
++page.svelte (wessoms on 10/08/2024 at 20:16):         align-items: center;
++page.svelte (wessoms on 10/08/2024 at 20:16):         margin-right: 0px;
++page.svelte (wessoms on 10/08/2024 at 20:16):         margin-left: auto;
++page.svelte (wessoms on 10/08/2024 at 20:16):     }
++page.svelte (wessoms on 10/08/2024 at 20:16): </style>
