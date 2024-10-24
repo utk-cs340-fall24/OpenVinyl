@@ -16,7 +16,7 @@
     };
     let loading = true;
     let error = null;
-  
+    
     // Spotify Authentication
   
 
@@ -32,6 +32,7 @@
             artist: data.artists.map((artist) => artist.name).join(', '),
             image_url: data.album.images[0]?.url || 'https://placehold.co/300',
           };
+          console.log(data)
         } else {
           console.log('No track found for the given ID.');
           songDetails = {
@@ -45,6 +46,8 @@
         error = err.message;
       } finally {
         loading = false;
+        
+
       }
     });
   </script>
