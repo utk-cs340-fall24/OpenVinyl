@@ -279,9 +279,11 @@
 
     .posts-wrapper {
       width: 100%;
+      margin-left:0;
     }
 
     .wrapper {
+      margin-left:0;
       flex-direction: column;
     }
   }
