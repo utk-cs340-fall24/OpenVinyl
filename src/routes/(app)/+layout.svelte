@@ -42,8 +42,7 @@ import { page } from '$app/stores'
 
   </div>
   <Nav />
-  {#if $page.url.pathname !== '/fancy'}
-  {/if}
+  <Sidebar hidden={$page.url.pathname !== '/discover'}></Sidebar>
   <slot></slot>
   <Footer />
 </div>
