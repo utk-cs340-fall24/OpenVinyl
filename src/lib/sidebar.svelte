@@ -11,6 +11,8 @@
   let showPremiumMessage = true;
   let showPlayer = false;
   let isPlaying = false;
+  let pinnedSidebar = false;
+  export let hidden;
 
   const userReady = derived(user, $user => $user); // Wait for user to be set
 
@@ -171,7 +173,7 @@ function updateRecentSongs(track) {
     recentSongs = [song, ...recentSongs]; 
 
     if (recentSongs.length > 3) {
-      recentSongs = recentSongs.slice(0, 6); // Limit to 6 recent songs
+      recentSongs = recentSongs.slice(0, 3); // Limit to 6 recent songs
     }
   }
 }
@@ -264,7 +266,8 @@ function updateRecentSongs(track) {
 
 <!-- svelte-ignore missing-declaration -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<div class="sidebar" on:drop={handleDrop} on:dragover|preventDefault>
+<div class="sidebar" style="position:{pinnedSidebar ? 'fixed' : 'absolute'}; display:{hidden ? '' : 'none'}" on:drop={handleDrop} on:dragover|preventDefault>
+  <button class="pin-button" on:click={() => pinnedSidebar = !pinnedSidebar}><i class="fa fa-thumb-tack" aria-hidden="true"></i></button>
   {#if showPremiumMessage}
     <div class="premium-message">
       <p class="small-text">
@@ -380,14 +383,17 @@ function updateRecentSongs(track) {
   }
 
   .sidebar {
+    top: 13%;
+    left: 2%;
+    z-index: 1000; /* Ensure it floats on top of other elements */
     display: flex;
     flex-direction: column;
     background-color: #1d1f25;
-    width: 100%;
-    max-width: 300px;
+    width: 300px;
     padding: 20px;
     color: #f3f1f1;
     border-right: 1px solid #26282c;
+    border-radius:25px;
   }
 
   .playback-section {
@@ -442,10 +448,34 @@ function updateRecentSongs(track) {
     background-color: #007bff;
   }
 
+  .pin-button{
+    width: 30px;
+    height: 30px;
+    background-color: #26282c00;
+    border: none;
+    border-radius: 50%;
+    color: #f3f1f1;
+    font-size: 20px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left:225px;
+    margin-bottom:10px;
+  }
+
+  .pin-button:hover{
+    background-color: #434343;
+  }
+
   .recent-songs {
     flex: 1;
-    margin-top: 20px;
     overflow-y: auto;
+  }
+
+  .recent-songs p{
+    margin: 0;
   }
 
   .section-header {

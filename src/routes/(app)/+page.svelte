@@ -142,7 +142,7 @@
   onMount(async () => {
     setTimeout(() => {
       loadingPage = false;
-    }, 1500);
+    }, 10); // loading screen will be displayed for this amount of time
     await fetchSongData();
 
     const {
@@ -184,7 +184,6 @@
   on:dragleave={handleDragLeave}
   on:drop={handleDrop}
 >
-  <Sidebar />
   <div class="posts-wrapper {isDragOver ? 'drag-over' : ''}">
     <AddPost on:reviewSubmitted={handleReviewSubmitted} />
 
@@ -223,6 +222,7 @@
 <style>
   .wrapper {
     display: flex;
+    background-color: #121212;
     min-height: 90vh;
     width: 100%;
     position: relative;
@@ -245,11 +245,10 @@
 
   .posts-wrapper {
     display: inline-block;
-    margin-left: 0;
-    width: calc(100% - 300px);
-    padding: 0px;
+    padding:0px;
+    margin-left:250px;
+    width:calc(100% - 300px);
     height: fit-content;
-    background-color: #121212;
     transition: background-color 0.3s;
   }
 
