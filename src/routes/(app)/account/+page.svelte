@@ -17,8 +17,6 @@
       const session = await supabase.auth.getSession();
       const user = session?.data?.session?.user;
 
-      let filename = user.id + '.png'
-
       if (user) {
         const { data, error } = await supabase.from("profiles").select("username, first_name, last_name, avatar_url, spotify_access_token").eq("id", user.id).single();
         if (data) {
@@ -156,7 +154,10 @@
   async function fileUpload() {
     console.log(document.getElementById("fupload").files[0])
     const user = await supabase.auth.getUser();
-    let filename = user.data.user.id + '.png'
+
+    let providedFilename = document.getElementById("fupload").files[0].name;
+    let filename = user.data.user.id + "." + providedFilename.substring(providedFilename.indexOf(".") + 1);
+    console.log(filename);
 
     const { data, error } = await supabase
       .storage
