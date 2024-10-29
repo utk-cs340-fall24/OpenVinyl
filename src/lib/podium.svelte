@@ -1,35 +1,14 @@
 <script>
-//   import { SupabaseAuthClient } from "@supabase/supabase-js/dist/module/lib/SupabaseAuthClient";
-  import { supabase } from "$lib/supabaseClient";
   import { onMount } from "svelte";
 
-export let podiumData;
+    export let data;
 
-let profile_pic_url = [];
-let username = [];
+    let podium = [];
 
+    
     onMount(async () => {
-        await fetchMultipleUsers(podiumData);
+        podium = [...podium, data[1], data[0], data[2]];
     });
-
-    async function fetchMultipleUsers(userIds) {
-        const { data, error } = await supabase
-            .from('profiles')
-            .select('id, username, avatar_url')
-            .in('id', userIds);
-        
-        if (error) {
-            console.error('Error fetching users:', error);
-        }
-        if(data) {
-            const orderedData = userIds.map(id => data.find(user => user.id === id));
-
-            orderedData.forEach((user, index) => {
-                username[index] = user?.username || 'Unknown';
-                profile_pic_url[index] = user?.avatar_url || 'https://placehold.co/100'; 
-            });
-        }
-    }
 
 </script>
 
@@ -40,15 +19,15 @@ let username = [];
         <p class="header">Top users</p>
     </div>
     <div class="podium-wrapper">
-        {#each username as user, index}
+        {#each podium as user}
         <div class="podium-position">
             <div class="profile-picture-wrapper">
                 <div class="profile-picture">
-                    <img class=profile-picture src={profile_pic_url[index]} alt="profile-pic" />
+                    <img class=profile-picture src={user.avatar_url} alt="profile-pic" />
                 </div>
             </div>
                 <div>
-                    <p class="username">{username[index]}</p>
+                    <p class="username">{user.username}</p>
                 </div>
                 <div class="podium-bar"></div>
             </div>
