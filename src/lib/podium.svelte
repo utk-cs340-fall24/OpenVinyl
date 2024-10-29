@@ -26,11 +26,15 @@
                     <img class=profile-picture src={user.avatar_url} alt="profile-pic" />
                 </div>
             </div>
-                <div>
-                    <p class="username">{user.username}</p>
-                </div>
-                <div class="podium-bar"></div>
+            <div>
+                <span class="username">{user.username}</span>
             </div>
+            <div class="likes-wrapper">
+                <span class="like-count">{user.total_likes}</span>
+                <span class="likes-text">likes</span>
+            </div>
+            <div class="podium-bar"></div>
+        </div>
         {/each}
     </div>
 
@@ -81,6 +85,17 @@
         text-overflow: ellipsis;
         white-space: nowrap;
         overflow: hidden;
+        font-size: 20px;
+    }
+
+    .likes-wrapper {
+        display: flex;
+        flex-direction: column;
+        padding-top: 30px;
+    }
+
+    .like-count {
+        font-size: 40px;
     }
 
     .podium-position {
@@ -115,7 +130,7 @@
     }
     
     .divider {
-        width: 80%;
+        width: 70%;
         height: 3px; 
         background-color: #2c2f34; 
     }

@@ -61,7 +61,9 @@
             <Podium data={topUserData}/>
         </div>
     {:else}
-        <p>Loading podium data...</p>
+        <div class="loading-wrapper">
+            <span class="loading-text">Loading podium data...</span>
+        </div>
     {/if}
     <div class="top-songs">
         <TopSongs class="top-songs" tracklist={tracklist}/>
@@ -71,7 +73,7 @@
 <style>
     .layout {
         display: flex;
-        height:88.6vh; /* temporary, add popular posts to fill page later */
+        height: auto; /* temporary, add popular posts to fill page later */
     }
 
     .podium {
@@ -84,6 +86,20 @@
         align-items: center;
         margin-right: 0px;
         margin-left: auto;
+    }
+
+    .loading-wrapper {
+        display: flex;
+        align-items: center;
+        margin-left: auto;
+    }
+
+
+    .loading-text {
+        font-size: 50px;
+        display: flex;
+        text-align: center;
+        padding: auto;
     }
 
 </style>
