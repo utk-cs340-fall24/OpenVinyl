@@ -1,8 +1,8 @@
 <script>
     import Matter from 'matter-js';
     import { onMount } from 'svelte';
-    import Car from "$lib/Car.svelte";
+    import Plinko from "$lib/Plinko.svelte";
     </script>
         
- <Car />
+ <Plinko />
     
