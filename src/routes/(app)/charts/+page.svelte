@@ -9,6 +9,7 @@
     let tracklist = [];
     let topUsers = [];
     let topUserData = [];
+    let postCounts = [];
 
     onMount(async () => {
         await authenticateClientCredentials();
@@ -21,7 +22,12 @@
             ...profile,
             total_likes: topUsers[index].total_likes
         }));
-        
+        postCounts = await fetchUserPostCounts(topIds);
+        console.log(postCounts);
+        topUserData = topUserData.map((profile, index) => ({
+            ...profile,
+            post_count: postCounts[index].post_count
+        }));
     });
     
     async function fetchTopUsers() {
@@ -49,7 +55,23 @@
         if(data) {
             const orderedData = userIds.map(id => data.find(user => user.id === id));
             
-            return orderedData
+            return orderedData;
+        }
+    }
+
+    async function fetchUserPostCounts(userIds) {
+        const { data, error } = await supabase.rpc('count_user_posts', { user_ids: userIds });
+
+        if (error) {
+        console.error("Error counting user posts:", error);
+        } else {
+            const dataLookup = Object.fromEntries(data.map(item => [item.user_id, item.post_count]));
+
+            // Map userIds to data in the original order
+            return userIds.map(userId => ({
+                user_id: userId,
+                post_count: dataLookup[userId] || 0  // Default to 0 if user_id is not in the data
+            }));
         }
     }
 </script>
