@@ -36,13 +36,13 @@
     engine.velocityIterations = 10;
     engine.constraintIterations = 4;
 
-    // Create renderer
+    // Create renderer with reduced size
     render = Render.create({
       element: document.getElementById('matter-js'),
       engine: engine,
       options: {
-        width: 800,
-        height: 800,
+        width: 600, // Reduced width
+        height: 600, // Reduced height
         background: '#333333', // Changed background color for better contrast
         wireframes: false,
       },
@@ -57,7 +57,7 @@
     // Add boundaries with reduced edge widths
     Composite.add(world, [
       // Top boundary
-      Bodies.rectangle(400, -5, 800, 10, {
+      Bodies.rectangle(300, -5, 600, 10, {
         isStatic: true,
         collisionFilter: {
           category: defaultCategory,
@@ -65,7 +65,7 @@
         },
       }),
       // Bottom boundary
-      Bodies.rectangle(400, 805, 800, 10, {
+      Bodies.rectangle(300, 605, 600, 10, {
         isStatic: true,
         label: 'BottomBoundary',
         collisionFilter: {
@@ -74,7 +74,7 @@
         },
       }),
       // Right wall
-      Bodies.rectangle(805, 400, 10, 800, {
+      Bodies.rectangle(605, 300, 10, 600, {
         isStatic: true,
         collisionFilter: {
           category: defaultCategory,
@@ -82,7 +82,7 @@
         },
       }),
       // Left wall
-      Bodies.rectangle(-5, 400, 10, 800, {
+      Bodies.rectangle(-5, 300, 10, 600, {
         isStatic: true,
         collisionFilter: {
           category: defaultCategory,
@@ -107,11 +107,11 @@
 
       // Reduce variation of the dropping point to make it more likely to drop in the middle
       const randomOffset =
-        (Math.random() + Math.random() + Math.random() - 1.5) * 30; // Adjusted range
-      const xPosition = 400 + randomOffset; // Centered at 400
+        (Math.random() + Math.random() + Math.random() - 1.5) * 20; // Adjusted range
+      const xPosition = 300 + randomOffset; // Centered at 300
 
       // Create a single circle with both stroke and sprite
-      const ball = Bodies.circle(xPosition, 50, 18, {
+      const ball = Bodies.circle(xPosition, 50, 14, { // Reduced radius
         collisionFilter: {
           group: -1, // Balls will not collide with each other
           category: ballCategory,
@@ -121,12 +121,12 @@
         label: 'Ball',
         render: {
           strokeStyle: '#ffffff',
-          lineWidth: 4,
+          lineWidth: 3, // Adjusted line width
           fillStyle: 'transparent',
           sprite: {
             texture: 'logo.svg',
-            xScale: 0.1, // Adjusted scale for larger ball
-            yScale: 0.1,
+            xScale: 0.08, // Adjusted scale for smaller ball
+            yScale: 0.08,
           },
         },
       });
@@ -160,7 +160,7 @@
           // Before removing the ball, find out which box the ball is in
           var ballX = ball.position.x;
           // Calculate slot index based on ballX
-          const slotWidth = 800 / multiplierSlots.length;
+          const slotWidth = 600 / multiplierSlots.length;
           var slotIndex = Math.floor(ballX / slotWidth);
 
           if (slotIndex >= 0 && slotIndex < multiplierSlots.length) {
@@ -190,9 +190,9 @@
   // Function to create pegs in a wider pattern
   function createPegs() {
     const rows = 12;
-    const pegSpacingX = 60;
-    const pegSpacingY = 50;
-    const startX = 400; // Center x position
+    const pegSpacingX = 45; // Adjusted spacing
+    const pegSpacingY = 40; // Adjusted spacing
+    const startX = 300; // Center x position
 
     for (let row = 0; row < rows; row++) {
       const cols = row + 3; // Start with 3 pegs at the top
@@ -201,8 +201,8 @@
 
       for (let col = 0; col < cols; col++) {
         const x = xOffset + col * pegSpacingX;
-        const y = 100 + row * pegSpacingY;
-        const peg = Bodies.circle(x, y, 5, {
+        const y = 80 + row * pegSpacingY; // Adjusted starting y position
+        const peg = Bodies.circle(x, y, 4, { // Reduced radius
           isStatic: true,
           collisionFilter: {
             category: defaultCategory,
@@ -222,16 +222,16 @@
   // Function to create multiplier slots at the bottom
   function createMultiplierSlots() {
     const slotCount = 15; // Number of slots
-    const slotWidth = 800 / slotCount;
+    const slotWidth = 600 / slotCount;
 
-    // Adjusted slot positions to be further down
-    const slotYPosition = 100 + 12 * 50 + 150; // Moved slots further down
+    // Adjusted slot positions
+    const slotYPosition = 80 + 12 * 40 + 80; // Adjusted positions
 
     // Create pegs between slots
     for (let i = 0; i <= slotCount; i++) {
       const x = i * slotWidth;
-      const y = slotYPosition - 150;
-      const peg = Bodies.circle(x, y, 5, {
+      const y = slotYPosition - 30; // Adjusted position
+      const peg = Bodies.circle(x, y, 4, { // Reduced radius
         isStatic: true,
         collisionFilter: {
           category: defaultCategory,
@@ -243,28 +243,13 @@
           lineWidth: 1,
         },
       });
-      // const peg2 = Bodies.circle(x, y+50, 5, {
-      //   isStatic: true,
-      //   collisionFilter: {
-      //     category: defaultCategory,
-      //     mask: ballCategory | defaultCategory,
-      //   },
-      //   render: {
-      //     fillStyle: '#fff',
-      //     strokeStyle: '#555',
-      //     lineWidth: 1,
-      //   },
-      // });
       Composite.add(world, peg);
-      // Composite.add(world, peg2);
-
     }
-    
 
     // Create floors for slots and label them
     for (let i = 0; i < slotCount; i++) {
       const x = i * slotWidth + slotWidth / 2;
-      const floor = Bodies.rectangle(x, slotYPosition + 50, slotWidth, 40, {
+      const floor = Bodies.rectangle(x, slotYPosition + 30, slotWidth, 30, {
         isStatic: true,
         collisionFilter: {
           category: defaultCategory,
@@ -286,12 +271,12 @@
       const text = document.createElement('div');
       text.style.position = 'absolute';
       text.style.left = `${i * slotWidth}px`;
-      text.style.top = `${render.options.height - 30}px`; // Adjusted label position
+      text.style.top = `${render.options.height - 50}px`; // Adjusted label position
       text.style.width = `${slotWidth}px`;
       text.style.textAlign = 'center';
       text.style.color = '#fff';
       text.style.fontWeight = 'bold';
-      text.style.fontSize = '14px';
+      text.style.fontSize = '12px'; // Reduced font size
       text.innerText = `${multiplier}x`;
       text.classList.add('multiplier-label');
       document.getElementById('matter-js').appendChild(text);
@@ -345,8 +330,8 @@
 
   .game-area {
     position: relative;
-    width: 800px;
-    height: 800px;
+    width: 600px; /* Reduced width */
+    height: 600px; /* Reduced height */
     background-color: #333333; /* Changed background color for better contrast */
     overflow: hidden;
     border-radius: 10px;
@@ -386,6 +371,6 @@
   /* Multiplier Labels */
   .multiplier-label {
     position: absolute;
-    font-size: 14px;
+    font-size: 12px; /* Reduced font size */
   }
 </style>
