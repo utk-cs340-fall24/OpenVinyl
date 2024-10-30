@@ -189,6 +189,7 @@
   .avatar {
     height: 50px;
     width: auto;
+    border-radius: 50%;
     cursor: pointer;
   }
 

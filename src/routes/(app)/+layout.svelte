@@ -42,7 +42,7 @@ import { page } from '$app/stores'
 
   </div>
   <Nav />
-  <Sidebar hidden={$page.url.pathname !== '/discover'}></Sidebar>
+  <Sidebar hidden={$page.url.pathname !== '/discover' && $page.url.pathname !== '/account'}></Sidebar>
   <slot></slot>
   <Footer />
 </div>

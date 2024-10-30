@@ -191,7 +191,12 @@
 
     <p>Update your information below</p>
 
-    <img src={avatar_url || 'https://placehold.co/150'} alt={`user's avatar`} id="">
+    <div class="image-container">
+      <img class="img-preview" src={avatar_url || 'https://placehold.co/150'} alt={`user's avatar`} id="">
+      <div class="overlay">
+        <button>Edit</button>
+      </div>
+    </div>
     
     <div class="input-group">
       <div class="input-wrapper" id="fname-wrapper"><input type="text" name="" id="fname" placeholder="first name" bind:value={fname}></div>
@@ -304,18 +309,95 @@
   }
 
   .wrapper .account-settings button {
-    width: 100px;
-    height: 2.5em;
-    font-size: 14px;
-    background-color: #1d1f25;
-    color: #fff;
-    border: 2px solid #c5c5c5;
-    border-radius: 4px;
+    appearance: none;
+    background-color: #FAFBFC;
+    border: 1px solid rgba(27, 31, 35, 0.15);
+    border-radius: 6px;
+    box-shadow: rgba(27, 31, 35, 0.04) 0 1px 0, rgba(255, 255, 255, 0.25) 0 1px 0 inset;
+    box-sizing: border-box;
+    color: #24292E;
     cursor: pointer;
+    display: inline-block;
+    font-family: -apple-system, system-ui, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    list-style: none;
+    padding: 6px 16px;
+    position: relative;
+    transition: background-color 0.2s cubic-bezier(0.3, 0, 0.5, 1);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    vertical-align: middle;
+    white-space: nowrap;
+    word-wrap: break-word;
+  }
+
+  .wrapper .account-settings button:hover {
+    background-color: #F3F4F6;
+    text-decoration: none;
+    transition-duration: 0.1s;
+  }
+
+  .wrapper .account-settings button:disabled {
+    background-color: #FAFBFC;
+    border-color: rgba(27, 31, 35, 0.15);
+    color: #959DA5;
+    cursor: default;
+  }
+
+  .wrapper .account-settings button:active {
+    background-color: #EDEFF2;
+    box-shadow: rgba(225, 228, 232, 0.2) 0 1px 0 inset;
+    transition: none 0s;
+  }
+
+  .wrapper .account-settings button:focus {
+    outline: 1px transparent;
+  }
+
+  .wrapper .account-settings button:before {
+    display: none;
+  }
+
+  .wrapper .account-settings button:-webkit-details-marker {
+    display: none;
   }
 
   .wrapper .account-settings .signout {
-    display: block;
+    background: #FF4742;
+    border: 1px solid #FF4742;
+    border-radius: 6px;
+    box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-block;
+    font-family: nunito,roboto,proxima-nova,"proxima nova",sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 16px;
+    min-height: 40px;
+    outline: 0;
+    padding: 12px 14px;
+    text-align: center;
+    text-rendering: geometricprecision;
+    text-transform: none;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    vertical-align: middle;
+  }
+
+  .wrapper .account-settings .signout:hover, .signout:active {
+    background-color: initial;
+    background-position: 0 0;
+    color: #FF4742;
+  }
+
+  .signout:active {
+    opacity: .5;
   }
 
   #fupload {
@@ -323,9 +405,65 @@
     margin-bottom: 10px;
   }
 
-  .wrapper .account-settings button:hover {
-    color: #1c1c1c;
-    background-color: #c5c5c5;
-    border: 2px solid #c5c5c5;
+  .image-container {
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+    width: 150px;
+    height: 150px;
+  }
+
+  .image-container img {
+    display: block;
+    width: 150px;
+    height: 150px;
+  }
+
+  .image-container .overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    transition: .5s ease;
+    background-color: #40e0d033;
+  }
+
+  .image-container:hover .overlay {
+    opacity: 1;
+  }
+
+  .image-container .overlay button {
+    font-size: 20px;
+    position: absolute;
+    width: 50px;
+    height: 30px;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+
+  @media (max-width: 480px) {
+    .wrapper .account-settings {
+      margin: 0;
+      width: 100%;
+    }
+
+    .wrapper .account-settings .input-group {
+      display: flex;
+      justify-content: flex-start;
+      width: 100%;
+    }
+
+    .wrapper .account-settings .input-group input {
+      width: 160px;
+      margin-right: 10px;
+    }
   }
 </style>
