@@ -343,7 +343,7 @@
     background-color: #1d1f25;
     width: 70%;
     margin: 20px auto;
-    padding: 10px;
+    padding: 5px;
     color: #f3f1f1;
     border: 1px solid #26282c;
     font-family: "Concert One", sans-serif;
@@ -356,10 +356,10 @@
     align-items: center;
     justify-content: space-between;
     background-color: #26282c;
-    padding: 10px;
+    padding: 5px;
     width: 100%;
     box-sizing: border-box;
-    border-radius: 8px 8px 0 0;
+    border-radius: 8px 8px 8px 8px;
   }
 
   .user-info {
