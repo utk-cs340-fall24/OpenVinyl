@@ -194,7 +194,7 @@
     <div class="image-container">
       <img class="img-preview" src={avatar_url || 'https://placehold.co/150'} alt={`user's avatar`} id="">
       <div class="overlay">
-        <button>Edit</button>
+        <input type="file" name="" id="fupload" on:change={fileUpload}>
       </div>
     </div>
     
@@ -213,8 +213,6 @@
       <button class="update" id="updateuname" on:click={editUsername}>Edit</button>
       <p class="user-alert" id="username-alert"></p>
     </div>
-
-    <input type="file" name="" id="fupload" on:change={fileUpload}>
 
     <h2>Account Integrations</h2>
     <div class="int-wrapper">
@@ -318,7 +316,7 @@
     color: #24292E;
     cursor: pointer;
     display: inline-block;
-    font-family: -apple-system, system-ui, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+    font-family: sans-serif;
     font-size: 14px;
     font-weight: 500;
     line-height: 20px;
@@ -374,7 +372,7 @@
     color: #FFFFFF;
     cursor: pointer;
     display: inline-block;
-    font-family: nunito,roboto,proxima-nova,"proxima nova",sans-serif;
+    font-family: sans-serif;
     font-size: 16px;
     font-weight: 800;
     line-height: 16px;
@@ -411,6 +409,7 @@
     position: relative;
     width: 150px;
     height: 150px;
+    margin: 0 0 30px 0;
   }
 
   .image-container img {
@@ -436,11 +435,9 @@
     opacity: 1;
   }
 
-  .image-container .overlay button {
+  .image-container .overlay input {
     font-size: 20px;
     position: absolute;
-    width: 50px;
-    height: 30px;
     top: 50%;
     left: 50%;
     -webkit-transform: translate(-50%, -50%);
