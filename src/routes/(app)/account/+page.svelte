@@ -230,7 +230,6 @@
 
 <style>
   .wrapper{
-    background-color: #1d1f25;
     height: auto;
     overflow: auto;
   }
