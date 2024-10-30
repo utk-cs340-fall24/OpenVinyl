@@ -375,7 +375,7 @@ function updateRecentSongs(track) {
 
   :global(body) {
     margin: 0;
-    font-family: "Concert One", sans-serif;
+    
     background-color: #16181c;
     color: #f3f1f1;
   }

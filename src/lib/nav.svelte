@@ -166,7 +166,7 @@
     justify-content: space-between;
     padding: 10px;
     border-bottom: 1px solid #26282c;
-    font-family: "Concert One", sans-serif;
+    
     align-items: center;
   }
   .spotify-button {

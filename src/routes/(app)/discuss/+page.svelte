@@ -79,9 +79,9 @@
       display: flex;
       flex-direction: column;
       padding: 20px;
-      margin-bottom: 40vh;
+      min-height: 100vh;
     }
-  
+
     .post-wrapper {
       flex: 1;
       display: flex;

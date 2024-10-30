@@ -68,14 +68,14 @@
     flex-direction: column;
     vertical-align: center;
     background-color: #eed202;
-    font-family: "Concert One", sans-serif;
+    
     color: black;
   }
   .warning-button {
     background-color: black;
     color: white;
     border-radius: 5px; 
-    font-family: "Concert One", sans-serif;
+    
 
   }
   .warning-button:hover {

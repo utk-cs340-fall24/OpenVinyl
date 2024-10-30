@@ -502,302 +502,307 @@
     cursor: not-allowed;
     opacity: 0.5;
   }
-    .post-detail-wrapper {
-      padding: 20px;
-      background-color: #1d1f25;
-      color: #f3f1f1;
-      border: 1px solid #26282c;
-      border-radius: 8px;
-      font-family: 'Concert One', sans-serif;
-    }
-  
-    .post-header {
-      display: flex;
-      /* justify-content: center; */
-      /* align-items: center; */
-      margin-bottom: 20px;
-    }
-  
-    .user-info {
-      display: flex;
-      align-items: center;
-    }
-  
-    .profile-pic {
-      width: 50px; /* Increased size for better visibility */
-      height: 50px;
-      border-radius: 50%;
-      margin-right: 15px;
-      object-fit: cover;
-    }
-  
-    .username {
-      font-size: 1.2rem; /* Increased font size */
-      color: #b9b9b9;
-      font-weight: bold;
-    }
-  
-    .post-content {
-      display: flex;
-      margin-top: 20px;
-      align-items: center;
-      gap: 20px; /* Added gap for better spacing */
-    }
-  
-    .album-cover-container {
-      display: flex;
-      position: relative;
-      width: 200px;
-      height: 200px;
-      flex-shrink: 0;
 
-    }
-  
-    .album-cover {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 8px;
-    }
-  
-    .play-button {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      color: white;
-      font-size: 2rem;
-      background-color: rgba(0, 0, 0, 0.6);
-      border-radius: 50%;
+  .post-detail-wrapper {
+    padding: 20px;
+    background-color: #1d1f25;
+    color: #f3f1f1;
+    border: 1px solid #26282c;
+    border-radius: 8px;
+    font-family: 'Concert One', sans-serif;
+    margin: 20px;
+    margin-left: 350px;
+    width:70%;
+  }
+
+  .post-header {
+    display: flex;
+    /* justify-content: center; */
+    /* align-items: center; */
+    margin-bottom: 20px;
+  }
+
+  .user-info {
+    display: flex;
+    align-items: center;
+  }
+
+  .profile-pic {
+    width: 50px; /* Increased size for better visibility */
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 15px;
+    object-fit: cover;
+  }
+
+  .username {
+    font-size: 1.2rem; /* Increased font size */
+    color: #b9b9b9;
+    font-weight: bold;
+  }
+
+  .post-content {
+    display: flex;
+    margin-top: 20px;
+    align-items: center;
+    gap: 20px; /* Added gap for better spacing */
+  }
+
+  .album-cover-container {
+    display: flex;
+    position: relative;
+    width: 200px;
+    height: 200px;
+    flex-shrink: 0;
+
+  }
+
+  .album-cover {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+
+  .play-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 2rem;
+    background-color: rgba(0, 0, 0, 0.6);
+    border-radius: 50%;
+    padding: 15px;
+    opacity: 0;
+    transition: opacity 0.3s, background-color 0.3s;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .album-cover-container:hover .play-button {
+    opacity: 1;
+  }
+
+  .play-button:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+
+  .song-info {
+    flex: 1;
+  }
+
+  .song-title {
+    font-size: 2rem; /* Increased font size */
+    margin: 0;
+    color: #e4e4e4;
+  }
+
+  .song-artist {
+    font-size: 1.2rem; /* Increased font size */
+    color: #b9b9b9;
+  }
+
+  .post-rating {
+    margin-top: 10px;
+    color: #ffc107;
+    font-size: 1.2rem;
+  }
+
+  .post-content-section {
+    margin-top: 20px;
+    font-size: 1.1rem;
+    line-height: 1.6;
+  }
+
+  .like-section {
+    display: flex;
+    align-items: center;
+    margin-top: 15px;
+  }
+
+  .like-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    color: #f3f1f1;
+    display: flex;
+    align-items: center;
+    padding: 0;
+    font-size: 1.2rem;
+    transition: color 0.3s;
+  }
+
+  .like-button:hover {
+    color: #007bff;
+  }
+
+  .like-button i {
+    margin-right: 8px;
+    color: #f3f1f1;
+    font-size: 1.2rem;
+  }
+
+  .like-button i.liked {
+    color: #007bff;
+  }
+
+  .like-text {
+    min-width: 45px;
+    display: inline-block;
+    font-size: 1rem;
+    color: white;
+  }
+
+  .liked {
+    color: #007bff;
+  }
+
+  .like-count {
+    width: 24px;
+    height: 24px;
+    margin-left: 10px;
+    text-align: center;
+    background-color: #007bff;
+    color: white;
+    border-radius: 50%;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Comments Section */
+  .comments-section {
+    margin-top: 40px;
+  }
+
+  .comments-section h2 {
+    margin-bottom: 20px;
+    color: #ffffff;
+    font-size: 1.5rem;
+  }
+
+  .comment-form {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 30px;
+  }
+
+  .comment-form textarea {
+    resize: vertical;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #444;
+    background-color: #2a2d35;
+    color: #f3f1f1;
+    font-size: 1rem;
+    margin-bottom: 10px;
+  }
+
+  .comment-form textarea::placeholder {
+    color: #a9a9a9;
+  }
+
+  .comment-form button {
+    align-self: flex-end;
+    padding: 10px 20px;
+    background-color: #007bff;
+    border: none;
+    border-radius: 6px;
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+  }
+
+  .comment-form button:hover {
+    background-color: #0056b3;
+  }
+
+  .comment-form button:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+  }
+
+  .comments-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .no-comments {
+    color: #a9a9a9;
+    font-style: italic;
+  }
+
+  @media (max-width: 768px) {
+    .post-detail-wrapper {
       padding: 15px;
-      opacity: 0;
-      transition: opacity 0.3s, background-color 0.3s;
-      text-decoration: none;
-      display: flex;
+      margin: 15px;
+    }
+
+    .post-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .user-info {
+      margin-bottom: 15px;
+    }
+
+    .post-content {
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
+      gap: 10px;
     }
-  
-    .album-cover-container:hover .play-button {
-      opacity: 1;
+
+    .album-cover-container {
+      width: 100%;
+      height: auto;
+      margin-right: 0;
+      margin-bottom: 15px;
     }
-  
-    .play-button:hover {
-      background-color: rgba(0, 0, 0, 0.8);
-    }
-  
+
     .song-info {
-      flex: 1;
-    }
-  
-    .song-title {
-      font-size: 2rem; /* Increased font size */
-      margin: 0;
-      color: #e4e4e4;
-    }
-  
-    .song-artist {
-      font-size: 1.2rem; /* Increased font size */
-      color: #b9b9b9;
-    }
-  
-    .post-rating {
-      margin-top: 10px;
-      color: #ffc107;
-      font-size: 1.2rem;
-    }
-  
-    .post-content-section {
-      margin-top: 20px;
-      font-size: 1.1rem;
-      line-height: 1.6;
-    }
-  
-    .like-section {
-      display: flex;
-      align-items: center;
-      margin-top: 15px;
-    }
-  
-    .like-button {
-      background-color: transparent;
-      border: none;
-      cursor: pointer;
-      color: #f3f1f1;
-      display: flex;
-      align-items: center;
-      padding: 0;
-      font-size: 1.2rem;
-      transition: color 0.3s;
-    }
-  
-    .like-button:hover {
-      color: #007bff;
-    }
-  
-    .like-button i {
-      margin-right: 8px;
-      color: #f3f1f1;
-      font-size: 1.2rem;
-    }
-  
-    .like-button i.liked {
-      color: #007bff;
-    }
-  
-    .like-text {
-      min-width: 45px;
-      display: inline-block;
-      font-size: 1rem;
-      color: white;
-    }
-  
-    .liked {
-      color: #007bff;
-    }
-  
-    .like-count {
-      width: 24px;
-      height: 24px;
-      margin-left: 10px;
       text-align: center;
-      background-color: #007bff;
-      color: white;
-      border-radius: 50%;
-      font-size: 0.9rem;
-      display: flex;
-      align-items: center;
+    }
+
+    .song-title {
+      font-size: 1.8rem;
+    }
+
+    .song-artist {
+      font-size: 1.1rem;
+    }
+
+    .post-rating {
+      font-size: 1rem;
+    }
+
+    .post-content-section {
+      font-size: 1rem;
+    }
+
+    .like-section {
       justify-content: center;
     }
-  
-    /* Comments Section */
-    .comments-section {
-      margin-top: 40px;
-    }
-  
-    .comments-section h2 {
-      margin-bottom: 20px;
-      color: #ffffff;
-      font-size: 1.5rem;
-    }
-  
-    .comment-form {
-      display: flex;
-      flex-direction: column;
-      margin-bottom: 30px;
-    }
-  
-    .comment-form textarea {
-      resize: vertical;
-      padding: 10px;
-      border-radius: 6px;
-      border: 1px solid #444;
-      background-color: #2a2d35;
-      color: #f3f1f1;
+
+    .like-button i {
       font-size: 1rem;
-      margin-bottom: 10px;
+      margin-right: 5px;
     }
-  
-    .comment-form textarea::placeholder {
-      color: #a9a9a9;
+
+    .like-text {
+      font-size: 0.9rem;
     }
-  
-    .comment-form button {
-      align-self: flex-end;
-      padding: 10px 20px;
-      background-color: #007bff;
-      border: none;
-      border-radius: 6px;
-      color: #ffffff;
-      cursor: pointer;
-      font-size: 1rem;
-      transition: background-color 0.3s;
+
+    .like-count {
+      width: 20px;
+      height: 20px;
+      margin-left: 8px;
+      font-size: 0.8rem;
     }
-  
-    .comment-form button:hover {
-      background-color: #0056b3;
-    }
-  
-    .comment-form button:disabled {
-      background-color: #6c757d;
-      cursor: not-allowed;
-    }
-  
-    .comments-list {
-      display: flex;
-      flex-direction: column;
-    }
-  
-    .no-comments {
-      color: #a9a9a9;
-      font-style: italic;
-    }
-  
-    @media (max-width: 768px) {
-      .post-detail-wrapper {
-        padding: 15px;
-      }
-  
-      .post-header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-  
-      .user-info {
-        margin-bottom: 15px;
-      }
-  
-      .post-content {
-        flex-direction: column;
-        align-items: center;
-        gap: 10px;
-      }
-  
-      .album-cover-container {
-        width: 100%;
-        height: auto;
-        margin-right: 0;
-        margin-bottom: 15px;
-      }
-  
-      .song-info {
-        text-align: center;
-      }
-  
-      .song-title {
-        font-size: 1.8rem;
-      }
-  
-      .song-artist {
-        font-size: 1.1rem;
-      }
-  
-      .post-rating {
-        font-size: 1rem;
-      }
-  
-      .post-content-section {
-        font-size: 1rem;
-      }
-  
-      .like-section {
-        justify-content: center;
-      }
-  
-      .like-button i {
-        font-size: 1rem;
-        margin-right: 5px;
-      }
-  
-      .like-text {
-        font-size: 0.9rem;
-      }
-  
-      .like-count {
-        width: 20px;
-        height: 20px;
-        margin-left: 8px;
-        font-size: 0.8rem;
-      }
-    }
-  </style>
+  }
+</style>

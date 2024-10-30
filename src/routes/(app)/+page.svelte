@@ -1,7 +1,6 @@
 <script lang="js">
   import { supabase } from "$lib/supabaseClient";
   import Post from "$lib/post.svelte";
-  import Sidebar from "$lib/sidebar.svelte";
   import { onMount, onDestroy } from "svelte";
   import { spotify } from "$lib/spotifyClient.js";
   import { goto } from "$app/navigation";
@@ -307,7 +306,7 @@
     background-color: #1d1f25;
     color: white;
     border: 1px solid #26282c;
-    font-family: "Concert One", sans-serif;
+    
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;

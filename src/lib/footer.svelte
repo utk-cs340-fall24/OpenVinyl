@@ -17,7 +17,7 @@
     display: flex;
     justify-content: center;
     padding: 10px;
-    font-family: "Concert One", sans-serif;
+    
     align-items: center;
   }
 
