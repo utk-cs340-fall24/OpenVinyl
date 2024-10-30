@@ -51,7 +51,7 @@
 
 <style>
   .wrapper {
-    background-color: #16181c;
+    background-color: #121212;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
