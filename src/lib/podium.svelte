@@ -1,35 +1,14 @@
 <script>
-//   import { SupabaseAuthClient } from "@supabase/supabase-js/dist/module/lib/SupabaseAuthClient";
-  import { supabase } from "$lib/supabaseClient";
   import { onMount } from "svelte";
 
-export let podiumData;
+    export let data;
 
-let profile_pic_url = [];
-let username = [];
+    let podium = [];
 
+    
     onMount(async () => {
-        await fetchMultipleUsers(podiumData);
+        podium = [...podium, data[1], data[0], data[2]];
     });
-
-    async function fetchMultipleUsers(userIds) {
-        const { data, error } = await supabase
-            .from('profiles')
-            .select('id, username, avatar_url')
-            .in('id', userIds);
-        
-        if (error) {
-            console.error('Error fetching users:', error);
-        }
-        if(data) {
-            const orderedData = userIds.map(id => data.find(user => user.id === id));
-
-            orderedData.forEach((user, index) => {
-                username[index] = user?.username || 'Unknown';
-                profile_pic_url[index] = user?.avatar_url || 'https://placehold.co/100'; 
-            });
-        }
-    }
 
 </script>
 
@@ -40,22 +19,44 @@ let username = [];
         <p class="header">Top users</p>
     </div>
     <div class="podium-wrapper">
-        {#each username as user, index}
+        {#each podium as user}
         <div class="podium-position">
             <div class="profile-picture-wrapper">
                 <div class="profile-picture">
-                    <img class=profile-picture src={profile_pic_url[index]} alt="profile-pic" />
+                    <img class=profile-picture src={user.avatar_url} alt="profile-pic" />
                 </div>
             </div>
-                <div>
-                    <p class="username">{username[index]}</p>
-                </div>
-                <div class="podium-bar"></div>
+            <div>
+                <span class="username">{user.username}</span>
             </div>
+            <div class="likes-wrapper">
+                <span class="like-count">{user.total_likes}</span>
+                <span class="likes-text">likes</span>
+            </div>
+            <div class="podium-bar"></div>
+        </div>
+        {/each}
+    </div>
+    <div class="page-divider"></div>
+    <div class="leaderboard-wrapper">
+        <div class="leaderboard-header">
+            <span></span>
+            <span>User</span>
+            <span>Likes</span>
+            <span>Posts</span>
+        </div>
+        <div class="leaderboard-divider"></div>
+        {#each data as user}
+        <div class="user">
+            <img class="small-profile-pic" src={user.avatar_url} alt="profile-pic">
+            <span>{user.username}</span>
+            <span>{user.total_likes}</span>
+            <span>{user.post_count}</span>
+        </div>
+        <div class="user-divider"></div>
         {/each}
     </div>
 
-    <div class="divider"></div>
     
 </div>
 
@@ -102,6 +103,17 @@ let username = [];
         text-overflow: ellipsis;
         white-space: nowrap;
         overflow: hidden;
+        font-size: 20px;
+    }
+
+    .likes-wrapper {
+        display: flex;
+        flex-direction: column;
+        padding-top: 15px;
+    }
+
+    .like-count {
+        font-size: 40px;
     }
 
     .podium-position {
@@ -135,10 +147,63 @@ let username = [];
         background-color: #cd7f32;
     }
     
-    .divider {
-        width: 80%;
+    .page-divider {
+        width: 768px;
         height: 3px; 
         background-color: #2c2f34; 
+    }
+
+    .leaderboard-wrapper{
+        padding-top: 10px;
+        width: 768px;
+    }
+
+    .leaderboard-header {
+        font-size: 20px;
+    }
+
+    .user {
+        font-size: 16px;
+    }
+
+    .leaderboard-header, .user {
+        display: grid;
+        grid-template-columns: 1fr 11fr 1fr 1fr;
+        gap: 1rem;
+        padding-left:30px;
+        padding-right:30px;
+        align-items: center;
+        padding-top: 3px;
+        padding-bottom: 3px;
+    }
+
+    .leaderboard-divider {
+        width: 768px;
+        background-color: #FFFFFF;
+        height: 3px;
+    }
+    
+    .user-divider {
+        width: 740px;
+        background-color: #2c2f34;
+        height: 3px;
+        margin: 0 auto;
+    }
+
+    .leaderboard-header span:nth-child(1), .user span:nth-child(2)
+    .user span:nth-child(1), .user span:nth-child(2) {
+        text-align: left;
+    }
+    .leaderboard-header span:nth-child(3), .leaderboard-header span:nth-child(4),
+    .user span:nth-child(3), .user span:nth-child(4) {
+        text-align: center;
+    }
+
+    .small-profile-pic {
+        color: white;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
     }
 
 </style>
