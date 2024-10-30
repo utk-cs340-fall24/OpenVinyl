@@ -734,7 +734,7 @@
     box-sizing: border-box;
     padding-left: 10px;
     padding-right: 10px;
-    font-family: "Concert One", sans-serif;
+    
 
   }
   .info-button {

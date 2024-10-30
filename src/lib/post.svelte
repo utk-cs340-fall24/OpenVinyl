@@ -234,7 +234,7 @@
 
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <!-- svelte-ignore a11y-no-static-element-interactions -->
-    <div class="right-section" on:click={() => window.location.href = `/posts/${post_id}`} style="cursor: pointer;"></div>
+    <div class="right-section" on:click={() => goto(`/posts/${post_id}`)} style="cursor: pointer;"></div>
   </div>
 
   <div class="content-wrapper">
@@ -346,7 +346,7 @@
     padding: 5px;
     color: #f3f1f1;
     border: 1px solid #26282c;
-    font-family: "Concert One", sans-serif;
+    
     min-height: 150px;
     border-radius: 8px;
   }
@@ -392,7 +392,7 @@
     height:30px;
   }
 
-  .discover-button {
+  /* .discover-button {
     background-color: transparent;
     border: none;
     cursor: pointer;
@@ -403,7 +403,7 @@
 
   .discover-button:hover {
     color: #6a6a6a;
-  }
+  } */
 
   .content-wrapper {
     display: flex;
@@ -492,7 +492,7 @@
     margin-top: 10px;
   }
 
-  .like-section {
+  /* .like-section {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -554,7 +554,7 @@
   .like-button:disabled {
     cursor: not-allowed;
     opacity: 0.6;
-  }
+  } */
 
   @media (max-width: 768px) {
     .wrapper {
@@ -608,7 +608,7 @@
       overflow: hidden;
     }
 
-    .like-section {
+    /* .like-section {
       justify-content: center;
       margin-top: 15px;
     }
@@ -620,6 +620,6 @@
 
     .like-text {
       font-size: 0.9rem;
-    }
+    } */
   }
 </style>

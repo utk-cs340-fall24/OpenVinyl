@@ -18,7 +18,7 @@
     font-size: 26px;
     background-color: #ae40cf;
     color:black;
-    font-family: "Concert One", sans-serif;
+    
     transition-duration: 1s;
   }
   .new-post:hover{

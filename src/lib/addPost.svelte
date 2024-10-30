@@ -311,7 +311,7 @@
     padding: 10px;
     color: #f3f1f1;
     border: 1px solid #26282c;
-    font-family: "Concert One", sans-serif;
+    
     border-radius: 8px;
   }
 

@@ -191,89 +191,93 @@
   }
 </script>
 
-{#if loading}
-  <p>Loading song details...</p>
-{:else if error}
-  <p>Error: {error}</p>
-{:else}
-  <div class="song-details">
-    <img src={songDetails.image_url} alt="{songDetails.title} album cover" />
-    <div class="song-info">
-      <h1>{songDetails.title}</h1>
-      <p>by {songDetails.artist}</p>
-    </div>
-  </div>
-
-  <h2>Reviews</h2>
-
-  {#if reviews.length > 0}
-  {#each reviews as review}
-    <div class="wrapper">
-      <div class="top-bar">
-        <div class="user-info">
-          <img class="profile-pic" src={review.profiles.avatar_url || 'https://placehold.co/30'} alt="profile" />
-          <span class="username">
-            <a class="username-link" href="/profiles/{review.profiles.username}">{review.profiles.username}</a>
-          </span>
-        </div>
-      </div>
-
-      <div class="content-wrapper">
-        <div class="album-cover-container">
-          <img
-            class="album-cover"
-            src={songDetails.image_url}
-            alt="{songDetails.title} album cover"
-          />
-          <a href="/discover/{song_id}" class="play-button" aria-label="Play Song">
-            <i class="fa-solid fa-play"></i>
-          </a>
-        </div>
-
-        <div class="song-info-wrapper">
-          <p class="song-name">{songDetails.title}</p>
-          <p class="artist-name">by {songDetails.artist}</p>
-          <p class="review-preview">{review.content}</p>
-        </div>
-
-        <div>
-          <div class="rating-wrapper">
-            <p>{@html renderStars(review.rating)}</p>
-          </div>
-
-          <div class="vote-section">
-            <button
-              on:click={() => toggleVote('upvote', review.id)}
-              disabled={!logged_in_user_uuid || processingVote}
-              class="vote-button upvote-button"
-              aria-label="Upvote"
-              class:selected={userVotes[review.id] === 'upvote'}
-            >
-              <i class="fa-solid fa-arrow-up"></i>
-            </button>
-
-            <span class="net-vote-count">{netVotes[review.id]}</span>
-
-            <button
-              on:click={() => toggleVote('downvote', review.id)}
-              disabled={!logged_in_user_uuid || processingVote}
-              class="vote-button downvote-button"
-              aria-label="Downvote"
-              class:selected={userVotes[review.id] === 'downvote'}
-            >
-              <i class="fa-solid fa-arrow-down"></i>
-            </button>
-          </div>
-        </div>
+<div class="wrapper">
+  {#if loading}
+    <p>Loading song details...</p>
+  {:else if error}
+    <p>Error: {error}</p>
+  {:else}
+    <div class="song-details">
+      <img src={songDetails.image_url} alt="{songDetails.title} album cover" />
+      <div class="song-info">
+        <h1>{songDetails.title}</h1>
+        <p>by {songDetails.artist}</p>
       </div>
     </div>
-  {/each}
-{:else}
-  <p>No reviews yet. Be the first to review!</p>
-{/if}
-{/if}
 
+    <h2>Reviews</h2>
+
+    {#if reviews.length > 0}
+    {#each reviews as review}
+      <div class="inner-wrapper">
+        <div class="top-bar">
+          <div class="user-info">
+            <img class="profile-pic" src={review.profiles.avatar_url || 'https://placehold.co/30'} alt="profile" />
+            <span class="username">
+              <a class="username-link" href="/profiles/{review.profiles.username}">{review.profiles.username}</a>
+            </span>
+          </div>
+        </div>
+
+        <div class="content-wrapper">
+          <div class="album-cover-container">
+            <img
+              class="album-cover"
+              src={songDetails.image_url}
+              alt="{songDetails.title} album cover"
+            />
+            <a href="/discover/{song_id}" class="play-button" aria-label="Play Song">
+              <i class="fa-solid fa-play"></i>
+            </a>
+          </div>
+
+          <div class="song-info-wrapper">
+            <p class="song-name">{songDetails.title}</p>
+            <p class="artist-name">by {songDetails.artist}</p>
+            <p class="review-preview">{review.content}</p>
+          </div>
+
+          <div>
+            <div class="rating-wrapper">
+              <p>{@html renderStars(review.rating)}</p>
+            </div>
+
+            <div class="vote-section">
+              <button
+                on:click={() => toggleVote('upvote', review.id)}
+                disabled={!logged_in_user_uuid || processingVote}
+                class="vote-button upvote-button"
+                aria-label="Upvote"
+                class:selected={userVotes[review.id] === 'upvote'}
+              >
+                <i class="fa-solid fa-arrow-up"></i>
+              </button>
+
+              <span class="net-vote-count">{netVotes[review.id]}</span>
+
+              <button
+                on:click={() => toggleVote('downvote', review.id)}
+                disabled={!logged_in_user_uuid || processingVote}
+                class="vote-button downvote-button"
+                aria-label="Downvote"
+                class:selected={userVotes[review.id] === 'downvote'}
+              >
+                <i class="fa-solid fa-arrow-down"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    {/each}
+  {:else}
+    <p>No reviews yet. Be the first to review!</p>
+  {/if}
+  {/if}
+</div>
 <style>
+  .wrapper{
+    margin: 0;
+  }
   /* Add your styles here */
   .song-details {
     display: flex;
@@ -342,7 +346,7 @@
     padding: 10px;
     color: #f3f1f1;
     border: 1px solid #26282c;
-    font-family: "Concert One", sans-serif;
+    
     min-height: 150px;
     border-radius: 8px;
   }
