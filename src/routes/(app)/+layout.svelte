@@ -34,16 +34,15 @@
       user.set({ role: 'guest' });
     }
   });
-  function hideBanner() {
-    document.getElementById("banner").style.display = "None";
-  }
+  // function hideBanner() {
+  //   document.getElementById("banner").style.display = "None";
+  // }
 
 </script>
 <div class="wrapper">
-  <div id="banner" class = "banner" ><div>Note: This app is in beta so spotify auth will not work for non-developers
-<button class= "warning-button" on:click={hideBanner}>Hide Message</button></div>
-
-  </div>
+  <!-- <div id="banner" class = "banner" ><div>Note: This app is in beta so spotify auth will not work for non-developers
+    <button class= "warning-button" on:click={hideBanner}>Hide Message</button></div>
+  </div> -->
   <Nav />
   <Sidebar hidden={sidebarHidden}></Sidebar>
   <slot></slot>
@@ -57,14 +56,15 @@
     display: flex;
     flex-direction: column;
   }
+  /*
   .banner {
-    /* height: 40px; */
+    height: 40px;
     display: flex;
     padding-top: 5px;
     padding-bottom: 5px;
     align-content: center;
     text-align: center;
-    /* width: 100%; */
+    width: 100%;
     flex-direction: column;
     vertical-align: center;
     background-color: #eed202;
@@ -81,4 +81,5 @@
   .warning-button:hover {
     cursor: pointer;
   }
+  */
 </style>

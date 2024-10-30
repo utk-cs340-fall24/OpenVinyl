@@ -262,13 +262,16 @@ function updateRecentSongs(track) {
   function hidePremiumMessage() {
     showPremiumMessage = false;
   }
+
 </script>
 
 <!-- svelte-ignore missing-declaration -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<div class="sidebar" style="position:{pinnedSidebar ? 'fixed' : 'absolute'}; display:{hidden ? '' : 'none'}" on:drop={handleDrop} on:dragover|preventDefault>
-  <button class="pin-button" on:click={() => pinnedSidebar = !pinnedSidebar}><i class="fa fa-thumb-tack" aria-hidden="true"></i></button>
-  <button class="pin-button" on:click={() => hidden = !hidden}><i class="fa fa-thumb-tack" aria-hidden="true"></i></button>
+<div class="sidebar {pinnedSidebar ? 'pinned' : ''} {hidden ? '' : 'hidden'}" on:drop={handleDrop} on:dragover|preventDefault>
+  <div class="button-wrapper">
+    <button class="pin-button" on:click={() => pinnedSidebar = !pinnedSidebar}><i class="fa fa-thumb-tack" aria-hidden="true"></i></button>
+    <button class="close-button {hidden ? '' : 'rotated'}" on:click={() => hidden = !hidden}><i class="fa-solid fa-chevron-left"></i></button>
+  </div>
   {#if showPremiumMessage}
     <div class="premium-message">
       <p class="small-text">
@@ -385,7 +388,7 @@ function updateRecentSongs(track) {
 
   .sidebar {
     top: 13%;
-    left: 2%;
+    left: 0%;
     z-index: 1000; /* Ensure it floats on top of other elements */
     display: flex;
     flex-direction: column;
@@ -394,7 +397,19 @@ function updateRecentSongs(track) {
     padding: 20px;
     color: #f3f1f1;
     border-right: 1px solid #26282c;
-    border-radius:25px;
+    border-radius:0px 25px 25px 0px;
+    position:absolute;
+    
+    transition: transform 0.5s ease-in-out;
+  }
+
+  .hidden {
+    transform: translateX(-250px);
+    transition: transform 0.5s ease-in-out;
+  }
+
+  .pinned{
+    position: fixed !important;
   }
 
   .playback-section {
@@ -459,14 +474,41 @@ function updateRecentSongs(track) {
     font-size: 20px;
     cursor: pointer;
     transition: background-color 0.2s;
-    display: flex;
+    display: inline-block;
     align-items: center;
     justify-content: center;
-    margin-left:225px;
     margin-bottom:10px;
   }
 
   .pin-button:hover{
+    background-color: #434343;
+  }
+
+  .rotated{
+    transform: translateX(20px) rotateY(180deg) !important;
+    transition: transform 0.5s ease-in-out;
+  }
+
+  .close-button{
+    width: 30px;
+    height: 30px;
+    background-color: #26282c00;
+    border: none;
+    border-radius: 50%;
+    color: #f3f1f1;
+    font-size: 20px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    display: inline-block;
+    align-items: center;
+    justify-content: center;
+    margin-bottom:10px;
+    margin-left: 180px;
+    transform: translateX(20px);
+    transition: transform 0.5s ease-in-out;
+  }
+
+  .close-button:hover{
     background-color: #434343;
   }
 
