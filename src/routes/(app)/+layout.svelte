@@ -6,9 +6,11 @@
   // import { ensureUserProfileExists } from '$lib/utils';
   import { onMount } from "svelte";
   import Sidebar from "$lib/sidebar.svelte";
-import { page } from '$app/stores'
+  import { page } from '$app/stores'
+  let sidebarHidden = false;
 
   onMount(async () => {
+    sidebarHidden = !['/discover', '/discuss', '/account'].some(path => $page.url.pathname.includes(path));
     try {
       const { data: { session }, error } = await supabase.auth.getSession();
       console.log("current session: ", session)
@@ -32,17 +34,17 @@ import { page } from '$app/stores'
       user.set({ role: 'guest' });
     }
   });
-  function hideBanner() {
-    document.getElementById("banner").style.display = "None";
-  }
+  // function hideBanner() {
+  //   document.getElementById("banner").style.display = "None";
+  // }
+
 </script>
 <div class="wrapper">
-  <div id="banner" class = "banner" ><div>Note: This app is in beta so spotify auth will not work for non-developers
-<button class= "warning-button" on:click={hideBanner}>Hide Message</button></div>
-
-  </div>
+  <!-- <div id="banner" class = "banner" ><div>Note: This app is in beta so spotify auth will not work for non-developers
+    <button class= "warning-button" on:click={hideBanner}>Hide Message</button></div>
+  </div> -->
   <Nav />
-  <Sidebar hidden={$page.url.pathname !== '/discover'}></Sidebar>
+  <Sidebar hidden={sidebarHidden}></Sidebar>
   <slot></slot>
   <Footer />
 </div>
@@ -54,14 +56,15 @@ import { page } from '$app/stores'
     display: flex;
     flex-direction: column;
   }
+  /*
   .banner {
-    /* height: 40px; */
+    height: 40px;
     display: flex;
     padding-top: 5px;
     padding-bottom: 5px;
     align-content: center;
     text-align: center;
-    /* width: 100%; */
+    width: 100%;
     flex-direction: column;
     vertical-align: center;
     background-color: #eed202;
@@ -78,4 +81,5 @@ import { page } from '$app/stores'
   .warning-button:hover {
     cursor: pointer;
   }
+  */
 </style>
