@@ -21,7 +21,7 @@ export async function load({ params }) {
     console.error('Error fetching reviews:', reviewsError);
     throw error(500, 'Error fetching reviews');
   }
-
+console.log(reviews)
   return {
     song_id: slug,
     reviews

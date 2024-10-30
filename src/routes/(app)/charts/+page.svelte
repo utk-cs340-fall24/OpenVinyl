@@ -1,5 +1,4 @@
 <script>
-    import Sidebar from "$lib/sidebar.svelte";
     import TopSongs from "$lib/topSongs.svelte";
     import Podium from "$lib/podium.svelte";
     import { authenticateClientCredentials } from "$lib/utils";
@@ -77,7 +76,6 @@
 </script>
 
 <div class="layout">
-    <Sidebar />
     {#if topUserData.length > 0}
         <div class="podium">
             <Podium data={topUserData}/>

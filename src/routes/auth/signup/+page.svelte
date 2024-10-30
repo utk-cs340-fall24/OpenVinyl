@@ -1,6 +1,5 @@
 <script>
   import { supabase } from '$lib/supabaseClient.js';
-  import logo from '$lib/logo.svg';
 
   let email;
   let pass;
@@ -17,15 +16,11 @@
         email: email,
         password: pass,
     })
-    console.log("data: ", data);
-    console.log("error: ", error);
   }
 </script>
 
 <div class="container">
   <div class="login-window">
-    <a href="/" class="back"><i class="fa-solid fa-arrow-left"></i> Back</a>
-    <a href="/"><img src={logo} alt="logo" class="logo"></a>
     <h1>Create Account</h1>
     <p>Enter your information below</p>
   
@@ -42,7 +37,7 @@
   }
 
   .container {
-    background-color: #121212;
+    background-color: #f3f4f6;
     height: 100vh;
     overflow: hidden;
     width: 100vw;
@@ -51,30 +46,10 @@
     align-items: center;
   }
 
-  .container .login-window .back {
-    text-align: left !important;
-    display: block;
-    text-decoration: none;
-    color: #fff;
-  }
-  .container .login-window .back:visited {
-    color: #fff;
-  }
-
-
-  .logo {
-    width: 100px;
-    padding-bottom: 20px;
-    height: auto;
-    cursor: pointer;
-  }
-
   .container div {
-    max-height: 80vh;
-    overflow-y: auto;
-    height: auto;
+    height: 50vh;
     max-width: 30vw;
-    background-color: #1D1F25;
+    background-color: #fff;
     box-shadow: 0px 10px 15px -3px rgba(0,0,0,0.1);
     border-radius: 8px;
     padding: 2.5em;
@@ -83,23 +58,13 @@
 
   .login-window h1 {
     text-align: left;
-    color: #fff;
     margin: 0;
   }
 
   .login-window p {
     text-align: left;
-    color: #fff;
     margin: 0 0 1em 0;
     opacity: 0.3;
-  }
-
-  .login-window button {
-    width: 100%;
-    margin-top: 8px;
-    height: 2.5em;
-    font-size: 18px;
-    cursor: pointer;
   }
 
   .login-window input {
