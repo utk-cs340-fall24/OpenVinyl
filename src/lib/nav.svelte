@@ -90,8 +90,11 @@
       >
         Charts
       </a>
-        <a href="/discuss" class="nav-link" class:active={$page.url.pathname.startsWith("/network")}>
+        <a href="/discuss" class="nav-link" class:active={$page.url.pathname.startsWith("/discuss")}>
           Discuss
+        </a>
+        <a href="/games" class="nav-link" class:active={$page.url.pathname.startsWith("/games")}>
+          Games
         </a>
       </div>
       
