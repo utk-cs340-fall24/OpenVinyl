@@ -54,16 +54,18 @@
     runner = Runner.create();
     Runner.run(runner, engine);
 
-    // Add boundaries
+    // Add boundaries with reduced edge widths
     Composite.add(world, [
-      Bodies.rectangle(400, -25, 800, 50, {
+      // Top boundary
+      Bodies.rectangle(400, -5, 800, 10, {
         isStatic: true,
         collisionFilter: {
           category: defaultCategory,
           mask: ballCategory | defaultCategory,
         },
       }),
-      Bodies.rectangle(400, 825, 800, 50, {
+      // Bottom boundary
+      Bodies.rectangle(400, 805, 800, 10, {
         isStatic: true,
         label: 'BottomBoundary',
         collisionFilter: {
@@ -71,14 +73,16 @@
           mask: ballCategory | defaultCategory,
         },
       }),
-      Bodies.rectangle(825, 400, 50, 800, {
+      // Right wall
+      Bodies.rectangle(805, 400, 10, 800, {
         isStatic: true,
         collisionFilter: {
           category: defaultCategory,
           mask: ballCategory | defaultCategory,
         },
       }),
-      Bodies.rectangle(-25, 400, 50, 800, {
+      // Left wall
+      Bodies.rectangle(-5, 400, 10, 800, {
         isStatic: true,
         collisionFilter: {
           category: defaultCategory,
@@ -103,11 +107,11 @@
 
       // Reduce variation of the dropping point to make it more likely to drop in the middle
       const randomOffset =
-        (Math.random() + Math.random() + Math.random() - 1.5) * 30; // Range approx -75 to +75, centered at 0
+        (Math.random() + Math.random() + Math.random() - 1.5) * 30; // Adjusted range
       const xPosition = 400 + randomOffset; // Centered at 400
 
       // Create a single circle with both stroke and sprite
-      const ball = Bodies.circle(xPosition, 50, 18, { // Increased radius from 18 to 22
+      const ball = Bodies.circle(xPosition, 50, 18, {
         collisionFilter: {
           group: -1, // Balls will not collide with each other
           category: ballCategory,
@@ -223,19 +227,39 @@
     // Adjusted slot positions to be further down
     const slotYPosition = 100 + 12 * 50 + 150; // Moved slots further down
 
-    // Create walls between slots
+    // Create pegs between slots
     for (let i = 0; i <= slotCount; i++) {
       const x = i * slotWidth;
-      const wall = Bodies.rectangle(x, slotYPosition - 50, 10, 200, {
+      const y = slotYPosition - 150;
+      const peg = Bodies.circle(x, y, 5, {
         isStatic: true,
         collisionFilter: {
           category: defaultCategory,
           mask: ballCategory | defaultCategory,
         },
-        render: { fillStyle: '#444' },
+        render: {
+          fillStyle: '#fff',
+          strokeStyle: '#555',
+          lineWidth: 1,
+        },
       });
-      Composite.add(world, wall);
+      // const peg2 = Bodies.circle(x, y+50, 5, {
+      //   isStatic: true,
+      //   collisionFilter: {
+      //     category: defaultCategory,
+      //     mask: ballCategory | defaultCategory,
+      //   },
+      //   render: {
+      //     fillStyle: '#fff',
+      //     strokeStyle: '#555',
+      //     lineWidth: 1,
+      //   },
+      // });
+      Composite.add(world, peg);
+      // Composite.add(world, peg2);
+
     }
+    
 
     // Create floors for slots and label them
     for (let i = 0; i < slotCount; i++) {
@@ -262,7 +286,7 @@
       const text = document.createElement('div');
       text.style.position = 'absolute';
       text.style.left = `${i * slotWidth}px`;
-      text.style.top = `${render.options.height - 100}px`; // Adjusted label position
+      text.style.top = `${render.options.height - 30}px`; // Adjusted label position
       text.style.width = `${slotWidth}px`;
       text.style.textAlign = 'center';
       text.style.color = '#fff';
