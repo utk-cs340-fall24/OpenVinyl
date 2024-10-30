@@ -6,9 +6,11 @@
   // import { ensureUserProfileExists } from '$lib/utils';
   import { onMount } from "svelte";
   import Sidebar from "$lib/sidebar.svelte";
-import { page } from '$app/stores'
+  import { page } from '$app/stores'
+  let sidebarHidden = false;
 
   onMount(async () => {
+    sidebarHidden = !['/discover', '/discuss', '/account'].some(path => $page.url.pathname.includes(path));
     try {
       const { data: { session }, error } = await supabase.auth.getSession();
       console.log("current session: ", session)
@@ -35,6 +37,7 @@ import { page } from '$app/stores'
   function hideBanner() {
     document.getElementById("banner").style.display = "None";
   }
+
 </script>
 <div class="wrapper">
   <div id="banner" class = "banner" ><div>Note: This app is in beta so spotify auth will not work for non-developers
@@ -42,7 +45,7 @@ import { page } from '$app/stores'
 
   </div>
   <Nav />
-  <Sidebar hidden={$page.url.pathname !== '/discover'}></Sidebar>
+  <Sidebar hidden={sidebarHidden}></Sidebar>
   <slot></slot>
   <Footer />
 </div>

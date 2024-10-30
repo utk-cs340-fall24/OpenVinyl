@@ -268,6 +268,7 @@ function updateRecentSongs(track) {
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div class="sidebar" style="position:{pinnedSidebar ? 'fixed' : 'absolute'}; display:{hidden ? '' : 'none'}" on:drop={handleDrop} on:dragover|preventDefault>
   <button class="pin-button" on:click={() => pinnedSidebar = !pinnedSidebar}><i class="fa fa-thumb-tack" aria-hidden="true"></i></button>
+  <button class="pin-button" on:click={() => hidden = !hidden}><i class="fa fa-thumb-tack" aria-hidden="true"></i></button>
   {#if showPremiumMessage}
     <div class="premium-message">
       <p class="small-text">
