@@ -96,7 +96,6 @@
       justify-content: center;
       align-items: center;
       height: 100vh; /* Full viewport height */
-      background-color: #1d1f25; /* Dark background */
       color: #f3f1f1; /* Light text color */
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
