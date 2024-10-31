@@ -1,0 +1,402 @@
+post.svelte  (weston49 on 10/30/2024 at 19:10):     <div class="right-section" on:click={() => goto(`/posts/${post_id}`)} style="cursor: pointer;"></div>
+post.svelte  (weston49 on 10/30/2024 at 19:10):   /* .discover-button {
+post.svelte  (weston49 on 10/30/2024 at 19:10):   } */
+post.svelte  (weston49 on 10/30/2024 at 19:10):   /* .like-section {
+post.svelte  (weston49 on 10/30/2024 at 19:10):   } */
+post.svelte  (weston49 on 10/30/2024 at 19:10):     /* .like-section {
+post.svelte  (weston49 on 10/30/2024 at 19:10):     } */
++page.svelte (weston49 on 10/30/2024 at 19:10):   .post-detail-wrapper {
++page.svelte (weston49 on 10/30/2024 at 19:10):     padding: 20px;
++page.svelte (weston49 on 10/30/2024 at 19:10):     background-color: #1d1f25;
++page.svelte (weston49 on 10/30/2024 at 19:10):     color: #f3f1f1;
++page.svelte (weston49 on 10/30/2024 at 19:10):     border: 1px solid #26282c;
++page.svelte (weston49 on 10/30/2024 at 19:10):     border-radius: 8px;
++page.svelte (weston49 on 10/30/2024 at 19:10):     font-family: 'Concert One', sans-serif;
++page.svelte (weston49 on 10/30/2024 at 19:10):     margin: 20px;
++page.svelte (weston49 on 10/30/2024 at 19:10):     margin-left: 350px;
++page.svelte (weston49 on 10/30/2024 at 19:10):     width:70%;
++page.svelte (weston49 on 10/30/2024 at 19:10):   }
++page.svelte (weston49 on 10/30/2024 at 19:10):   .post-header {
++page.svelte (weston49 on 10/30/2024 at 19:10):     display: flex;
++page.svelte (weston49 on 10/30/2024 at 19:10):     /* justify-content: center; */
++page.svelte (weston49 on 10/30/2024 at 19:10):     /* align-items: center; */
++page.svelte (weston49 on 10/30/2024 at 19:10):     margin-bottom: 20px;
++page.svelte (weston49 on 10/30/2024 at 19:10):   }
++page.svelte (weston49 on 10/30/2024 at 19:10):   .user-info {
++page.svelte (weston49 on 10/30/2024 at 19:10):     display: flex;
++page.svelte (weston49 on 10/30/2024 at 19:10):     align-items: center;
++page.svelte (weston49 on 10/30/2024 at 19:10):   }
++page.svelte (weston49 on 10/30/2024 at 19:10):   .profile-pic {
++page.svelte (weston49 on 10/30/2024 at 19:10):     width: 50px; /* Increased size for better visibility */
++page.svelte (weston49 on 10/30/2024 at 19:10):     height: 50px;
++page.svelte (weston49 on 10/30/2024 at 19:10):     border-radius: 50%;
++page.svelte (weston49 on 10/30/2024 at 19:10):     margin-right: 15px;
++page.svelte (weston49 on 10/30/2024 at 19:10):     object-fit: cover;
++page.svelte (weston49 on 10/30/2024 at 19:10):   }
++page.svelte (weston49 on 10/30/2024 at 19:10):   .username {
++page.svelte (weston49 on 10/30/2024 at 19:10):     font-size: 1.2rem; /* Increased font size */
++page.svelte (weston49 on 10/30/2024 at 19:10):     color: #b9b9b9;
++page.svelte (weston49 on 10/30/2024 at 19:10):     font-weight: bold;
++page.svelte (weston49 on 10/30/2024 at 19:10):   }
++page.svelte (weston49 on 10/30/2024 at 19:10):   .post-content {
++page.svelte (weston49 on 10/30/2024 at 19:10):     display: flex;
++page.svelte (weston49 on 10/30/2024 at 19:10):     margin-top: 20px;
++page.svelte (weston49 on 10/30/2024 at 19:10):     align-items: center;
++page.svelte (weston49 on 10/30/2024 at 19:10):     gap: 20px; /* Added gap for better spacing */
++page.svelte (weston49 on 10/30/2024 at 19:10):   }
++page.svelte (weston49 on 10/30/2024 at 19:10):   .album-cover-container {
++page.svelte (weston49 on 10/30/2024 at 19:10):     display: flex;
++page.svelte (weston49 on 10/30/2024 at 19:10):     position: relative;
++page.svelte (weston49 on 10/30/2024 at 19:10):     width: 200px;
++page.svelte (weston49 on 10/30/2024 at 19:10):     height: 200px;
++page.svelte (weston49 on 10/30/2024 at 19:10):     flex-shrink: 0;
++page.svelte (weston49 on 10/30/2024 at 19:10):   }
++page.svelte (weston49 on 10/30/2024 at 19:10):   .album-cover {
++page.svelte (weston49 on 10/30/2024 at 19:10):     width: 100%;
++page.svelte (weston49 on 10/30/2024 at 19:10):     height: 100%;
++page.svelte (weston49 on 10/30/2024 at 19:10):     object-fit: cover;
++page.svelte (weston49 on 10/30/2024 at 19:10):     border-radius: 8px;
++page.svelte (weston49 on 10/30/2024 at 19:10):   }
++page.svelte (weston49 on 10/30/2024 at 19:10):   .play-button {
++page.svelte (weston49 on 10/30/2024 at 19:10):     position: absolute;
++page.svelte (weston49 on 10/30/2024 at 19:10):     top: 50%;
++page.svelte (weston49 on 10/30/2024 at 19:10):     left: 50%;
++page.svelte (weston49 on 10/30/2024 at 19:10):     transform: translate(-50%, -50%);
++page.svelte (weston49 on 10/30/2024 at 19:10):     color: white;
++page.svelte (weston49 on 10/30/2024 at 19:10):     font-size: 2rem;
++page.svelte (weston49 on 10/30/2024 at 19:10):     background-color: rgba(0, 0, 0, 0.6);
++page.svelte (weston49 on 10/30/2024 at 19:10):     border-radius: 50%;
++page.svelte (weston49 on 10/30/2024 at 19:10):     padding: 15px;
++page.svelte (weston49 on 10/30/2024 at 19:10):     opacity: 0;
++page.svelte (weston49 on 10/30/2024 at 19:10):     transition: opacity 0.3s, background-color 0.3s;
++page.svelte (weston49 on 10/30/2024 at 19:10):     text-decoration: none;
++page.svelte (weston49 on 10/30/2024 at 19:10):     display: flex;
++page.svelte (weston49 on 10/30/2024 at 19:10):     align-items: center;
++page.svelte (weston49 on 10/30/2024 at 19:10):     justify-content: center;
++page.svelte (weston49 on 10/30/2024 at 19:10):   }
++page.svelte (weston49 on 10/30/2024 at 19:10):   .album-cover-container:hover .play-button {
++page.svelte (weston49 on 10/30/2024 at 19:10):     opacity: 1;
++page.svelte (weston49 on 10/30/2024 at 19:10):   }
++page.svelte (weston49 on 10/30/2024 at 19:10):   .play-button:hover {
++page.svelte (weston49 on 10/30/2024 at 19:10):     background-color: rgba(0, 0, 0, 0.8);
++page.svelte (weston49 on 10/30/2024 at 19:10):   }
++page.svelte (weston49 on 10/30/2024 at 19:10):   .song-info {
++page.svelte (weston49 on 10/30/2024 at 19:10):     flex: 1;
++page.svelte (weston49 on 10/30/2024 at 19:10):   }
++page.svelte (weston49 on 10/30/2024 at 19:10):   .song-title {
++page.svelte (weston49 on 10/30/2024 at 19:10):     font-size: 2rem; /* Increased font size */
++page.svelte (weston49 on 10/30/2024 at 19:10):     margin: 0;
++page.svelte (weston49 on 10/30/2024 at 19:10):     color: #e4e4e4;
++page.svelte (weston49 on 10/30/2024 at 19:10):   }
++page.svelte (weston49 on 10/30/2024 at 19:10):   .song-artist {
++page.svelte (weston49 on 10/30/2024 at 19:10):     font-size: 1.2rem; /* Increased font size */
++page.svelte (weston49 on 10/30/2024 at 19:10):     color: #b9b9b9;
++page.svelte (weston49 on 10/30/2024 at 19:10):   }
++page.svelte (weston49 on 10/30/2024 at 19:10):   .post-rating {
++page.svelte (weston49 on 10/30/2024 at 19:10):     margin-top: 10px;
++page.svelte (weston49 on 10/30/2024 at 19:10):     color: #ffc107;
++page.svelte (weston49 on 10/30/2024 at 19:10):     font-size: 1.2rem;
++page.svelte (weston49 on 10/30/2024 at 19:10):   }
++page.svelte (weston49 on 10/30/2024 at 19:10):   .post-content-section {
++page.svelte (weston49 on 10/30/2024 at 19:10):     margin-top: 20px;
++page.svelte (weston49 on 10/30/2024 at 19:10):     font-size: 1.1rem;
++page.svelte (weston49 on 10/30/2024 at 19:10):     line-height: 1.6;
++page.svelte (weston49 on 10/30/2024 at 19:10):   }
++page.svelte (weston49 on 10/30/2024 at 19:10):   .like-section {
++page.svelte (weston49 on 10/30/2024 at 19:10):     display: flex;
++page.svelte (weston49 on 10/30/2024 at 19:10):     align-items: center;
++page.svelte (weston49 on 10/30/2024 at 19:10):     margin-top: 15px;
++page.svelte (weston49 on 10/30/2024 at 19:10):   }
++page.svelte (weston49 on 10/30/2024 at 19:10):   .like-button {
++page.svelte (weston49 on 10/30/2024 at 19:10):     background-color: transparent;
++page.svelte (weston49 on 10/30/2024 at 19:10):     border: none;
++page.svelte (weston49 on 10/30/2024 at 19:10):     cursor: pointer;
++page.svelte (weston49 on 10/30/2024 at 19:10):     color: #f3f1f1;
++page.svelte (weston49 on 10/30/2024 at 19:10):     display: flex;
++page.svelte (weston49 on 10/30/2024 at 19:10):     align-items: center;
++page.svelte (weston49 on 10/30/2024 at 19:10):     padding: 0;
++page.svelte (weston49 on 10/30/2024 at 19:10):     font-size: 1.2rem;
++page.svelte (weston49 on 10/30/2024 at 19:10):     transition: color 0.3s;
++page.svelte (weston49 on 10/30/2024 at 19:10):   }
++page.svelte (weston49 on 10/30/2024 at 19:10):   .like-button:hover {
++page.svelte (weston49 on 10/30/2024 at 19:10):     color: #007bff;
++page.svelte (weston49 on 10/30/2024 at 19:10):   }
++page.svelte (weston49 on 10/30/2024 at 19:10):   .like-button i {
++page.svelte (weston49 on 10/30/2024 at 19:10):     margin-right: 8px;
++page.svelte (weston49 on 10/30/2024 at 19:10):     color: #f3f1f1;
++page.svelte (weston49 on 10/30/2024 at 19:10):     font-size: 1.2rem;
++page.svelte (weston49 on 10/30/2024 at 19:10):   }
++page.svelte (weston49 on 10/30/2024 at 19:10):   .like-button i.liked {
++page.svelte (weston49 on 10/30/2024 at 19:10):     color: #007bff;
++page.svelte (weston49 on 10/30/2024 at 19:10):   }
++page.svelte (weston49 on 10/30/2024 at 19:10):   .like-text {
++page.svelte (weston49 on 10/30/2024 at 19:10):     min-width: 45px;
++page.svelte (weston49 on 10/30/2024 at 19:10):     display: inline-block;
++page.svelte (weston49 on 10/30/2024 at 19:10):     font-size: 1rem;
++page.svelte (weston49 on 10/30/2024 at 19:10):     color: white;
++page.svelte (weston49 on 10/30/2024 at 19:10):   }
++page.svelte (weston49 on 10/30/2024 at 19:10):   .liked {
++page.svelte (weston49 on 10/30/2024 at 19:10):     color: #007bff;
++page.svelte (weston49 on 10/30/2024 at 19:10):   }
++page.svelte (weston49 on 10/30/2024 at 19:10):   .like-count {
++page.svelte (weston49 on 10/30/2024 at 19:10):     width: 24px;
++page.svelte (weston49 on 10/30/2024 at 19:10):     height: 24px;
++page.svelte (weston49 on 10/30/2024 at 19:10):     margin-left: 10px;
++page.svelte (weston49 on 10/30/2024 at 19:10):     text-align: center;
++page.svelte (weston49 on 10/30/2024 at 19:10):     background-color: #007bff;
++page.svelte (weston49 on 10/30/2024 at 19:10):     color: white;
++page.svelte (weston49 on 10/30/2024 at 19:10):     border-radius: 50%;
++page.svelte (weston49 on 10/30/2024 at 19:10):     font-size: 0.9rem;
++page.svelte (weston49 on 10/30/2024 at 19:10):     display: flex;
++page.svelte (weston49 on 10/30/2024 at 19:10):     align-items: center;
++page.svelte (weston49 on 10/30/2024 at 19:10):     justify-content: center;
++page.svelte (weston49 on 10/30/2024 at 19:10):   }
++page.svelte (weston49 on 10/30/2024 at 19:10):   /* Comments Section */
++page.svelte (weston49 on 10/30/2024 at 19:10):   .comments-section {
++page.svelte (weston49 on 10/30/2024 at 19:10):     margin-top: 40px;
++page.svelte (weston49 on 10/30/2024 at 19:10):   }
++page.svelte (weston49 on 10/30/2024 at 19:10):   .comments-section h2 {
++page.svelte (weston49 on 10/30/2024 at 19:10):     margin-bottom: 20px;
++page.svelte (weston49 on 10/30/2024 at 19:10):     color: #ffffff;
++page.svelte (weston49 on 10/30/2024 at 19:10):     font-size: 1.5rem;
++page.svelte (weston49 on 10/30/2024 at 19:10):   }
++page.svelte (weston49 on 10/30/2024 at 19:10):   .comment-form {
++page.svelte (weston49 on 10/30/2024 at 19:10):     display: flex;
++page.svelte (weston49 on 10/30/2024 at 19:10):     flex-direction: column;
++page.svelte (weston49 on 10/30/2024 at 19:10):     margin-bottom: 30px;
++page.svelte (weston49 on 10/30/2024 at 19:10):   }
++page.svelte (weston49 on 10/30/2024 at 19:10):   .comment-form textarea {
++page.svelte (weston49 on 10/30/2024 at 19:10):     resize: vertical;
++page.svelte (weston49 on 10/30/2024 at 19:10):     padding: 10px;
++page.svelte (weston49 on 10/30/2024 at 19:10):     border-radius: 6px;
++page.svelte (weston49 on 10/30/2024 at 19:10):     border: 1px solid #444;
++page.svelte (weston49 on 10/30/2024 at 19:10):     background-color: #2a2d35;
++page.svelte (weston49 on 10/30/2024 at 19:10):     color: #f3f1f1;
++page.svelte (weston49 on 10/30/2024 at 19:10):     font-size: 1rem;
++page.svelte (weston49 on 10/30/2024 at 19:10):     margin-bottom: 10px;
++page.svelte (weston49 on 10/30/2024 at 19:10):   }
++page.svelte (weston49 on 10/30/2024 at 19:10):   .comment-form textarea::placeholder {
++page.svelte (weston49 on 10/30/2024 at 19:10):     color: #a9a9a9;
++page.svelte (weston49 on 10/30/2024 at 19:10):   }
++page.svelte (weston49 on 10/30/2024 at 19:10):   .comment-form button {
++page.svelte (weston49 on 10/30/2024 at 19:10):     align-self: flex-end;
++page.svelte (weston49 on 10/30/2024 at 19:10):     padding: 10px 20px;
++page.svelte (weston49 on 10/30/2024 at 19:10):     background-color: #007bff;
++page.svelte (weston49 on 10/30/2024 at 19:10):     border: none;
++page.svelte (weston49 on 10/30/2024 at 19:10):     border-radius: 6px;
++page.svelte (weston49 on 10/30/2024 at 19:10):     color: #ffffff;
++page.svelte (weston49 on 10/30/2024 at 19:10):     cursor: pointer;
++page.svelte (weston49 on 10/30/2024 at 19:10):     font-size: 1rem;
++page.svelte (weston49 on 10/30/2024 at 19:10):     transition: background-color 0.3s;
++page.svelte (weston49 on 10/30/2024 at 19:10):   }
++page.svelte (weston49 on 10/30/2024 at 19:10):   .comment-form button:hover {
++page.svelte (weston49 on 10/30/2024 at 19:10):     background-color: #0056b3;
++page.svelte (weston49 on 10/30/2024 at 19:10):   }
++page.svelte (weston49 on 10/30/2024 at 19:10):   .comment-form button:disabled {
++page.svelte (weston49 on 10/30/2024 at 19:10):     background-color: #6c757d;
++page.svelte (weston49 on 10/30/2024 at 19:10):     cursor: not-allowed;
++page.svelte (weston49 on 10/30/2024 at 19:10):   }
++page.svelte (weston49 on 10/30/2024 at 19:10):   .comments-list {
++page.svelte (weston49 on 10/30/2024 at 19:10):     display: flex;
++page.svelte (weston49 on 10/30/2024 at 19:10):     flex-direction: column;
++page.svelte (weston49 on 10/30/2024 at 19:10):   }
++page.svelte (weston49 on 10/30/2024 at 19:10):   .no-comments {
++page.svelte (weston49 on 10/30/2024 at 19:10):     color: #a9a9a9;
++page.svelte (weston49 on 10/30/2024 at 19:10):     font-style: italic;
++page.svelte (weston49 on 10/30/2024 at 19:10):   }
++page.svelte (weston49 on 10/30/2024 at 19:10):   @media (max-width: 768px) {
++page.svelte (weston49 on 10/30/2024 at 19:10):       padding: 15px;
++page.svelte (weston49 on 10/30/2024 at 19:10):       margin: 15px;
++page.svelte (weston49 on 10/30/2024 at 19:10):       flex-direction: column;
++page.svelte (weston49 on 10/30/2024 at 19:10):       align-items: flex-start;
++page.svelte (weston49 on 10/30/2024 at 19:10):       margin-bottom: 15px;
++page.svelte (weston49 on 10/30/2024 at 19:10):       flex-direction: column;
++page.svelte (weston49 on 10/30/2024 at 19:10):       gap: 10px;
++page.svelte (weston49 on 10/30/2024 at 19:10):     .album-cover-container {
++page.svelte (weston49 on 10/30/2024 at 19:10):       height: auto;
++page.svelte (weston49 on 10/30/2024 at 19:10):       margin-right: 0;
++page.svelte (weston49 on 10/30/2024 at 19:10):       margin-bottom: 15px;
++page.svelte (weston49 on 10/30/2024 at 19:10):       text-align: center;
++page.svelte (weston49 on 10/30/2024 at 19:10):       font-size: 1.8rem;
++page.svelte (weston49 on 10/30/2024 at 19:10):       font-size: 1.1rem;
++page.svelte (weston49 on 10/30/2024 at 19:10):       font-size: 1rem;
++page.svelte (weston49 on 10/30/2024 at 19:10):       font-size: 1rem;
++page.svelte (weston49 on 10/30/2024 at 19:10):       justify-content: center;
++page.svelte (weston49 on 10/30/2024 at 19:10):       margin-right: 5px;
++page.svelte (weston49 on 10/30/2024 at 19:10):     .like-text {
++page.svelte (weston49 on 10/30/2024 at 19:10):     .like-count {
++page.svelte (weston49 on 10/30/2024 at 19:10):       width: 20px;
++page.svelte (weston49 on 10/30/2024 at 19:10):       height: 20px;
++page.svelte (weston49 on 10/30/2024 at 19:10):       margin-left: 8px;
++page.svelte (weston49 on 10/30/2024 at 19:10):       font-size: 0.8rem;
++page.svelte (weston49 on 10/30/2024 at 19:10):   }
++page.svelte (weston49 on 10/30/2024 at 19:10): </style>
++page.svelte (weston49 on 10/25/2024 at 10:58):     }, 10); // loading screen will be displayed for this amount of time
++page.svelte (weston49 on 10/25/2024 at 10:58):     background-color: #121212;
++page.svelte (weston49 on 10/25/2024 at 10:58):     padding:0px;
++page.svelte (weston49 on 10/25/2024 at 10:58):     margin-left:250px;
++page.svelte (weston49 on 10/25/2024 at 10:58):     width:calc(100% - 300px);
++page.svelte (weston49 on 10/25/2024 at 11:04):       margin-left:0;
++page.svelte (weston49 on 10/25/2024 at 11:04):       margin-left:0;
+app.html     (weston49 on 10/30/2024 at 20:20): 		<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c&display=swap" rel="stylesheet">
+app.html     (weston49 on 10/30/2024 at 19:10): 	*{
+app.html     (weston49 on 10/30/2024 at 20:20): 		font-family: "M PLUS Rounded 1c", sans-serif;
+app.html     (weston49 on 10/30/2024 at 19:10): 	}
++page.svelte (weston49 on 10/30/2024 at 19:10): <div class="wrapper">
++page.svelte (weston49 on 10/30/2024 at 19:10):   {#if loading}
++page.svelte (weston49 on 10/30/2024 at 19:10):     <p>Loading song details...</p>
++page.svelte (weston49 on 10/30/2024 at 19:10):   {:else if error}
++page.svelte (weston49 on 10/30/2024 at 19:10):     <p>Error: {error}</p>
++page.svelte (weston49 on 10/30/2024 at 19:10):   {:else}
++page.svelte (weston49 on 10/30/2024 at 19:10):     <div class="song-details">
++page.svelte (weston49 on 10/30/2024 at 19:10):       <img src={songDetails.image_url} alt="{songDetails.title} album cover" />
++page.svelte (weston49 on 10/30/2024 at 19:10):       <div class="song-info">
++page.svelte (weston49 on 10/30/2024 at 19:10):         <h1>{songDetails.title}</h1>
++page.svelte (weston49 on 10/30/2024 at 19:10):         <p>by {songDetails.artist}</p>
++page.svelte (weston49 on 10/30/2024 at 19:10):     </div>
++page.svelte (weston49 on 10/30/2024 at 19:10):     <h2>Reviews</h2>
++page.svelte (weston49 on 10/30/2024 at 19:10):     {#if reviews.length > 0}
++page.svelte (weston49 on 10/30/2024 at 19:10):     {#each reviews as review}
++page.svelte (weston49 on 10/30/2024 at 19:10):       <div class="inner-wrapper">
++page.svelte (weston49 on 10/30/2024 at 19:10):         <div class="top-bar">
++page.svelte (weston49 on 10/30/2024 at 19:10):           <div class="user-info">
++page.svelte (weston49 on 10/30/2024 at 19:10):             <img class="profile-pic" src={review.profiles.avatar_url || 'https://placehold.co/30'} alt="profile" />
++page.svelte (weston49 on 10/30/2024 at 19:10):             <span class="username">
++page.svelte (weston49 on 10/30/2024 at 19:10):               <a class="username-link" href="/profiles/{review.profiles.username}">{review.profiles.username}</a>
++page.svelte (weston49 on 10/30/2024 at 19:10):             </span>
++page.svelte (weston49 on 10/30/2024 at 19:10):           </div>
++page.svelte (weston49 on 10/30/2024 at 19:10):         <div class="content-wrapper">
++page.svelte (weston49 on 10/30/2024 at 19:10):           <div class="album-cover-container">
++page.svelte (weston49 on 10/30/2024 at 19:10):             <img
++page.svelte (weston49 on 10/30/2024 at 19:10):               class="album-cover"
++page.svelte (weston49 on 10/30/2024 at 19:10):               src={songDetails.image_url}
++page.svelte (weston49 on 10/30/2024 at 19:10):               alt="{songDetails.title} album cover"
++page.svelte (weston49 on 10/30/2024 at 19:10):             />
++page.svelte (weston49 on 10/30/2024 at 19:10):             <a href="/discover/{song_id}" class="play-button" aria-label="Play Song">
++page.svelte (weston49 on 10/30/2024 at 19:10):               <i class="fa-solid fa-play"></i>
++page.svelte (weston49 on 10/30/2024 at 19:10):             </a>
++page.svelte (weston49 on 10/30/2024 at 19:10):           </div>
++page.svelte (weston49 on 10/30/2024 at 19:10):           <div class="song-info-wrapper">
++page.svelte (weston49 on 10/30/2024 at 19:10):             <p class="song-name">{songDetails.title}</p>
++page.svelte (weston49 on 10/30/2024 at 19:10):             <p class="artist-name">by {songDetails.artist}</p>
++page.svelte (weston49 on 10/30/2024 at 19:10):             <p class="review-preview">{review.content}</p>
++page.svelte (weston49 on 10/30/2024 at 19:10):           <div>
++page.svelte (weston49 on 10/30/2024 at 19:10):             <div class="rating-wrapper">
++page.svelte (weston49 on 10/30/2024 at 19:10):               <p>{@html renderStars(review.rating)}</p>
++page.svelte (weston49 on 10/30/2024 at 19:10):             </div>
++page.svelte (weston49 on 10/30/2024 at 19:10):             <div class="vote-section">
++page.svelte (weston49 on 10/30/2024 at 19:10):               <button
++page.svelte (weston49 on 10/30/2024 at 19:10):                 on:click={() => toggleVote('upvote', review.id)}
++page.svelte (weston49 on 10/30/2024 at 19:10):                 disabled={!logged_in_user_uuid || processingVote}
++page.svelte (weston49 on 10/30/2024 at 19:10):                 class="vote-button upvote-button"
++page.svelte (weston49 on 10/30/2024 at 19:10):                 aria-label="Upvote"
++page.svelte (weston49 on 10/30/2024 at 19:10):                 class:selected={userVotes[review.id] === 'upvote'}
++page.svelte (weston49 on 10/30/2024 at 19:10):               >
++page.svelte (weston49 on 10/30/2024 at 19:10):                 <i class="fa-solid fa-arrow-up"></i>
++page.svelte (weston49 on 10/30/2024 at 19:10):               </button>
++page.svelte (weston49 on 10/30/2024 at 19:10):               <span class="net-vote-count">{netVotes[review.id]}</span>
++page.svelte (weston49 on 10/30/2024 at 19:10):               <button
++page.svelte (weston49 on 10/30/2024 at 19:10):                 on:click={() => toggleVote('downvote', review.id)}
++page.svelte (weston49 on 10/30/2024 at 19:10):                 disabled={!logged_in_user_uuid || processingVote}
++page.svelte (weston49 on 10/30/2024 at 19:10):                 class="vote-button downvote-button"
++page.svelte (weston49 on 10/30/2024 at 19:10):                 aria-label="Downvote"
++page.svelte (weston49 on 10/30/2024 at 19:10):                 class:selected={userVotes[review.id] === 'downvote'}
++page.svelte (weston49 on 10/30/2024 at 19:10):               >
++page.svelte (weston49 on 10/30/2024 at 19:10):                 <i class="fa-solid fa-arrow-down"></i>
++page.svelte (weston49 on 10/30/2024 at 19:10):               </button>
++page.svelte (weston49 on 10/30/2024 at 19:10):             </div>
++page.svelte (weston49 on 10/30/2024 at 19:10):     {/each}
++page.svelte (weston49 on 10/30/2024 at 19:10):   {:else}
++page.svelte (weston49 on 10/30/2024 at 19:10):     <p>No reviews yet. Be the first to review!</p>
++page.svelte (weston49 on 10/30/2024 at 19:10):   {/if}
++page.svelte (weston49 on 10/30/2024 at 19:10):   {/if}
++page.svelte (weston49 on 10/30/2024 at 19:10): </div>
++page.svelte (weston49 on 10/30/2024 at 19:10):   .wrapper{
++page.svelte (weston49 on 10/30/2024 at 19:10):     margin: 0;
++page.svelte (weston49 on 10/30/2024 at 19:10):   }
++page.svelte (weston49 on 10/30/2024 at 19:10):       min-height: 100vh;
++layout.svelte (weston49 on 10/30/2024 at 17:12):   import { page } from '$app/stores'
++layout.svelte (weston49 on 10/30/2024 at 17:12):   let sidebarHidden = false;
++layout.svelte (weston49 on 10/30/2024 at 17:12):     sidebarHidden = !['/discover', '/discuss', '/account'].some(path => $page.url.pathname.includes(path));
++layout.svelte (weston49 on 10/30/2024 at 17:59):   // function hideBanner() {
++layout.svelte (weston49 on 10/30/2024 at 17:59):   //   document.getElementById("banner").style.display = "None";
++layout.svelte (weston49 on 10/30/2024 at 17:59):   // }
++layout.svelte (weston49 on 10/31/2024 at 08:54): <head>
++layout.svelte (weston49 on 10/31/2024 at 08:54): </head>
++layout.svelte (weston49 on 10/30/2024 at 17:59):   <!-- <div id="banner" class = "banner" ><div>Note: This app is in beta so spotify auth will not work for non-developers
++layout.svelte (weston49 on 10/30/2024 at 17:59):     <button class= "warning-button" on:click={hideBanner}>Hide Message</button></div>
++layout.svelte (weston49 on 10/30/2024 at 17:59):   </div> -->
++layout.svelte (weston49 on 10/30/2024 at 17:12):   <Sidebar hidden={sidebarHidden}></Sidebar>
++layout.svelte (weston49 on 10/30/2024 at 17:59):   /*
++layout.svelte (weston49 on 10/30/2024 at 17:59):     height: 40px;
++layout.svelte (weston49 on 10/30/2024 at 17:59):     width: 100%;
++layout.svelte (weston49 on 10/30/2024 at 17:59):   */
+footer.svelte (weston49 on 10/30/2024 at 20:04):     display: none;
+sidebar.svelte (weston49 on 10/25/2024 at 10:58):   let pinnedSidebar = false;
+sidebar.svelte (weston49 on 10/25/2024 at 10:58):   export let hidden;
+sidebar.svelte (weston49 on 10/25/2024 at 10:58):       recentSongs = recentSongs.slice(0, 3); // Limit to 6 recent songs
+sidebar.svelte (weston49 on 10/30/2024 at 17:59): <div class="sidebar {pinnedSidebar ? 'pinned' : ''} {hidden ? '' : 'hidden'}" on:drop={handleDrop} on:dragover|preventDefault>
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):   <div class="button-wrapper">
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     <button class="pin-button" on:click={() => pinnedSidebar = !pinnedSidebar}><i class="fa fa-thumb-tack" aria-hidden="true"></i></button>
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     <button class="close-button {hidden ? '' : 'rotated'}" on:click={() => hidden = !hidden}><i class="fa-solid fa-chevron-left"></i></button>
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):   </div>
+sidebar.svelte (weston49 on 10/25/2024 at 10:58):     top: 13%;
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     left: 0%;
+sidebar.svelte (weston49 on 10/25/2024 at 10:58):     z-index: 1000; /* Ensure it floats on top of other elements */
+sidebar.svelte (weston49 on 10/25/2024 at 10:58):     width: 300px;
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     border-radius:0px 25px 25px 0px;
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     position:absolute;
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     transition: transform 0.5s ease-in-out;
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):   }
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):   .hidden {
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     transform: translateX(-250px);
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     transition: transform 0.5s ease-in-out;
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):   }
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):   .pinned{
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     position: fixed !important;
+sidebar.svelte (weston49 on 10/25/2024 at 10:58):   .pin-button{
+sidebar.svelte (weston49 on 10/25/2024 at 10:58):     width: 30px;
+sidebar.svelte (weston49 on 10/25/2024 at 10:58):     height: 30px;
+sidebar.svelte (weston49 on 10/25/2024 at 10:58):     background-color: #26282c00;
+sidebar.svelte (weston49 on 10/25/2024 at 10:58):     border: none;
+sidebar.svelte (weston49 on 10/25/2024 at 10:58):     border-radius: 50%;
+sidebar.svelte (weston49 on 10/25/2024 at 10:58):     color: #f3f1f1;
+sidebar.svelte (weston49 on 10/25/2024 at 10:58):     font-size: 20px;
+sidebar.svelte (weston49 on 10/25/2024 at 10:58):     cursor: pointer;
+sidebar.svelte (weston49 on 10/25/2024 at 10:58):     transition: background-color 0.2s;
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     display: inline-block;
+sidebar.svelte (weston49 on 10/25/2024 at 10:58):     align-items: center;
+sidebar.svelte (weston49 on 10/25/2024 at 10:58):     justify-content: center;
+sidebar.svelte (weston49 on 10/25/2024 at 10:58):     margin-bottom:10px;
+sidebar.svelte (weston49 on 10/25/2024 at 10:58):   }
+sidebar.svelte (weston49 on 10/25/2024 at 10:58):   .pin-button:hover{
+sidebar.svelte (weston49 on 10/25/2024 at 10:58):     background-color: #434343;
+sidebar.svelte (weston49 on 10/25/2024 at 10:58):   }
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):   .rotated{
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     transform: translateX(20px) rotateY(180deg) !important;
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     transition: transform 0.5s ease-in-out;
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):   }
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):   .close-button{
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     width: 30px;
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     height: 30px;
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     background-color: #26282c00;
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     border: none;
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     border-radius: 50%;
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     color: #f3f1f1;
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     font-size: 20px;
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     cursor: pointer;
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     transition: background-color 0.2s;
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     display: inline-block;
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     align-items: center;
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     justify-content: center;
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     margin-bottom:10px;
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     margin-left: 180px;
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     transform: translateX(20px);
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     transition: transform 0.5s ease-in-out;
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):   }
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):   .close-button:hover{
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     background-color: #434343;
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):   }
+sidebar.svelte (weston49 on 10/25/2024 at 10:58):   .recent-songs p{
+sidebar.svelte (weston49 on 10/25/2024 at 10:58):     margin: 0;
+sidebar.svelte (weston49 on 10/25/2024 at 10:58):   }
