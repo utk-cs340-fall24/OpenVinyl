@@ -10,6 +10,7 @@
   import { getValidSpotifyAccessToken } from "$lib/utils";
   import { user } from "$lib/stores";
   import { derived } from 'svelte/store';
+  import { sidebarHidden } from "$lib/stores";
 
  
   import { goto } from "$app/navigation";
@@ -694,7 +695,7 @@
         Create 'OpenVinyl Discover' Playlist</button>
     {/if}
   </div>
-  <div class="game-board">
+  <div class="game-board { $sidebarHidden ? 'sidebarHidden' : '' }">
     {#each boxes as box, index (box.id)}
       <!-- svelte-ignore a11y-click-events-have-key-events -->
       <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -764,6 +765,10 @@
     max-width: 620px;
     margin: 0 auto;
     box-sizing: border-box;
+  }
+
+  .game-board.sidebarHidden {
+    /* Add your styles for when the sidebar is hidden */
   }
 
   .box {

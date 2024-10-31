@@ -1,13 +1,11 @@
 <script>
   import { onMount, onDestroy } from "svelte";
-  import { selectedSong } from "$lib/stores";
+  import { selectedSong, sidebarHidden } from "$lib/stores";
   import { getValidSpotifyAccessToken } from "$lib/utils";
   import { user } from "$lib/stores";
   import { derived } from 'svelte/store';
   import "@fortawesome/fontawesome-free/css/all.css";
   import "@fortawesome/fontawesome-free/js/all.js";
-
-  export let sidebarHidden;
 
   let player;
   let currentSong = null;
@@ -16,6 +14,11 @@
   let showPlayer = false;
   let isPlaying = false;
   let pinnedSidebar = false;
+  let isSidebarHidden = false;
+
+  const unsubscribeSidebarHidden = sidebarHidden.subscribe(value => {
+    isSidebarHidden = value;
+  });
 
   const userReady = derived(user, $user => $user); // Wait for user to be set
 
@@ -266,6 +269,9 @@ function updateRecentSongs(track) {
     showPremiumMessage = false;
   }
 
+  function toggleSidebar() {
+    sidebarHidden.update(value => !value);
+  }
 </script>
 
 <head>
@@ -273,10 +279,10 @@ function updateRecentSongs(track) {
 </head>
 <!-- svelte-ignore missing-declaration -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<div class="sidebar {pinnedSidebar ? 'pinned' : ''} {sidebarHidden ? '' : 'hidden'}" on:drop={handleDrop} on:dragover|preventDefault>
+<div class="sidebar {pinnedSidebar ? 'pinned' : ''} {isSidebarHidden ? '' : 'sidebarHidden'}" on:drop={handleDrop} on:dragover|preventDefault>
   <div class="button-wrapper">
     <button class="pin-button" on:click={() => pinnedSidebar = !pinnedSidebar}><i class="fa fa-thumb-tack" aria-hidden="true"></i></button>
-    <button class="close-button {sidebarHidden ? '' : 'rotated'}" on:click={() => sidebarHidden = !sidebarHidden}><i class="fa-solid fa-chevron-left"></i></button>
+    <button class="close-button {isSidebarHidden ? '' : 'rotated'}" on:click={toggleSidebar}><i class="fa-solid fa-chevron-left"></i></button>
   </div>
   {#if showPremiumMessage}
     <div class="premium-message">
@@ -409,7 +415,7 @@ function updateRecentSongs(track) {
     transition: transform 0.5s ease-in-out;
   }
 
-  .hidden {
+  .sidebarHidden {
     transform: translateX(-250px);
     transition: transform 0.5s ease-in-out;
   }

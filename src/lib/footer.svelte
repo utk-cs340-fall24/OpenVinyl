@@ -1,9 +1,9 @@
 <div class="footer-wrapper">
-  <footer>
+  <!-- <footer>
     <div class="footer-content">
       <p class="footer-text">&copy; {new Date().getFullYear()} Open Vinyl. All rights reserved.</p>
     </div>
-  </footer>
+  </footer> -->
 </div>
 
 <style>
