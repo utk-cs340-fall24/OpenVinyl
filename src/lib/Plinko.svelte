@@ -251,17 +251,21 @@
   }
 
   function getMultiplier(index, totalSlots) {
-    const middle = (totalSlots - 1) / 2;
-    const distanceFromCenter = Math.abs(index - middle);
+  const middle = Math.floor(totalSlots / 2); 
 
-    const maxMultiplier = 10;
-    const minMultiplier = 0.2;
-    const multiplier =
-      minMultiplier +
-      ((maxMultiplier - minMultiplier) * distanceFromCenter) / middle;
+  const multipliers = [
+    0.5, 1.0, 1.1, 1.3, 1.4, 1.9, 4.0, 7.1,
+  ];
 
-    return parseFloat(multiplier.toFixed(1));
-  }
+  const fullMultipliers = [
+    ...multipliers.slice(), 
+    ...multipliers 
+  ];
+
+  const distanceFromMiddle = Math.abs(index - middle);
+
+  return fullMultipliers[distanceFromMiddle];
+}
 </script>
 
 <div class="plinko-game">
