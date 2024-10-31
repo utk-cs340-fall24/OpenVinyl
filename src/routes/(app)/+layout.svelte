@@ -39,6 +39,9 @@
   // }
 
 </script>
+<head>
+  <link href="./../node_modules/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+</head>
 <div class="wrapper">
   <!-- <div id="banner" class = "banner" ><div>Note: This app is in beta so spotify auth will not work for non-developers
     <button class= "warning-button" on:click={hideBanner}>Hide Message</button></div>
