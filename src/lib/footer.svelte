@@ -11,6 +11,7 @@
     width: 100%;
     background-color: #1d1f25;
     border-top: 1px solid #26282c;
+    display: none;
   }
 
   footer {
