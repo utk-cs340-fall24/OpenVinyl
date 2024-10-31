@@ -4,6 +4,10 @@
   import { getValidSpotifyAccessToken } from "$lib/utils";
   import { user } from "$lib/stores";
   import { derived } from 'svelte/store';
+  import "@fortawesome/fontawesome-free/css/all.css";
+  import "@fortawesome/fontawesome-free/js/all.js";
+
+  export let sidebarHidden;
 
   let player;
   let currentSong = null;
@@ -12,7 +16,6 @@
   let showPlayer = false;
   let isPlaying = false;
   let pinnedSidebar = false;
-  export let hidden;
 
   const userReady = derived(user, $user => $user); // Wait for user to be set
 
@@ -266,14 +269,14 @@ function updateRecentSongs(track) {
 </script>
 
 <head>
-  <!-- <link href="./../node_modules/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet"> -->
+  <link href="./../node_modules/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
 </head>
 <!-- svelte-ignore missing-declaration -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<div class="sidebar {pinnedSidebar ? 'pinned' : ''} {hidden ? '' : 'hidden'}" on:drop={handleDrop} on:dragover|preventDefault>
+<div class="sidebar {pinnedSidebar ? 'pinned' : ''} {sidebarHidden ? '' : 'hidden'}" on:drop={handleDrop} on:dragover|preventDefault>
   <div class="button-wrapper">
     <button class="pin-button" on:click={() => pinnedSidebar = !pinnedSidebar}><i class="fa fa-thumb-tack" aria-hidden="true"></i></button>
-    <button class="close-button {hidden ? '' : 'rotated'}" on:click={() => hidden = !hidden}><i class="fa-solid fa-chevron-left"></i></button>
+    <button class="close-button {sidebarHidden ? '' : 'rotated'}" on:click={() => sidebarHidden = !sidebarHidden}><i class="fa-solid fa-chevron-left"></i></button>
   </div>
   {#if showPremiumMessage}
     <div class="premium-message">

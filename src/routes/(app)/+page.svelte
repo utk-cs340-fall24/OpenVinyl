@@ -9,6 +9,8 @@
   import { selectedSong } from "$lib/stores";
   import { getSongs, authenticateClientCredentials } from "$lib/utils.js";
 
+  import sidebarHidden from "$lib/sidebar.svelte";
+
   export let data;
 
   let session_uuid;
@@ -183,7 +185,7 @@
   on:dragleave={handleDragLeave}
   on:drop={handleDrop}
 >
-  <div class="posts-wrapper {isDragOver ? 'drag-over' : ''}">
+  <div class="posts-wrapper {isDragOver ? 'drag-over' : ''} {sidebarHidden ? '' : 'sidebarHidden'}">
     <AddPost on:reviewSubmitted={handleReviewSubmitted} />
 
     {#each posts as post (post.id)}
@@ -240,6 +242,10 @@
     z-index: 1000;
     right: 2%;
     bottom: 4%;
+  }
+
+  .sidebarHidden{
+    margin-left: 0 !important;
   }
 
   .posts-wrapper {
