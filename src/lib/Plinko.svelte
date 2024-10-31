@@ -5,11 +5,10 @@
   let engine, world, render, runner;
   let dropBall;
   let multiplierSlots = [];
-  let balance = 50; // Starting balance in vinyls
-  let message = ''; // Message to display last win
-  const ballCost = 1; // Cost per ball in vinyls
+  let balance = 50; 
+  let message = '';
+  const ballCost = 1;
 
-  // Matter.js modules
   const Engine = Matter.Engine;
   const Render = Matter.Render;
   const Runner = Matter.Runner;
@@ -18,7 +17,6 @@
   const Events = Matter.Events;
   const Body = Matter.Body;
 
-  // Define collision categories and groups
   const defaultCategory = 0x0001;
   const ballCategory = 0x0002;
 
@@ -27,36 +25,30 @@
   });
 
   function createScene() {
-    // Create engine and world
     engine = Engine.create();
     world = engine.world;
 
-    // Adjust physics settings
     engine.positionIterations = 10;
     engine.velocityIterations = 10;
     engine.constraintIterations = 4;
 
-    // Create renderer with reduced size
     render = Render.create({
       element: document.getElementById('matter-js'),
       engine: engine,
       options: {
-        width: 600, // Reduced width
-        height: 600, // Reduced height
-        background: '#333333', // Changed background color for better contrast
+        width: 600,
+        height: 600,
+        background: '#333333', 
         wireframes: false,
       },
     });
 
     Render.run(render);
 
-    // Create runner
     runner = Runner.create();
     Runner.run(runner, engine);
 
-    // Add boundaries with reduced edge widths
     Composite.add(world, [
-      // Top boundary
       Bodies.rectangle(300, -5, 600, 10, {
         isStatic: true,
         collisionFilter: {
@@ -64,7 +56,6 @@
           mask: ballCategory | defaultCategory,
         },
       }),
-      // Bottom boundary
       Bodies.rectangle(300, 605, 600, 10, {
         isStatic: true,
         label: 'BottomBoundary',
@@ -73,7 +64,6 @@
           mask: ballCategory | defaultCategory,
         },
       }),
-      // Right wall
       Bodies.rectangle(605, 300, 10, 600, {
         isStatic: true,
         collisionFilter: {
@@ -81,7 +71,6 @@
           mask: ballCategory | defaultCategory,
         },
       }),
-      // Left wall
       Bodies.rectangle(-5, 300, 10, 600, {
         isStatic: true,
         collisionFilter: {
@@ -91,41 +80,36 @@
       }),
     ]);
 
-    // Add pegs
     createPegs();
 
-    // Add multiplier slots
     createMultiplierSlots();
 
-    // Drop ball function
     dropBall = () => {
       if (balance < ballCost) {
         message = "You don't have enough vinyls!";
         return;
       }
-      balance -= ballCost; // Deduct cost per ball
+      balance -= ballCost; 
 
-      // Reduce variation of the dropping point to make it more likely to drop in the middle
       const randomOffset =
-        (Math.random() + Math.random() + Math.random() - 1.5) * 20; // Adjusted range
-      const xPosition = 300 + randomOffset; // Centered at 300
+        (Math.random() + Math.random() + Math.random() - 1.5) * 20;
+      const xPosition = 300 + randomOffset; 
 
-      // Create a single circle with both stroke and sprite
-      const ball = Bodies.circle(xPosition, 50, 14, { // Reduced radius
+      const ball = Bodies.circle(xPosition, 50, 14, {
         collisionFilter: {
-          group: -1, // Balls will not collide with each other
+          group: -1,
           category: ballCategory,
-          mask: defaultCategory, // Collide with defaultCategory (pegs, boundaries)
+          mask: defaultCategory, 
         },
         restitution: 0.5,
         label: 'Ball',
         render: {
           strokeStyle: '#ffffff',
-          lineWidth: 3, // Adjusted line width
+          lineWidth: 3, 
           fillStyle: 'transparent',
           sprite: {
             texture: 'logo.svg',
-            xScale: 0.08, // Adjusted scale for smaller ball
+            xScale: 0.08,
             yScale: 0.08,
           },
         },
@@ -134,75 +118,63 @@
       Composite.add(world, ball);
     };
 
-    // Event for collision detection
     Events.on(engine, 'collisionStart', function (event) {
       var pairs = event.pairs;
 
       pairs.forEach(function (pair) {
         var labels = [pair.bodyA.label, pair.bodyB.label];
 
-        // When the ball reaches the bottom boundary
         if (
           (labels.includes('Ball') || labels.includes('BallPart')) &&
           labels.includes('BottomBoundary')
         ) {
-          // Determine which body is the ball
           var ball =
             pair.bodyA.label === 'Ball' || pair.bodyA.label === 'BallPart'
               ? pair.bodyA
               : pair.bodyB;
 
-          // If it's a part, get the parent
           if (ball.label === 'BallPart') {
             ball = ball.parent;
           }
 
-          // Before removing the ball, find out which box the ball is in
           var ballX = ball.position.x;
-          // Calculate slot index based on ballX
           const slotWidth = 600 / multiplierSlots.length;
           var slotIndex = Math.floor(ballX / slotWidth);
 
           if (slotIndex >= 0 && slotIndex < multiplierSlots.length) {
             var multiplier = multiplierSlots[slotIndex];
 
-            // Calculate winnings
             var winnings = ballCost * multiplier;
             balance += winnings;
 
-            // Ensure balance is rounded to two decimals
             balance = parseFloat(balance.toFixed(2));
 
-            // Update message
             message = `You won ${winnings.toFixed(2)} Vinyls!`;
           } else {
-            // Ball is out of bounds; no winnings
             message = `No winnings. Try again!`;
           }
 
-          // Remove the ball
           Composite.remove(world, ball);
         }
       });
     });
   }
 
-  // Function to create pegs in a wider pattern
   function createPegs() {
     const rows = 12;
-    const pegSpacingX = 45; // Adjusted spacing
-    const pegSpacingY = 40; // Adjusted spacing
-    const startX = 300; // Center x position
+    const pegSpacingX = 45; 
+    const pegSpacingY = 40; 
+    const startX = 300; 
 
     for (let row = 0; row < rows; row++) {
-      const cols = row + 3; // Start with 3 pegs at the top
+      const cols = row + 3; 
       const rowWidth = (cols - 1) * pegSpacingX;
       const xOffset = startX - rowWidth / 2;
 
       for (let col = 0; col < cols; col++) {
         const x = xOffset + col * pegSpacingX;
-        const y = 80 + row * pegSpacingY; // Adjusted starting y position
-        const peg = Bodies.circle(x, y, 4, { // Reduced radius
+        const y = 80 + row * pegSpacingY; 
+        const peg = Bodies.circle(x, y, 4, { 
           isStatic: true,
           collisionFilter: {
             category: defaultCategory,
@@ -219,19 +191,16 @@
     }
   }
 
-  // Function to create multiplier slots at the bottom
   function createMultiplierSlots() {
-    const slotCount = 15; // Number of slots
+    const slotCount = 15;
     const slotWidth = 600 / slotCount;
 
-    // Adjusted slot positions
-    const slotYPosition = 80 + 12 * 40 + 80; // Adjusted positions
+    const slotYPosition = 80 + 12 * 40 + 80;
 
-    // Create pegs between slots
     for (let i = 0; i <= slotCount; i++) {
       const x = i * slotWidth;
-      const y = slotYPosition - 30; // Adjusted position
-      const peg = Bodies.circle(x, y, 4, { // Reduced radius
+      const y = slotYPosition - 30; 
+      const peg = Bodies.circle(x, y, 4, { 
         isStatic: true,
         collisionFilter: {
           category: defaultCategory,
@@ -246,7 +215,6 @@
       Composite.add(world, peg);
     }
 
-    // Create floors for slots and label them
     for (let i = 0; i < slotCount; i++) {
       const x = i * slotWidth + slotWidth / 2;
       const floor = Bodies.rectangle(x, slotYPosition + 30, slotWidth, 30, {
@@ -267,36 +235,37 @@
       const multiplier = getMultiplier(i, slotCount);
       multiplierSlots[i] = multiplier;
 
-      // Add text labels for multipliers using HTML elements
       const text = document.createElement('div');
       text.style.position = 'absolute';
       text.style.left = `${i * slotWidth}px`;
-      text.style.top = `${render.options.height - 50}px`; // Adjusted label position
+      text.style.top = `${render.options.height - 50}px`; 
       text.style.width = `${slotWidth}px`;
       text.style.textAlign = 'center';
       text.style.color = '#fff';
       text.style.fontWeight = 'bold';
-      text.style.fontSize = '12px'; // Reduced font size
+      text.style.fontSize = '12px'; 
       text.innerText = `${multiplier}x`;
       text.classList.add('multiplier-label');
       document.getElementById('matter-js').appendChild(text);
     }
   }
 
-  // Function to assign multipliers, higher on the edges
   function getMultiplier(index, totalSlots) {
-    const middle = (totalSlots - 1) / 2;
-    const distanceFromCenter = Math.abs(index - middle);
+  const middle = Math.floor(totalSlots / 2); 
 
-    // Calculate multiplier based on distance from center
-    const maxMultiplier = 10;
-    const minMultiplier = 0.2;
-    const multiplier =
-      minMultiplier +
-      ((maxMultiplier - minMultiplier) * distanceFromCenter) / middle;
+  const multipliers = [
+    0.5, 1.0, 1.1, 1.3, 1.4, 1.9, 4.0, 7.1,
+  ];
 
-    return parseFloat(multiplier.toFixed(1));
-  }
+  const fullMultipliers = [
+    ...multipliers.slice(), 
+    ...multipliers 
+  ];
+
+  const distanceFromMiddle = Math.abs(index - middle);
+
+  return fullMultipliers[distanceFromMiddle];
+}
 </script>
 
 <div class="plinko-game">
@@ -330,9 +299,9 @@
 
   .game-area {
     position: relative;
-    width: 600px; /* Reduced width */
-    height: 600px; /* Reduced height */
-    background-color: #333333; /* Changed background color for better contrast */
+    width: 600px;
+    height: 600px;
+    background-color: #333333; 
     overflow: hidden;
     border-radius: 10px;
     box-shadow: 0 0 10px #000;
@@ -368,9 +337,8 @@
     font-size: 1.1em;
   }
 
-  /* Multiplier Labels */
   .multiplier-label {
     position: absolute;
-    font-size: 12px; /* Reduced font size */
+    font-size: 12px; 
   }
 </style>

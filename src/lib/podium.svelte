@@ -16,7 +16,7 @@
 
 <div class="wrapper">
     <div>
-        <p class="header">Top users</p>
+        <p class="header">Top Users</p>
     </div>
     <div class="podium-wrapper">
         {#each podium as user}
@@ -46,14 +46,16 @@
             <span>Posts</span>
         </div>
         <div class="leaderboard-divider"></div>
-        {#each data as user}
+        {#each data as user, index}
         <div class="user">
             <img class="small-profile-pic" src={user.avatar_url} alt="profile-pic">
             <span>{user.username}</span>
             <span>{user.total_likes}</span>
             <span>{user.post_count}</span>
         </div>
-        <div class="user-divider"></div>
+        {#if index < data.length - 1}
+            <div class="user-divider"></div>
+        {/if}
         {/each}
     </div>
 
@@ -67,6 +69,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        padding-bottom: 20px;
     }
 
     .header {
