@@ -112,16 +112,36 @@
     box-sizing: border-box;
   }
 
-  .login-window .emailbuttons button {
+  .login-window .emailbuttons .inputbox {
     width: 100%;
     margin-top: 8px;
     height: 2.5em;
     font-size: 18px;
+    align-items: center;
+    background: rgb(83,112,254);
+    background: linear-gradient(90deg, rgba(83,112,254,1) 16%, rgba(254,102,197,1) 66%); 
+    border: 0;
+    border-radius: 8px;
+    box-shadow: rgba(151, 65, 252, 0.2) 0 15px 30px -5px;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    display: flex;
+    font-size: 20px;
+    justify-content: center;
+    line-height: 1em;
+    max-width: 100%;
+    min-width: 140px;
+    padding: 3px;
+    text-decoration: none;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    white-space: nowrap;
     cursor: pointer;
   }
 
-  button:hover {
-    cursor: pointer;
+  .login-window .emailbuttons .inputbox:active, .login-window .emailbuttons .inputbox:hover {
+    outline: 0;
   }
 
   .fa-google {
@@ -131,6 +151,30 @@
   .login-window .oauthbuttons button {
     width: 32%;
     height: 3em;
+  }
+
+  .google {
+    background-color: #4285F4; 
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    font-weight: 600;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .spotify {
+    background-color: #1db954; 
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    font-weight: 600;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   }
 
   .hr-text {
@@ -169,6 +213,24 @@
     line-height: 1.5em;
     color: #ffffff;
     background-color: #1D1F25;
+  }
+
+  @media (max-width: 768px) {
+    .container .login-window {
+      max-height: 80vh;
+      height: auto;
+      overflow-y: auto;
+      max-width: 40vw;
+      background-color: #1D1F25;
+      box-shadow: 0px 10px 15px -3px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      padding: 2.5em;
+      text-align: center;
+    }
+  }
+
+  @media (max-width: 480px) {
+
   }
 </style>
 
