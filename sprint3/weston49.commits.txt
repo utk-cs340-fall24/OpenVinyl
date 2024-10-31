@@ -1,10 +1,40 @@
-post.svelte  (weston49 on 10/30/2024 at 19:10):     <div class="right-section" on:click={() => goto(`/posts/${post_id}`)} style="cursor: pointer;"></div>
-post.svelte  (weston49 on 10/30/2024 at 19:10):   /* .discover-button {
-post.svelte  (weston49 on 10/30/2024 at 19:10):   } */
-post.svelte  (weston49 on 10/30/2024 at 19:10):   /* .like-section {
-post.svelte  (weston49 on 10/30/2024 at 19:10):   } */
-post.svelte  (weston49 on 10/30/2024 at 19:10):     /* .like-section {
-post.svelte  (weston49 on 10/30/2024 at 19:10):     } */
+footer.svelte (weston49 on 10/31/2024 at 13:56):   <!-- <footer>
+footer.svelte (weston49 on 10/31/2024 at 13:56):   </footer> -->
+footer.svelte (weston49 on 10/30/2024 at 20:04):     display: none;
++page.svelte (weston49 on 10/31/2024 at 13:56):   import { sidebarHidden } from "$lib/stores";
++page.svelte (weston49 on 10/31/2024 at 13:56):   let isSidebarHidden = false;
++page.svelte (weston49 on 10/31/2024 at 13:56):   const unsubscribeSidebar = sidebarHidden.subscribe(value => {
++page.svelte (weston49 on 10/31/2024 at 13:56):     isSidebarHidden = value;
++page.svelte (weston49 on 10/31/2024 at 13:56):   });
++page.svelte (weston49 on 10/31/2024 at 13:56):   onDestroy(() => {
++page.svelte (weston49 on 10/31/2024 at 13:56):     unsubscribeSidebar();
++page.svelte (weston49 on 10/31/2024 at 13:56):     unsubscribe();
++page.svelte (weston49 on 10/31/2024 at 13:56):   });
++page.svelte (weston49 on 10/25/2024 at 10:58):     }, 10); // loading screen will be displayed for this amount of time
++page.svelte (weston49 on 10/31/2024 at 13:56):   <div class="posts-wrapper {isDragOver ? 'drag-over' : ''} {isSidebarHidden ? '' : 'sidebarHidden'}">
++page.svelte (weston49 on 10/25/2024 at 10:58):     background-color: #121212;
++page.svelte (weston49 on 10/31/2024 at 12:48):   .sidebarHidden{
++page.svelte (weston49 on 10/31/2024 at 12:48):     margin-left: 0 !important;
++page.svelte (weston49 on 10/31/2024 at 13:56):     margin-right: 0 !important;
++page.svelte (weston49 on 10/31/2024 at 13:56):     width: 100% !important;
++page.svelte (weston49 on 10/31/2024 at 13:56):     transition: margin-left 0.5s ease-in-out, width 0.5 ease-in-out;
++page.svelte (weston49 on 10/31/2024 at 12:48):   }
++page.svelte (weston49 on 10/25/2024 at 10:58):     padding:0px;
++page.svelte (weston49 on 10/31/2024 at 13:56):     width:80%;
++page.svelte (weston49 on 10/31/2024 at 13:56):     margin-left:250px;
++page.svelte (weston49 on 10/31/2024 at 13:56):     transition: margin-left 0.5s ease-in-out, width 0.5s ease-in-out;
++page.svelte (weston49 on 10/25/2024 at 11:04):       margin-left:0;
++page.svelte (weston49 on 10/25/2024 at 11:04):       margin-left:0;
+app.html     (weston49 on 10/30/2024 at 20:20): 		<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c&display=swap" rel="stylesheet">
+app.html     (weston49 on 10/30/2024 at 19:10): 	*{
+app.html     (weston49 on 10/30/2024 at 20:20): 		font-family: "M PLUS Rounded 1c", sans-serif;
+app.html     (weston49 on 10/30/2024 at 19:10): 	}
++page.svelte (weston49 on 10/31/2024 at 13:56):     import { sidebarHidden } from "$lib/stores";
++page.svelte (weston49 on 10/31/2024 at 13:56):     let isSidebarHidden = false;
++page.svelte (weston49 on 10/31/2024 at 13:56):     const unsubscribeSidebar = sidebarHidden.subscribe(value => {
++page.svelte (weston49 on 10/31/2024 at 13:56):       isSidebarHidden = value;
++page.svelte (weston49 on 10/31/2024 at 13:56):     });
++page.svelte (weston49 on 10/31/2024 at 13:56): <div class="post-detail-wrapper {isSidebarHidden ? 'sidebarHidden' : ''}">
 +page.svelte (weston49 on 10/30/2024 at 19:10):   .post-detail-wrapper {
 +page.svelte (weston49 on 10/30/2024 at 19:10):     padding: 20px;
 +page.svelte (weston49 on 10/30/2024 at 19:10):     background-color: #1d1f25;
@@ -12,9 +42,14 @@ post.svelte  (weston49 on 10/30/2024 at 19:10):     } */
 +page.svelte (weston49 on 10/30/2024 at 19:10):     border: 1px solid #26282c;
 +page.svelte (weston49 on 10/30/2024 at 19:10):     border-radius: 8px;
 +page.svelte (weston49 on 10/30/2024 at 19:10):     font-family: 'Concert One', sans-serif;
-+page.svelte (weston49 on 10/30/2024 at 19:10):     margin: 20px;
-+page.svelte (weston49 on 10/30/2024 at 19:10):     margin-left: 350px;
-+page.svelte (weston49 on 10/30/2024 at 19:10):     width:70%;
++page.svelte (weston49 on 10/31/2024 at 13:56):     margin:30px 11vw;
++page.svelte (weston49 on 10/31/2024 at 13:56):     width: 80vw;
++page.svelte (weston49 on 10/31/2024 at 13:56):     transition: width 0.5s ease-in-out, margin-left 0.5s ease-in-out;
++page.svelte (weston49 on 10/31/2024 at 13:56):   }
++page.svelte (weston49 on 10/31/2024 at 13:56):   .sidebarHidden{
++page.svelte (weston49 on 10/31/2024 at 13:56):     width: 75vw !important;
++page.svelte (weston49 on 10/31/2024 at 13:56):     margin-left: 340px !important;
++page.svelte (weston49 on 10/31/2024 at 13:56):     transition: width 0.5s ease-in-out, margin-left 0.5s ease-in-out;
 +page.svelte (weston49 on 10/30/2024 at 19:10):   }
 +page.svelte (weston49 on 10/30/2024 at 19:10):   .post-header {
 +page.svelte (weston49 on 10/30/2024 at 19:10):     display: flex;
@@ -231,17 +266,125 @@ post.svelte  (weston49 on 10/30/2024 at 19:10):     } */
 +page.svelte (weston49 on 10/30/2024 at 19:10):       font-size: 0.8rem;
 +page.svelte (weston49 on 10/30/2024 at 19:10):   }
 +page.svelte (weston49 on 10/30/2024 at 19:10): </style>
-+page.svelte (weston49 on 10/25/2024 at 10:58):     }, 10); // loading screen will be displayed for this amount of time
-+page.svelte (weston49 on 10/25/2024 at 10:58):     background-color: #121212;
-+page.svelte (weston49 on 10/25/2024 at 10:58):     padding:0px;
-+page.svelte (weston49 on 10/25/2024 at 10:58):     margin-left:250px;
-+page.svelte (weston49 on 10/25/2024 at 10:58):     width:calc(100% - 300px);
-+page.svelte (weston49 on 10/25/2024 at 11:04):       margin-left:0;
-+page.svelte (weston49 on 10/25/2024 at 11:04):       margin-left:0;
-app.html     (weston49 on 10/30/2024 at 20:20): 		<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c&display=swap" rel="stylesheet">
-app.html     (weston49 on 10/30/2024 at 19:10): 	*{
-app.html     (weston49 on 10/30/2024 at 20:20): 		font-family: "M PLUS Rounded 1c", sans-serif;
-app.html     (weston49 on 10/30/2024 at 19:10): 	}
+post.svelte  (weston49 on 10/30/2024 at 19:10):     <div class="right-section" on:click={() => goto(`/posts/${post_id}`)} style="cursor: pointer;"></div>
+post.svelte  (weston49 on 10/30/2024 at 19:10):   /* .discover-button {
+post.svelte  (weston49 on 10/30/2024 at 19:10):   } */
+post.svelte  (weston49 on 10/30/2024 at 19:10):   /* .like-section {
+post.svelte  (weston49 on 10/30/2024 at 19:10):   } */
+post.svelte  (weston49 on 10/30/2024 at 19:10):     /* .like-section {
+post.svelte  (weston49 on 10/30/2024 at 19:10):     } */
++page.svelte (weston49 on 10/31/2024 at 13:56):     import { sidebarHidden } from "$lib/stores";
++page.svelte (weston49 on 10/31/2024 at 13:56):     let isSidebarHidden = false;
++page.svelte (weston49 on 10/31/2024 at 13:56):     const unsubscribeSidebar = sidebarHidden.subscribe(value => {
++page.svelte (weston49 on 10/31/2024 at 13:56):       isSidebarHidden = value;
++page.svelte (weston49 on 10/31/2024 at 13:56):     });
++page.svelte (weston49 on 10/31/2024 at 13:56):         <div class="songs-list {isSidebarHidden ? 'sidebarHidden' : ''}">
++page.svelte (weston49 on 10/30/2024 at 19:10):       min-height: 100vh;
++page.svelte (weston49 on 10/31/2024 at 13:56):     .sidebarHidden{
++page.svelte (weston49 on 10/31/2024 at 13:56):       margin-left: 300px !important;
++page.svelte (weston49 on 10/31/2024 at 13:56):       transition: width 0.5s ease-in-out, margin-left 0.5s ease-in-out;
++page.svelte (weston49 on 10/31/2024 at 13:56):     }
++page.svelte (weston49 on 10/31/2024 at 13:56):       width: 100%;
++page.svelte (weston49 on 10/31/2024 at 13:56):       margin-left: 0px;
++page.svelte (weston49 on 10/31/2024 at 13:56):       transition: width 0.5s ease-in-out, margin-left 0.5s ease-in-out;
++layout.svelte (weston49 on 10/30/2024 at 17:12):   import { page } from '$app/stores'
++layout.svelte (weston49 on 10/31/2024 at 13:56):   import '@fortawesome/fontawesome-free/css/all.min.css'
++layout.svelte (weston49 on 10/30/2024 at 17:12):   let sidebarHidden = false;
++layout.svelte (weston49 on 10/30/2024 at 17:12):     sidebarHidden = !['/discover', '/discuss', '/account'].some(path => $page.url.pathname.includes(path));
++layout.svelte (weston49 on 10/30/2024 at 17:59):   // function hideBanner() {
++layout.svelte (weston49 on 10/30/2024 at 17:59):   //   document.getElementById("banner").style.display = "None";
++layout.svelte (weston49 on 10/30/2024 at 17:59):   // }
++layout.svelte (weston49 on 10/31/2024 at 08:54): <head>
++layout.svelte (weston49 on 10/31/2024 at 11:39):   <!-- <link href="./../node_modules/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet"> -->
++layout.svelte (weston49 on 10/31/2024 at 08:54): </head>
++layout.svelte (weston49 on 10/30/2024 at 17:59):   <!-- <div id="banner" class = "banner" ><div>Note: This app is in beta so spotify auth will not work for non-developers
++layout.svelte (weston49 on 10/30/2024 at 17:59):     <button class= "warning-button" on:click={hideBanner}>Hide Message</button></div>
++layout.svelte (weston49 on 10/30/2024 at 17:59):   </div> -->
++layout.svelte (weston49 on 10/31/2024 at 13:56):   <Sidebar></Sidebar>
++layout.svelte (weston49 on 10/30/2024 at 17:59):   /*
++layout.svelte (weston49 on 10/30/2024 at 17:59):     height: 40px;
++layout.svelte (weston49 on 10/30/2024 at 17:59):     width: 100%;
++layout.svelte (weston49 on 10/30/2024 at 17:59):   */
+sidebar.svelte (weston49 on 10/31/2024 at 13:56):   import { selectedSong, sidebarHidden } from "$lib/stores";
+sidebar.svelte (weston49 on 10/31/2024 at 12:48):   import "@fortawesome/fontawesome-free/css/all.css";
+sidebar.svelte (weston49 on 10/31/2024 at 12:48):   import "@fortawesome/fontawesome-free/js/all.js";
+sidebar.svelte (weston49 on 10/25/2024 at 10:58):   let pinnedSidebar = false;
+sidebar.svelte (weston49 on 10/31/2024 at 13:56):   let isSidebarHidden = false;
+sidebar.svelte (weston49 on 10/31/2024 at 13:56):   const unsubscribeSidebarHidden = sidebarHidden.subscribe(value => {
+sidebar.svelte (weston49 on 10/31/2024 at 13:56):     isSidebarHidden = value;
+sidebar.svelte (weston49 on 10/31/2024 at 13:56):   });
+sidebar.svelte (weston49 on 10/25/2024 at 10:58):       recentSongs = recentSongs.slice(0, 3); // Limit to 6 recent songs
+sidebar.svelte (weston49 on 10/31/2024 at 13:56):   function toggleSidebar() {
+sidebar.svelte (weston49 on 10/31/2024 at 13:56):     sidebarHidden.update(value => !value);
+sidebar.svelte (weston49 on 10/31/2024 at 13:56):   }
+sidebar.svelte (weston49 on 10/31/2024 at 11:39): <head>
+sidebar.svelte (weston49 on 10/31/2024 at 12:48):   <link href="./../node_modules/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+sidebar.svelte (weston49 on 10/31/2024 at 11:39): </head>
+sidebar.svelte (weston49 on 10/31/2024 at 13:56): <div class="sidebar {pinnedSidebar ? 'pinned' : ''} {isSidebarHidden ? '' : 'sidebarHidden'}" on:drop={handleDrop} on:dragover|preventDefault>
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):   <div class="button-wrapper">
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     <button class="pin-button" on:click={() => pinnedSidebar = !pinnedSidebar}><i class="fa fa-thumb-tack" aria-hidden="true"></i></button>
+sidebar.svelte (weston49 on 10/31/2024 at 13:56):     <button class="close-button {isSidebarHidden ? '' : 'rotated'}" on:click={toggleSidebar}><i class="fa-solid fa-chevron-left"></i></button>
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):   </div>
+sidebar.svelte (weston49 on 10/25/2024 at 10:58):     top: 13%;
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     left: 0%;
+sidebar.svelte (weston49 on 10/25/2024 at 10:58):     z-index: 1000; /* Ensure it floats on top of other elements */
+sidebar.svelte (weston49 on 10/25/2024 at 10:58):     width: 300px;
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     border-radius:0px 25px 25px 0px;
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     position:absolute;
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     transition: transform 0.5s ease-in-out;
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):   }
+sidebar.svelte (weston49 on 10/31/2024 at 13:56):   .sidebarHidden {
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     transform: translateX(-250px);
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     transition: transform 0.5s ease-in-out;
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):   }
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):   .pinned{
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     position: fixed !important;
+sidebar.svelte (weston49 on 10/25/2024 at 10:58):   .pin-button{
+sidebar.svelte (weston49 on 10/25/2024 at 10:58):     width: 30px;
+sidebar.svelte (weston49 on 10/25/2024 at 10:58):     height: 30px;
+sidebar.svelte (weston49 on 10/25/2024 at 10:58):     background-color: #26282c00;
+sidebar.svelte (weston49 on 10/25/2024 at 10:58):     border: none;
+sidebar.svelte (weston49 on 10/25/2024 at 10:58):     border-radius: 50%;
+sidebar.svelte (weston49 on 10/25/2024 at 10:58):     color: #f3f1f1;
+sidebar.svelte (weston49 on 10/25/2024 at 10:58):     font-size: 20px;
+sidebar.svelte (weston49 on 10/25/2024 at 10:58):     cursor: pointer;
+sidebar.svelte (weston49 on 10/25/2024 at 10:58):     transition: background-color 0.2s;
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     display: inline-block;
+sidebar.svelte (weston49 on 10/25/2024 at 10:58):     align-items: center;
+sidebar.svelte (weston49 on 10/25/2024 at 10:58):     justify-content: center;
+sidebar.svelte (weston49 on 10/25/2024 at 10:58):     margin-bottom:10px;
+sidebar.svelte (weston49 on 10/25/2024 at 10:58):   }
+sidebar.svelte (weston49 on 10/25/2024 at 10:58):   .pin-button:hover{
+sidebar.svelte (weston49 on 10/25/2024 at 10:58):     background-color: #434343;
+sidebar.svelte (weston49 on 10/25/2024 at 10:58):   }
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):   .rotated{
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     transform: translateX(20px) rotateY(180deg) !important;
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     transition: transform 0.5s ease-in-out;
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):   }
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):   .close-button{
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     width: 30px;
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     height: 30px;
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     background-color: #26282c00;
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     border: none;
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     border-radius: 50%;
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     color: #f3f1f1;
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     font-size: 20px;
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     cursor: pointer;
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     transition: background-color 0.2s;
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     display: inline-block;
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     align-items: center;
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     justify-content: center;
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     margin-bottom:10px;
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     margin-left: 180px;
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     transform: translateX(20px);
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     transition: transform 0.5s ease-in-out;
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):   }
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):   .close-button:hover{
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):     background-color: #434343;
+sidebar.svelte (weston49 on 10/30/2024 at 17:59):   }
+sidebar.svelte (weston49 on 10/25/2024 at 10:58):   .recent-songs p{
+sidebar.svelte (weston49 on 10/25/2024 at 10:58):     margin: 0;
+sidebar.svelte (weston49 on 10/25/2024 at 10:58):   }
 +page.svelte (weston49 on 10/30/2024 at 19:10): <div class="wrapper">
 +page.svelte (weston49 on 10/30/2024 at 19:10):   {#if loading}
 +page.svelte (weston49 on 10/30/2024 at 19:10):     <p>Loading song details...</p>
@@ -314,89 +457,10 @@ app.html     (weston49 on 10/30/2024 at 19:10): 	}
 +page.svelte (weston49 on 10/30/2024 at 19:10):   .wrapper{
 +page.svelte (weston49 on 10/30/2024 at 19:10):     margin: 0;
 +page.svelte (weston49 on 10/30/2024 at 19:10):   }
-+page.svelte (weston49 on 10/30/2024 at 19:10):       min-height: 100vh;
-+layout.svelte (weston49 on 10/30/2024 at 17:12):   import { page } from '$app/stores'
-+layout.svelte (weston49 on 10/30/2024 at 17:12):   let sidebarHidden = false;
-+layout.svelte (weston49 on 10/30/2024 at 17:12):     sidebarHidden = !['/discover', '/discuss', '/account'].some(path => $page.url.pathname.includes(path));
-+layout.svelte (weston49 on 10/30/2024 at 17:59):   // function hideBanner() {
-+layout.svelte (weston49 on 10/30/2024 at 17:59):   //   document.getElementById("banner").style.display = "None";
-+layout.svelte (weston49 on 10/30/2024 at 17:59):   // }
-+layout.svelte (weston49 on 10/31/2024 at 08:54): <head>
-+layout.svelte (weston49 on 10/31/2024 at 08:54): </head>
-+layout.svelte (weston49 on 10/30/2024 at 17:59):   <!-- <div id="banner" class = "banner" ><div>Note: This app is in beta so spotify auth will not work for non-developers
-+layout.svelte (weston49 on 10/30/2024 at 17:59):     <button class= "warning-button" on:click={hideBanner}>Hide Message</button></div>
-+layout.svelte (weston49 on 10/30/2024 at 17:59):   </div> -->
-+layout.svelte (weston49 on 10/30/2024 at 17:12):   <Sidebar hidden={sidebarHidden}></Sidebar>
-+layout.svelte (weston49 on 10/30/2024 at 17:59):   /*
-+layout.svelte (weston49 on 10/30/2024 at 17:59):     height: 40px;
-+layout.svelte (weston49 on 10/30/2024 at 17:59):     width: 100%;
-+layout.svelte (weston49 on 10/30/2024 at 17:59):   */
-footer.svelte (weston49 on 10/30/2024 at 20:04):     display: none;
-sidebar.svelte (weston49 on 10/25/2024 at 10:58):   let pinnedSidebar = false;
-sidebar.svelte (weston49 on 10/25/2024 at 10:58):   export let hidden;
-sidebar.svelte (weston49 on 10/25/2024 at 10:58):       recentSongs = recentSongs.slice(0, 3); // Limit to 6 recent songs
-sidebar.svelte (weston49 on 10/30/2024 at 17:59): <div class="sidebar {pinnedSidebar ? 'pinned' : ''} {hidden ? '' : 'hidden'}" on:drop={handleDrop} on:dragover|preventDefault>
-sidebar.svelte (weston49 on 10/30/2024 at 17:59):   <div class="button-wrapper">
-sidebar.svelte (weston49 on 10/30/2024 at 17:59):     <button class="pin-button" on:click={() => pinnedSidebar = !pinnedSidebar}><i class="fa fa-thumb-tack" aria-hidden="true"></i></button>
-sidebar.svelte (weston49 on 10/30/2024 at 17:59):     <button class="close-button {hidden ? '' : 'rotated'}" on:click={() => hidden = !hidden}><i class="fa-solid fa-chevron-left"></i></button>
-sidebar.svelte (weston49 on 10/30/2024 at 17:59):   </div>
-sidebar.svelte (weston49 on 10/25/2024 at 10:58):     top: 13%;
-sidebar.svelte (weston49 on 10/30/2024 at 17:59):     left: 0%;
-sidebar.svelte (weston49 on 10/25/2024 at 10:58):     z-index: 1000; /* Ensure it floats on top of other elements */
-sidebar.svelte (weston49 on 10/25/2024 at 10:58):     width: 300px;
-sidebar.svelte (weston49 on 10/30/2024 at 17:59):     border-radius:0px 25px 25px 0px;
-sidebar.svelte (weston49 on 10/30/2024 at 17:59):     position:absolute;
-sidebar.svelte (weston49 on 10/30/2024 at 17:59):     transition: transform 0.5s ease-in-out;
-sidebar.svelte (weston49 on 10/30/2024 at 17:59):   }
-sidebar.svelte (weston49 on 10/30/2024 at 17:59):   .hidden {
-sidebar.svelte (weston49 on 10/30/2024 at 17:59):     transform: translateX(-250px);
-sidebar.svelte (weston49 on 10/30/2024 at 17:59):     transition: transform 0.5s ease-in-out;
-sidebar.svelte (weston49 on 10/30/2024 at 17:59):   }
-sidebar.svelte (weston49 on 10/30/2024 at 17:59):   .pinned{
-sidebar.svelte (weston49 on 10/30/2024 at 17:59):     position: fixed !important;
-sidebar.svelte (weston49 on 10/25/2024 at 10:58):   .pin-button{
-sidebar.svelte (weston49 on 10/25/2024 at 10:58):     width: 30px;
-sidebar.svelte (weston49 on 10/25/2024 at 10:58):     height: 30px;
-sidebar.svelte (weston49 on 10/25/2024 at 10:58):     background-color: #26282c00;
-sidebar.svelte (weston49 on 10/25/2024 at 10:58):     border: none;
-sidebar.svelte (weston49 on 10/25/2024 at 10:58):     border-radius: 50%;
-sidebar.svelte (weston49 on 10/25/2024 at 10:58):     color: #f3f1f1;
-sidebar.svelte (weston49 on 10/25/2024 at 10:58):     font-size: 20px;
-sidebar.svelte (weston49 on 10/25/2024 at 10:58):     cursor: pointer;
-sidebar.svelte (weston49 on 10/25/2024 at 10:58):     transition: background-color 0.2s;
-sidebar.svelte (weston49 on 10/30/2024 at 17:59):     display: inline-block;
-sidebar.svelte (weston49 on 10/25/2024 at 10:58):     align-items: center;
-sidebar.svelte (weston49 on 10/25/2024 at 10:58):     justify-content: center;
-sidebar.svelte (weston49 on 10/25/2024 at 10:58):     margin-bottom:10px;
-sidebar.svelte (weston49 on 10/25/2024 at 10:58):   }
-sidebar.svelte (weston49 on 10/25/2024 at 10:58):   .pin-button:hover{
-sidebar.svelte (weston49 on 10/25/2024 at 10:58):     background-color: #434343;
-sidebar.svelte (weston49 on 10/25/2024 at 10:58):   }
-sidebar.svelte (weston49 on 10/30/2024 at 17:59):   .rotated{
-sidebar.svelte (weston49 on 10/30/2024 at 17:59):     transform: translateX(20px) rotateY(180deg) !important;
-sidebar.svelte (weston49 on 10/30/2024 at 17:59):     transition: transform 0.5s ease-in-out;
-sidebar.svelte (weston49 on 10/30/2024 at 17:59):   }
-sidebar.svelte (weston49 on 10/30/2024 at 17:59):   .close-button{
-sidebar.svelte (weston49 on 10/30/2024 at 17:59):     width: 30px;
-sidebar.svelte (weston49 on 10/30/2024 at 17:59):     height: 30px;
-sidebar.svelte (weston49 on 10/30/2024 at 17:59):     background-color: #26282c00;
-sidebar.svelte (weston49 on 10/30/2024 at 17:59):     border: none;
-sidebar.svelte (weston49 on 10/30/2024 at 17:59):     border-radius: 50%;
-sidebar.svelte (weston49 on 10/30/2024 at 17:59):     color: #f3f1f1;
-sidebar.svelte (weston49 on 10/30/2024 at 17:59):     font-size: 20px;
-sidebar.svelte (weston49 on 10/30/2024 at 17:59):     cursor: pointer;
-sidebar.svelte (weston49 on 10/30/2024 at 17:59):     transition: background-color 0.2s;
-sidebar.svelte (weston49 on 10/30/2024 at 17:59):     display: inline-block;
-sidebar.svelte (weston49 on 10/30/2024 at 17:59):     align-items: center;
-sidebar.svelte (weston49 on 10/30/2024 at 17:59):     justify-content: center;
-sidebar.svelte (weston49 on 10/30/2024 at 17:59):     margin-bottom:10px;
-sidebar.svelte (weston49 on 10/30/2024 at 17:59):     margin-left: 180px;
-sidebar.svelte (weston49 on 10/30/2024 at 17:59):     transform: translateX(20px);
-sidebar.svelte (weston49 on 10/30/2024 at 17:59):     transition: transform 0.5s ease-in-out;
-sidebar.svelte (weston49 on 10/30/2024 at 17:59):   }
-sidebar.svelte (weston49 on 10/30/2024 at 17:59):   .close-button:hover{
-sidebar.svelte (weston49 on 10/30/2024 at 17:59):     background-color: #434343;
-sidebar.svelte (weston49 on 10/30/2024 at 17:59):   }
-sidebar.svelte (weston49 on 10/25/2024 at 10:58):   .recent-songs p{
-sidebar.svelte (weston49 on 10/25/2024 at 10:58):     margin: 0;
-sidebar.svelte (weston49 on 10/25/2024 at 10:58):   }
++page.svelte (weston49 on 10/31/2024 at 13:56):   import { sidebarHidden } from "$lib/stores";
++page.svelte (weston49 on 10/31/2024 at 13:56):   <div class="game-board { $sidebarHidden ? 'sidebarHidden' : '' }">
++page.svelte (weston49 on 10/31/2024 at 13:56):   .game-board.sidebarHidden {
++page.svelte (weston49 on 10/31/2024 at 13:56):     /* Add your styles for when the sidebar is hidden */
++page.svelte (weston49 on 10/31/2024 at 13:56):   }
+stores.js    (weston49 on 10/31/2024 at 13:56): export const spotifyAccessToken = writable(null);
+stores.js    (weston49 on 10/31/2024 at 13:56): export const sidebarHidden = writable(null);
