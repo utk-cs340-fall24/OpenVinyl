@@ -123,40 +123,53 @@
   </nav>
 
   <div class="links mobile {active === 1 ? "is-active" : ""}">
-    <a href="/" 
-    class="nav-link" 
-    class:active={$page.url.pathname === "/"}
-  >
-    Home
-  </a>
-  <a 
-    href="/discover" 
-    class="nav-link" 
-    class:active={$page.url.pathname.startsWith("/discover")}
-  >
-    Discover
-  </a>
-  <a 
-    href="/charts" 
-    class="nav-link" 
-    class:active={$page.url.pathname.startsWith("/charts")}
-  >
-    Charts
-  </a>
-  <a 
-    href="/network"
-    class="nav-link" 
-    class:active={$page.url.pathname.startsWith("/network")}
-  >
-    Network
-  </a>
-  <a 
-    href="/games" 
-    class="nav-link" 
-    class:active={$page.url.pathname.startsWith("/games")}
-  >
-  Games
-  </a>
+    {#if showSpotifyButton}
+    <button on:click={authenticateSpotify} class="spotify-button-mobile">
+      Connect with Spotify
+    </button>
+    {/if}
+    <a 
+      href="/" 
+      class="nav-link" 
+      class:active={$page.url.pathname === "/"}
+    >
+      Home
+    </a>
+    <a 
+      href="/discover" 
+      class="nav-link" 
+      class:active={$page.url.pathname.startsWith("/discover")}
+    >
+      Discover
+    </a>
+    <a 
+      href="/charts" 
+      class="nav-link" 
+      class:active={$page.url.pathname.startsWith("/charts")}
+    >
+      Charts
+    </a>
+    <a 
+      href="/network"
+      class="nav-link" 
+      class:active={$page.url.pathname.startsWith("/network")}
+    >
+      Network
+    </a>
+    <a 
+      href="/games" 
+      class="nav-link" 
+      class:active={$page.url.pathname.startsWith("/games")}
+    >
+    Games
+    </a>
+    <a 
+      href="/account"
+      class="nav-link account-link" 
+      class:active={$page.url.pathname.startsWith("/account")}
+    >
+    Account Settings
+    </a>
   </div>
 </div>
 
@@ -197,6 +210,23 @@
     transition: background-color 0.3s ease, transform 0.2s ease;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     margin-right: 15px;
+  }
+
+  .spotify-button-mobile {
+    display: none;
+    background-color: #1db954; 
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    max-width: 200px;
+    border-radius: 20px; 
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    margin-right: 15px;
+    margin: 20px 0px 20px 0px;
   }
 
   .avatar {
@@ -323,6 +353,20 @@
   }
 
   @media (max-width: 480px) {
+    .spotify-button {
+      display: none;
+    }
+
+    .spotify-button-mobile {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .spotify-button-mobile:hover {
+      background-color: #1aa34a;
+      transform: scale(1.03); 
+    }
     nav {
       /* flex-direction: ; */
       text-align: center;
