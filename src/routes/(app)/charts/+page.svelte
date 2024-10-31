@@ -106,12 +106,20 @@
         align-items: center;
         margin-right: 0px;
         margin-left: auto;
+        position: fixed;
+        top: 50%;
+        left: 90vw;
+        transform: translate(-50%, -50%);
+        padding-right: 5vw;
     }
 
     .loading-wrapper {
         display: flex;
         align-items: center;
-        margin-left: auto;
+        margin: auto;
+        text-align: center;
+        vertical-align: center;
+        height: 100vh;
     }
 
 
