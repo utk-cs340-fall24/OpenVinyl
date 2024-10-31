@@ -35,7 +35,7 @@
     .wrapper {
         border-radius: 10px;
         background-color: #1d1f25;
-        width: 20vw;
+        width: 30vw;
         height: 80vh;
         margin: 20px;
         padding: 0px;
@@ -139,6 +139,14 @@
         text-overflow: ellipsis;
         white-space: nowrap;
         overflow: hidden;
+    }
+
+    @media (max-width: 1300px) {
+        .wrapper {
+            width: 80vw;
+            margin: 0px;
+        }
+
     }
 
 </style>
