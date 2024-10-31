@@ -7,6 +7,8 @@
   import { onMount } from "svelte";
   import Sidebar from "$lib/sidebar.svelte";
   import { page } from '$app/stores'
+  import '@fortawesome/fontawesome-free/css/all.min.css'
+
   let sidebarHidden = false;
 
   onMount(async () => {
@@ -47,7 +49,7 @@
     <button class= "warning-button" on:click={hideBanner}>Hide Message</button></div>
   </div> -->
   <Nav />
-  <Sidebar hidden={sidebarHidden}></Sidebar>
+  <Sidebar></Sidebar>
   <slot></slot>
   <Footer />
 </div>

@@ -8,8 +8,17 @@
   import { createEventDispatcher } from "svelte";
   import { selectedSong } from "$lib/stores";
   import { getSongs, authenticateClientCredentials } from "$lib/utils.js";
+  import { sidebarHidden } from "$lib/stores";
 
-  import sidebarHidden from "$lib/sidebar.svelte";
+  let isSidebarHidden = false;
+  const unsubscribeSidebar = sidebarHidden.subscribe(value => {
+    isSidebarHidden = value;
+  });
+
+  onDestroy(() => {
+    unsubscribeSidebar();
+    unsubscribe();
+  });
 
   export let data;
 
@@ -185,7 +194,7 @@
   on:dragleave={handleDragLeave}
   on:drop={handleDrop}
 >
-  <div class="posts-wrapper {isDragOver ? 'drag-over' : ''} {sidebarHidden ? '' : 'sidebarHidden'}">
+  <div class="posts-wrapper {isDragOver ? 'drag-over' : ''} {isSidebarHidden ? '' : 'sidebarHidden'}">
     <AddPost on:reviewSubmitted={handleReviewSubmitted} />
 
     {#each posts as post (post.id)}
@@ -246,15 +255,18 @@
 
   .sidebarHidden{
     margin-left: 0 !important;
+    margin-right: 0 !important;
+    width: 100% !important;
+    transition: margin-left 0.5s ease-in-out, width 0.5 ease-in-out;
   }
 
   .posts-wrapper {
     display: inline-block;
     padding:0px;
-    margin-left:250px;
-    width:calc(100% - 300px);
+    width:80%;
     height: fit-content;
-    transition: background-color 0.3s;
+    margin-left:250px;
+    transition: margin-left 0.5s ease-in-out, width 0.5s ease-in-out;
   }
 
   .loader {

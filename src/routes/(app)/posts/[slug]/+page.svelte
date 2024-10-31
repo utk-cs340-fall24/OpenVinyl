@@ -10,8 +10,15 @@
     import "@fortawesome/fontawesome-free/js/all.js";
     import {spotify} from "$lib/spotifyClient.js";
     import Comment from '$lib/comment.svelte';
+    import { sidebarHidden } from "$lib/stores";
 
     export let data;
+
+    let isSidebarHidden = false;
+    const unsubscribeSidebar = sidebarHidden.subscribe(value => {
+      isSidebarHidden = value;
+    });
+
     let { post, comments } = data;
     //song - id, img_url, title, artist
     let currentUser = null;
@@ -372,7 +379,7 @@
   }
   </script>
   
-<div class="post-detail-wrapper">
+<div class="post-detail-wrapper {isSidebarHidden ? 'sidebarHidden' : ''}">
     <div class="post-header">
       <div class="user-info">
         <img class="profile-pic" src={avatar_url} alt="profile" />
@@ -510,9 +517,15 @@
     border: 1px solid #26282c;
     border-radius: 8px;
     font-family: 'Concert One', sans-serif;
-    margin: 20px;
-    margin-left: 350px;
-    width:70%;
+    margin:30px 11vw;
+    width: 80vw;
+    transition: width 0.5s ease-in-out, margin-left 0.5s ease-in-out;
+  }
+
+  .sidebarHidden{
+    width: 75vw !important;
+    margin-left: 340px !important;
+    transition: width 0.5s ease-in-out, margin-left 0.5s ease-in-out;
   }
 
   .post-header {

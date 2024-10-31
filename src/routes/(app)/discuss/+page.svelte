@@ -2,12 +2,18 @@
     import { onMount } from "svelte";
     import { spotify } from "$lib/spotifyClient";
     import { authenticateClientCredentials } from "$lib/utils";
+    import { sidebarHidden } from "$lib/stores";
     export let data;
     let { popularSongs } = data;
   
     let songsDetailsMap = {};
     let loading = true;
     let error = null;
+
+    let isSidebarHidden = false;
+    const unsubscribeSidebar = sidebarHidden.subscribe(value => {
+      isSidebarHidden = value;
+    });
   
     onMount(async () => {
       try {
@@ -48,7 +54,7 @@
       {:else if error}
         <p>Error: {error}</p>
       {:else}
-        <div class="songs-list">
+        <div class="songs-list {isSidebarHidden ? 'sidebarHidden' : ''}">
           {#each popularSongs as song}
             <div class="song-item">
               <img
@@ -88,12 +94,20 @@
       justify-content: center;
       align-items: center;
     }
+
+    .sidebarHidden{
+      margin-left: 300px !important;
+      transition: width 0.5s ease-in-out, margin-left 0.5s ease-in-out;
+    }
   
     .songs-list {
       display: flex;
       flex-wrap: wrap;
       gap: 20px;
       justify-content: center;
+      width: 100%;
+      margin-left: 0px;
+      transition: width 0.5s ease-in-out, margin-left 0.5s ease-in-out;
     }
   
     .song-item {
@@ -164,4 +178,3 @@
       }
     }
   </style>
-  
