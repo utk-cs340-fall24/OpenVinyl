@@ -265,6 +265,9 @@ function updateRecentSongs(track) {
 
 </script>
 
+<head>
+  <!-- <link href="./../node_modules/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet"> -->
+</head>
 <!-- svelte-ignore missing-declaration -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div class="sidebar {pinnedSidebar ? 'pinned' : ''} {hidden ? '' : 'hidden'}" on:drop={handleDrop} on:dragover|preventDefault>
