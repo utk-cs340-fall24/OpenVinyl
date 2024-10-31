@@ -123,8 +123,7 @@
   </nav>
 
   <div class="links mobile {active === 1 ? "is-active" : ""}">
-    <a 
-    href="/" 
+    <a href="/" 
     class="nav-link" 
     class:active={$page.url.pathname === "/"}
   >
@@ -144,9 +143,20 @@
   >
     Charts
   </a>
-    <a href="/network" class="nav-link" class:active={$page.url.pathname.startsWith("/network")}>
-      Network
-    </a>
+  <a 
+    href="/network"
+    class="nav-link" 
+    class:active={$page.url.pathname.startsWith("/network")}
+  >
+    Network
+  </a>
+  <a 
+    href="/games" 
+    class="nav-link" 
+    class:active={$page.url.pathname.startsWith("/games")}
+  >
+  Games
+  </a>
   </div>
 </div>
 
