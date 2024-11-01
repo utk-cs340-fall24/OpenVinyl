@@ -22,7 +22,6 @@
             total_likes: topUsers[index].total_likes
         }));
         postCounts = await fetchUserPostCounts(topIds);
-        console.log(postCounts);
         topUserData = topUserData.map((profile, index) => ({
             ...profile,
             post_count: postCounts[index].post_count
