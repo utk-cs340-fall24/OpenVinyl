@@ -1,4 +1,4 @@
-# Sprint n (1, 2, 3, or 4)
+# Sprint 3
 
 - Name - Will Sessoms
 - Github - wessoms
