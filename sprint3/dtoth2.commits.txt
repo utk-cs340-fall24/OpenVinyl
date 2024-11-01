@@ -1,0 +1,344 @@
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400   1) <script>
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400   2)   import Matter from 'matter-js';
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400   3)   import { onMount } from 'svelte';
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400   4) 
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400   5)   let engine, world, render, runner;
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400   6)   let dropBall;
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400   7)   let multiplierSlots = [];
+c2f81279 (Dylan Toth 2024-10-30 20:05:51 -0400   8)   let balance = 50; 
+c2f81279 (Dylan Toth 2024-10-30 20:05:51 -0400   9)   let message = '';
+c2f81279 (Dylan Toth 2024-10-30 20:05:51 -0400  10)   const ballCost = 1;
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400  11) 
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400  12)   const Engine = Matter.Engine;
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400  13)   const Render = Matter.Render;
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400  14)   const Runner = Matter.Runner;
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400  15)   const Composite = Matter.Composite;
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400  16)   const Bodies = Matter.Bodies;
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400  17)   const Events = Matter.Events;
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400  18)   const Body = Matter.Body;
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400  19) 
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400  20)   const defaultCategory = 0x0001;
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400  21)   const ballCategory = 0x0002;
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400  22) 
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400  23)   onMount(() => {
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400  24)     createScene();
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400  25)   });
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400  26) 
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400  27)   function createScene() {
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400  28)     engine = Engine.create();
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400  29)     world = engine.world;
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400  30) 
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400  31)     engine.positionIterations = 10;
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400  32)     engine.velocityIterations = 10;
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400  33)     engine.constraintIterations = 4;
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400  34) 
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400  35)     render = Render.create({
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400  36)       element: document.getElementById('matter-js'),
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400  37)       engine: engine,
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400  38)       options: {
+c2f81279 (Dylan Toth 2024-10-30 20:05:51 -0400  39)         width: 600,
+c2f81279 (Dylan Toth 2024-10-30 20:05:51 -0400  40)         height: 600,
+c2f81279 (Dylan Toth 2024-10-30 20:05:51 -0400  41)         background: '#333333', 
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400  42)         wireframes: false,
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400  43)       },
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400  44)     });
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400  45) 
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400  46)     Render.run(render);
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400  47) 
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400  48)     runner = Runner.create();
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400  49)     Runner.run(runner, engine);
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400  50) 
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400  51)     Composite.add(world, [
+9b92ca86 (Dylan Toth 2024-10-30 19:47:42 -0400  52)       Bodies.rectangle(300, -5, 600, 10, {
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400  53)         isStatic: true,
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400  54)         collisionFilter: {
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400  55)           category: defaultCategory,
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400  56)           mask: ballCategory | defaultCategory,
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400  57)         },
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400  58)       }),
+9b92ca86 (Dylan Toth 2024-10-30 19:47:42 -0400  59)       Bodies.rectangle(300, 605, 600, 10, {
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400  60)         isStatic: true,
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400  61)         label: 'BottomBoundary',
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400  62)         collisionFilter: {
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400  63)           category: defaultCategory,
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400  64)           mask: ballCategory | defaultCategory,
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400  65)         },
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400  66)       }),
+9b92ca86 (Dylan Toth 2024-10-30 19:47:42 -0400  67)       Bodies.rectangle(605, 300, 10, 600, {
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400  68)         isStatic: true,
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400  69)         collisionFilter: {
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400  70)           category: defaultCategory,
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400  71)           mask: ballCategory | defaultCategory,
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400  72)         },
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400  73)       }),
+9b92ca86 (Dylan Toth 2024-10-30 19:47:42 -0400  74)       Bodies.rectangle(-5, 300, 10, 600, {
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400  75)         isStatic: true,
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400  76)         collisionFilter: {
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400  77)           category: defaultCategory,
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400  78)           mask: ballCategory | defaultCategory,
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400  79)         },
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400  80)       }),
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400  81)     ]);
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400  82) 
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400  83)     createPegs();
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400  84) 
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400  85)     createMultiplierSlots();
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400  86) 
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400  87)     dropBall = () => {
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400  88)       if (balance < ballCost) {
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400  89)         message = "You don't have enough vinyls!";
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400  90)         return;
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400  91)       }
+c2f81279 (Dylan Toth 2024-10-30 20:05:51 -0400  92)       balance -= ballCost; 
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400  93) 
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400  94)       const randomOffset =
+c2f81279 (Dylan Toth 2024-10-30 20:05:51 -0400  95)         (Math.random() + Math.random() + Math.random() - 1.5) * 20;
+c2f81279 (Dylan Toth 2024-10-30 20:05:51 -0400  96)       const xPosition = 300 + randomOffset; 
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400  97) 
+c2f81279 (Dylan Toth 2024-10-30 20:05:51 -0400  98)       const ball = Bodies.circle(xPosition, 50, 14, {
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400  99)         collisionFilter: {
+c2f81279 (Dylan Toth 2024-10-30 20:05:51 -0400 100)           group: -1,
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 101)           category: ballCategory,
+c2f81279 (Dylan Toth 2024-10-30 20:05:51 -0400 102)           mask: defaultCategory, 
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 103)         },
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 104)         restitution: 0.5,
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 105)         label: 'Ball',
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 106)         render: {
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 107)           strokeStyle: '#ffffff',
+c2f81279 (Dylan Toth 2024-10-30 20:05:51 -0400 108)           lineWidth: 3, 
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 109)           fillStyle: 'transparent',
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 110)           sprite: {
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 111)             texture: 'logo.svg',
+c2f81279 (Dylan Toth 2024-10-30 20:05:51 -0400 112)             xScale: 0.08,
+9b92ca86 (Dylan Toth 2024-10-30 19:47:42 -0400 113)             yScale: 0.08,
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 114)           },
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 115)         },
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 116)       });
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 117) 
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 118)       Composite.add(world, ball);
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 119)     };
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 120) 
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 121)     Events.on(engine, 'collisionStart', function (event) {
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 122)       var pairs = event.pairs;
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 123) 
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 124)       pairs.forEach(function (pair) {
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 125)         var labels = [pair.bodyA.label, pair.bodyB.label];
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 126) 
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 127)         if (
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 128)           (labels.includes('Ball') || labels.includes('BallPart')) &&
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 129)           labels.includes('BottomBoundary')
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 130)         ) {
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 131)           var ball =
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 132)             pair.bodyA.label === 'Ball' || pair.bodyA.label === 'BallPart'
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 133)               ? pair.bodyA
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 134)               : pair.bodyB;
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 135) 
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 136)           if (ball.label === 'BallPart') {
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 137)             ball = ball.parent;
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 138)           }
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 139) 
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 140)           var ballX = ball.position.x;
+9b92ca86 (Dylan Toth 2024-10-30 19:47:42 -0400 141)           const slotWidth = 600 / multiplierSlots.length;
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 142)           var slotIndex = Math.floor(ballX / slotWidth);
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 143) 
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 144)           if (slotIndex >= 0 && slotIndex < multiplierSlots.length) {
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 145)             var multiplier = multiplierSlots[slotIndex];
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 146) 
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 147)             var winnings = ballCost * multiplier;
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 148)             balance += winnings;
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 149) 
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 150)             balance = parseFloat(balance.toFixed(2));
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 151) 
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 152)             message = `You won ${winnings.toFixed(2)} Vinyls!`;
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 153)           } else {
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 154)             message = `No winnings. Try again!`;
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 155)           }
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 156) 
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 157)           Composite.remove(world, ball);
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 158)         }
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 159)       });
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 160)     });
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 161)   }
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 162) 
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 163)   function createPegs() {
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 164)     const rows = 12;
+c2f81279 (Dylan Toth 2024-10-30 20:05:51 -0400 165)     const pegSpacingX = 45; 
+c2f81279 (Dylan Toth 2024-10-30 20:05:51 -0400 166)     const pegSpacingY = 40; 
+c2f81279 (Dylan Toth 2024-10-30 20:05:51 -0400 167)     const startX = 300; 
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 168) 
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 169)     for (let row = 0; row < rows; row++) {
+c2f81279 (Dylan Toth 2024-10-30 20:05:51 -0400 170)       const cols = row + 3; 
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 171)       const rowWidth = (cols - 1) * pegSpacingX;
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 172)       const xOffset = startX - rowWidth / 2;
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 173) 
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 174)       for (let col = 0; col < cols; col++) {
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 175)         const x = xOffset + col * pegSpacingX;
+c2f81279 (Dylan Toth 2024-10-30 20:05:51 -0400 176)         const y = 80 + row * pegSpacingY; 
+c2f81279 (Dylan Toth 2024-10-30 20:05:51 -0400 177)         const peg = Bodies.circle(x, y, 4, { 
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 178)           isStatic: true,
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 179)           collisionFilter: {
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 180)             category: defaultCategory,
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 181)             mask: ballCategory | defaultCategory,
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 182)           },
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 183)           render: {
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 184)             fillStyle: '#fff',
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 185)             strokeStyle: '#555',
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 186)             lineWidth: 1,
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 187)           },
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 188)         });
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 189)         Composite.add(world, peg);
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 190)       }
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 191)     }
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 192)   }
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 193) 
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 194)   function createMultiplierSlots() {
+c2f81279 (Dylan Toth 2024-10-30 20:05:51 -0400 195)     const slotCount = 15;
+9b92ca86 (Dylan Toth 2024-10-30 19:47:42 -0400 196)     const slotWidth = 600 / slotCount;
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 197) 
+c2f81279 (Dylan Toth 2024-10-30 20:05:51 -0400 198)     const slotYPosition = 80 + 12 * 40 + 80;
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 199) 
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 200)     for (let i = 0; i <= slotCount; i++) {
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 201)       const x = i * slotWidth;
+c2f81279 (Dylan Toth 2024-10-30 20:05:51 -0400 202)       const y = slotYPosition - 30; 
+c2f81279 (Dylan Toth 2024-10-30 20:05:51 -0400 203)       const peg = Bodies.circle(x, y, 4, { 
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 204)         isStatic: true,
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 205)         collisionFilter: {
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 206)           category: defaultCategory,
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 207)           mask: ballCategory | defaultCategory,
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 208)         },
+bbfcfa28 (Dylan Toth 2024-10-30 19:07:17 -0400 209)         render: {
+bbfcfa28 (Dylan Toth 2024-10-30 19:07:17 -0400 210)           fillStyle: '#fff',
+bbfcfa28 (Dylan Toth 2024-10-30 19:07:17 -0400 211)           strokeStyle: '#555',
+bbfcfa28 (Dylan Toth 2024-10-30 19:07:17 -0400 212)           lineWidth: 1,
+bbfcfa28 (Dylan Toth 2024-10-30 19:07:17 -0400 213)         },
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 214)       });
+bbfcfa28 (Dylan Toth 2024-10-30 19:07:17 -0400 215)       Composite.add(world, peg);
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 216)     }
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 217) 
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 218)     for (let i = 0; i < slotCount; i++) {
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 219)       const x = i * slotWidth + slotWidth / 2;
+9b92ca86 (Dylan Toth 2024-10-30 19:47:42 -0400 220)       const floor = Bodies.rectangle(x, slotYPosition + 30, slotWidth, 30, {
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 221)         isStatic: true,
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 222)         collisionFilter: {
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 223)           category: defaultCategory,
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 224)           mask: ballCategory | defaultCategory,
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 225)         },
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 226)         render: {
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 227)           fillStyle: '#00aaff',
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 228)           strokeStyle: '#fff',
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 229)           lineWidth: 2,
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 230)         },
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 231)         label: `SlotFloor-${i}`,
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 232)       });
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 233)       Composite.add(world, floor);
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 234) 
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 235)       const multiplier = getMultiplier(i, slotCount);
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 236)       multiplierSlots[i] = multiplier;
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 237) 
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 238)       const text = document.createElement('div');
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 239)       text.style.position = 'absolute';
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 240)       text.style.left = `${i * slotWidth}px`;
+c2f81279 (Dylan Toth 2024-10-30 20:05:51 -0400 241)       text.style.top = `${render.options.height - 50}px`; 
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 242)       text.style.width = `${slotWidth}px`;
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 243)       text.style.textAlign = 'center';
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 244)       text.style.color = '#fff';
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 245)       text.style.fontWeight = 'bold';
+c2f81279 (Dylan Toth 2024-10-30 20:05:51 -0400 246)       text.style.fontSize = '12px'; 
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 247)       text.innerText = `${multiplier}x`;
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 248)       text.classList.add('multiplier-label');
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 249)       document.getElementById('matter-js').appendChild(text);
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 250)     }
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 251)   }
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 252) 
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 253)   function getMultiplier(index, totalSlots) {
+24d74cf9 (Dylan Toth 2024-10-30 20:13:13 -0400 254)   const middle = Math.floor(totalSlots / 2); 
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 255) 
+24d74cf9 (Dylan Toth 2024-10-30 20:13:13 -0400 256)   const multipliers = [
+24d74cf9 (Dylan Toth 2024-10-30 20:13:13 -0400 257)     0.5, 1.0, 1.1, 1.3, 1.4, 1.9, 4.0, 7.1,
+24d74cf9 (Dylan Toth 2024-10-30 20:13:13 -0400 258)   ];
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 259) 
+24d74cf9 (Dylan Toth 2024-10-30 20:13:13 -0400 260)   const fullMultipliers = [
+24d74cf9 (Dylan Toth 2024-10-30 20:13:13 -0400 261)     ...multipliers.slice(), 
+24d74cf9 (Dylan Toth 2024-10-30 20:13:13 -0400 262)     ...multipliers 
+24d74cf9 (Dylan Toth 2024-10-30 20:13:13 -0400 263)   ];
+24d74cf9 (Dylan Toth 2024-10-30 20:13:13 -0400 264) 
+24d74cf9 (Dylan Toth 2024-10-30 20:13:13 -0400 265)   const distanceFromMiddle = Math.abs(index - middle);
+24d74cf9 (Dylan Toth 2024-10-30 20:13:13 -0400 266) 
+24d74cf9 (Dylan Toth 2024-10-30 20:13:13 -0400 267)   return fullMultipliers[distanceFromMiddle];
+24d74cf9 (Dylan Toth 2024-10-30 20:13:13 -0400 268) }
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 269) </script>
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 270) 
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 271) <div class="plinko-game">
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 272)   <div class="balance-display">
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 273)     <span class="font-bold">Balance:</span> <span>{balance.toFixed(2)} Vinyls</span>
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 274)   </div>
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 275)   <div id="matter-js" class="game-area"></div>
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 276)   <button
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 277)     on:click={dropBall}
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 278)     class="drop-button"
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 279)     disabled={balance < ballCost}
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 280)   >
+2ad6fe81 (Dylan Toth 2024-10-30 18:41:48 -0400 281)     Drop Vinyl ({ballCost} Vinyls)
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 282)   </button>
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 283)   <div class="message-display">{message}</div>
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 284) </div>
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 285) 
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 286) <style>
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 287)   .plinko-game {
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 288)     display: flex;
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 289)     flex-direction: column;
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 290)     align-items: center;
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 291)     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 292)     color: #fff;
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 293)   }
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 294) 
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 295)   .balance-display {
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 296)     margin-bottom: 10px;
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 297)     font-size: 1.2em;
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 298)   }
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 299) 
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 300)   .game-area {
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 301)     position: relative;
+c2f81279 (Dylan Toth 2024-10-30 20:05:51 -0400 302)     width: 600px;
+c2f81279 (Dylan Toth 2024-10-30 20:05:51 -0400 303)     height: 600px;
+c2f81279 (Dylan Toth 2024-10-30 20:05:51 -0400 304)     background-color: #333333; 
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 305)     overflow: hidden;
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 306)     border-radius: 10px;
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 307)     box-shadow: 0 0 10px #000;
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 308)     border: 2px solid #444;
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 309)   }
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 310) 
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 311)   .drop-button {
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 312)     margin-top: 10px;
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 313)     padding: 10px 20px;
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 314)     background-color: #ff6347;
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 315)     color: #fff;
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 316)     font-size: 1em;
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 317)     font-weight: bold;
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 318)     border: none;
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 319)     border-radius: 5px;
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 320)     cursor: pointer;
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 321)     transition: background-color 0.3s;
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 322)   }
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 323) 
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 324)   .drop-button:hover {
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 325)     background-color: #e5533d;
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 326)   }
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 327) 
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 328)   .drop-button:disabled {
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 329)     background-color: #999;
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 330)     cursor: not-allowed;
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 331)   }
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 332) 
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 333)   .message-display {
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 334)     margin-top: 10px;
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 335)     color: #ffcc00;
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 336)     font-weight: bold;
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 337)     font-size: 1.1em;
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 338)   }
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 339) 
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 340)   .multiplier-label {
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 341)     position: absolute;
+c2f81279 (Dylan Toth 2024-10-30 20:05:51 -0400 342)     font-size: 12px; 
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 343)   }
+380a4295 (Dylan Toth 2024-10-30 18:00:55 -0400 344) </style>
