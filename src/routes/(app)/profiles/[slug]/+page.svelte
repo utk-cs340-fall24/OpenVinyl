@@ -273,6 +273,10 @@
 
   /* Responsive Design */
   @media (max-width: 768px) {
+    .profile-container {
+      margin: 20px 40px;
+    }
+
     .profile-header {
       flex-direction: column;
       align-items: center;
