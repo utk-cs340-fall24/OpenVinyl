@@ -1,0 +1,352 @@
+src/lib/podium.svelte:
+3e5c65f4 (wessoms    2024-10-29 00:00:12 -0400   4)     export let data;
+3e5c65f4 (wessoms    2024-10-29 00:00:12 -0400   6)     let podium = [];
+3e5c65f4 (wessoms    2024-10-29 00:00:12 -0400   8)     
+3e5c65f4 (wessoms    2024-10-29 00:00:12 -0400  10)         podium = [...podium, data[1], data[0], data[2]];
+df4eb8d3 (wessoms    2024-10-30 20:23:11 -0400  19)         <p class="header">Top Users</p>
+3e5c65f4 (wessoms    2024-10-29 00:00:12 -0400  22)         {#each podium as user}
+3e5c65f4 (wessoms    2024-10-29 00:00:12 -0400  26)                     <img class=profile-picture src={user.avatar_url} alt="profile-pic" />
+5fc001d2 (wessoms    2024-10-29 18:50:33 -0400  29)             <div>
+5fc001d2 (wessoms    2024-10-29 18:50:33 -0400  30)                 <span class="username">{user.username}</span>
+5fc001d2 (wessoms    2024-10-29 18:50:33 -0400  31)             </div>
+5fc001d2 (wessoms    2024-10-29 18:50:33 -0400  32)             <div class="likes-wrapper">
+5fc001d2 (wessoms    2024-10-29 18:50:33 -0400  33)                 <span class="like-count">{user.total_likes}</span>
+5fc001d2 (wessoms    2024-10-29 18:50:33 -0400  34)                 <span class="likes-text">likes</span>
+5fc001d2 (wessoms    2024-10-29 18:50:33 -0400  36)             <div class="podium-bar"></div>
+5fc001d2 (wessoms    2024-10-29 18:50:33 -0400  37)         </div>
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400  40)     <div class="page-divider"></div>
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400  41)     <div class="leaderboard-wrapper">
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400  42)         <div class="leaderboard-header">
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400  43)             <span></span>
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400  44)             <span>User</span>
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400  45)             <span>Likes</span>
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400  46)             <span>Posts</span>
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400  47)         </div>
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400  48)         <div class="leaderboard-divider"></div>
+df4eb8d3 (wessoms    2024-10-30 20:23:11 -0400  49)         {#each data as user, index}
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400  50)         <div class="user">
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400  51)             <img class="small-profile-pic" src={user.avatar_url} alt="profile-pic">
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400  52)             <span>{user.username}</span>
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400  53)             <span>{user.total_likes}</span>
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400  54)             <span>{user.post_count}</span>
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400  55)         </div>
+df4eb8d3 (wessoms    2024-10-30 20:23:11 -0400  56)         {#if index < data.length - 1}
+df4eb8d3 (wessoms    2024-10-30 20:23:11 -0400  57)             <div class="user-divider"></div>
+df4eb8d3 (wessoms    2024-10-30 20:23:11 -0400  58)         {/if}
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400  59)         {/each}
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400  60)     </div>
+df4eb8d3 (wessoms    2024-10-30 20:23:11 -0400  72)         padding-bottom: 20px;
+5fc001d2 (wessoms    2024-10-29 18:50:33 -0400 109)         font-size: 20px;
+5fc001d2 (wessoms    2024-10-29 18:50:33 -0400 110)     }
+5fc001d2 (wessoms    2024-10-29 18:50:33 -0400 111) 
+5fc001d2 (wessoms    2024-10-29 18:50:33 -0400 112)     .likes-wrapper {
+5fc001d2 (wessoms    2024-10-29 18:50:33 -0400 113)         display: flex;
+5fc001d2 (wessoms    2024-10-29 18:50:33 -0400 114)         flex-direction: column;
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 115)         padding-top: 15px;
+5fc001d2 (wessoms    2024-10-29 18:50:33 -0400 116)     }
+5fc001d2 (wessoms    2024-10-29 18:50:33 -0400 117) 
+5fc001d2 (wessoms    2024-10-29 18:50:33 -0400 118)     .like-count {
+5fc001d2 (wessoms    2024-10-29 18:50:33 -0400 119)         font-size: 40px;
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 153)     .page-divider {
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 154)         width: 768px;
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 159)     .leaderboard-wrapper{
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 160)         padding-top: 10px;
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 161)         width: 768px;
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 162)     }
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 163) 
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 164)     .leaderboard-header {
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 165)         font-size: 20px;
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 166)     }
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 167) 
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 168)     .user {
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 169)         font-size: 16px;
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 170)     }
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 171) 
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 172)     .leaderboard-header, .user {
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 173)         display: grid;
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 174)         grid-template-columns: 1fr 11fr 1fr 1fr;
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 175)         gap: 1rem;
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 176)         padding-left:30px;
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 177)         padding-right:30px;
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 178)         align-items: center;
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 179)         padding-top: 3px;
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 180)         padding-bottom: 3px;
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 181)     }
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 182) 
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 183)     .leaderboard-divider {
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 184)         width: 768px;
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 185)         background-color: #FFFFFF;
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 186)         height: 3px;
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 187)     }
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 188)     
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 189)     .user-divider {
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 190)         width: 740px;
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 191)         background-color: #2c2f34;
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 192)         height: 3px;
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 193)         margin: 0 auto;
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 194)     }
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 195) 
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 196)     .leaderboard-header span:nth-child(1), .user span:nth-child(2)
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 197)     .user span:nth-child(1), .user span:nth-child(2) {
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 198)         text-align: left;
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 199)     }
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 200)     .leaderboard-header span:nth-child(3), .leaderboard-header span:nth-child(4),
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 201)     .user span:nth-child(3), .user span:nth-child(4) {
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 202)         text-align: center;
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 203)     }
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 204) 
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 205)     .small-profile-pic {
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 206)         color: white;
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 207)         width: 30px;
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 208)         height: 30px;
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 209)         border-radius: 50%;
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 210)     }
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400 211) 
+
+src/routes/(app)/charts/+page.svelte:
+3e5c65f4 (wessoms    2024-10-29 00:00:12 -0400   7)     import { supabase } from "$lib/supabaseClient";
+3e5c65f4 (wessoms    2024-10-29 00:00:12 -0400   9)     let topUsers = [];
+3e5c65f4 (wessoms    2024-10-29 00:00:12 -0400  10)     let topUserData = [];
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400  11)     let postCounts = [];
+3e5c65f4 (wessoms    2024-10-29 00:00:12 -0400  17)         topUsers = await fetchTopUsers();
+3e5c65f4 (wessoms    2024-10-29 00:00:12 -0400  18)         const topIds = topUsers.map(item => item.user_id);
+3e5c65f4 (wessoms    2024-10-29 00:00:12 -0400  19)         topUserData = await fetchMultipleUsers(topIds);
+3e5c65f4 (wessoms    2024-10-29 00:00:12 -0400  20)         topUserData = topUserData.map((profile, index) => ({
+3e5c65f4 (wessoms    2024-10-29 00:00:12 -0400  21)             ...profile,
+3e5c65f4 (wessoms    2024-10-29 00:00:12 -0400  22)             total_likes: topUsers[index].total_likes
+3e5c65f4 (wessoms    2024-10-29 00:00:12 -0400  23)         }));
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400  24)         postCounts = await fetchUserPostCounts(topIds);
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400  25)         topUserData = topUserData.map((profile, index) => ({
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400  26)             ...profile,
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400  27)             post_count: postCounts[index].post_count
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400  28)         }));
+3e5c65f4 (wessoms    2024-10-29 00:00:12 -0400  30)     
+3e5c65f4 (wessoms    2024-10-29 00:00:12 -0400  31)     async function fetchTopUsers() {
+3e5c65f4 (wessoms    2024-10-29 00:00:12 -0400  32)         const { data, error } = await supabase.rpc("get_top_users_likes");
+3e5c65f4 (wessoms    2024-10-29 00:00:12 -0400  33)         if (error) 
+3e5c65f4 (wessoms    2024-10-29 00:00:12 -0400  34)         throw error;
+3e5c65f4 (wessoms    2024-10-29 00:00:12 -0400  35)     if (data) {
+3e5c65f4 (wessoms    2024-10-29 00:00:12 -0400  36)         const topUsers = data.map(item => ({
+3e5c65f4 (wessoms    2024-10-29 00:00:12 -0400  37)             user_id: item.user_id,
+3e5c65f4 (wessoms    2024-10-29 00:00:12 -0400  38)             total_likes: item.total_likes
+3e5c65f4 (wessoms    2024-10-29 00:00:12 -0400  39)         }));
+3e5c65f4 (wessoms    2024-10-29 00:00:12 -0400  40)         return topUsers;
+3e5c65f4 (wessoms    2024-10-29 00:00:12 -0400  41)         }
+3e5c65f4 (wessoms    2024-10-29 00:00:12 -0400  42)     }
+3e5c65f4 (wessoms    2024-10-29 00:00:12 -0400  43) 
+3e5c65f4 (wessoms    2024-10-29 00:00:12 -0400  44)     async function fetchMultipleUsers(userIds) {
+3e5c65f4 (wessoms    2024-10-29 00:00:12 -0400  45)         const { data, error } = await supabase
+3e5c65f4 (wessoms    2024-10-29 00:00:12 -0400  46)         .from('profiles')
+3e5c65f4 (wessoms    2024-10-29 00:00:12 -0400  47)         .select('id, username, avatar_url')
+3e5c65f4 (wessoms    2024-10-29 00:00:12 -0400  48)         .in('id', userIds);
+3e5c65f4 (wessoms    2024-10-29 00:00:12 -0400  49)         
+3e5c65f4 (wessoms    2024-10-29 00:00:12 -0400  50)         if (error) {
+3e5c65f4 (wessoms    2024-10-29 00:00:12 -0400  51)             console.error('Error fetching users:', error);
+3e5c65f4 (wessoms    2024-10-29 00:00:12 -0400  52)         }
+3e5c65f4 (wessoms    2024-10-29 00:00:12 -0400  53)         if(data) {
+3e5c65f4 (wessoms    2024-10-29 00:00:12 -0400  54)             const orderedData = userIds.map(id => data.find(user => user.id === id));
+3e5c65f4 (wessoms    2024-10-29 00:00:12 -0400  55)             
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400  56)             return orderedData;
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400  57)         }
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400  58)     }
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400  59) 
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400  60)     async function fetchUserPostCounts(userIds) {
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400  61)         const { data, error } = await supabase.rpc('count_user_posts', { user_ids: userIds });
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400  62) 
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400  63)         if (error) {
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400  64)         console.error("Error counting user posts:", error);
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400  65)         } else {
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400  66)             const dataLookup = Object.fromEntries(data.map(item => [item.user_id, item.post_count]));
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400  67) 
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400  68)             // Map userIds to data in the original order
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400  69)             return userIds.map(userId => ({
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400  70)                 user_id: userId,
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400  71)                 post_count: dataLookup[userId] || 0  // Default to 0 if user_id is not in the data
+0f53ea5b (wessoms    2024-10-30 00:45:39 -0400  72)             }));
+3e5c65f4 (wessoms    2024-10-29 00:00:12 -0400  73)         }
+3e5c65f4 (wessoms    2024-10-29 00:00:12 -0400  74)     }
+3e5c65f4 (wessoms    2024-10-29 00:00:12 -0400  78)     {#if topUserData.length > 0}
+3e5c65f4 (wessoms    2024-10-29 00:00:12 -0400  79)         <div class="podium">
+3e5c65f4 (wessoms    2024-10-29 00:00:12 -0400  80)             <Podium data={topUserData}/>
+3e5c65f4 (wessoms    2024-10-29 00:00:12 -0400  81)         </div>
+3e5c65f4 (wessoms    2024-10-29 00:00:12 -0400  82)     {:else}
+5fc001d2 (wessoms    2024-10-29 18:50:33 -0400  83)         <div class="loading-wrapper">
+5fc001d2 (wessoms    2024-10-29 18:50:33 -0400  84)             <span class="loading-text">Loading podium data...</span>
+5fc001d2 (wessoms    2024-10-29 18:50:33 -0400  85)         </div>
+3e5c65f4 (wessoms    2024-10-29 00:00:12 -0400  86)     {/if}
+486c7490 (wessoms    2024-10-31 16:54:53 -0400  94)         display: grid;
+486c7490 (wessoms    2024-10-31 16:54:53 -0400  95)         grid-template-columns: 68vw 32vw;
+486c7490 (wessoms    2024-10-31 16:54:53 -0400  96)         height: auto;
+486c7490 (wessoms    2024-10-31 16:54:53 -0400 100)         display: flex;
+486c7490 (wessoms    2024-10-31 16:54:53 -0400 101)         justify-content: center;
+df4eb8d3 (wessoms    2024-10-30 20:23:11 -0400 110)         position: fixed;
+df4eb8d3 (wessoms    2024-10-30 20:23:11 -0400 111)         top: 50%;
+df4eb8d3 (wessoms    2024-10-30 20:23:11 -0400 112)         left: 90vw;
+df4eb8d3 (wessoms    2024-10-30 20:23:11 -0400 113)         transform: translate(-50%, -50%);
+486c7490 (wessoms    2024-10-31 16:54:53 -0400 114)         padding-right: 12vw;
+5fc001d2 (wessoms    2024-10-29 18:50:33 -0400 117)     .loading-wrapper {
+5fc001d2 (wessoms    2024-10-29 18:50:33 -0400 118)         display: flex;
+5fc001d2 (wessoms    2024-10-29 18:50:33 -0400 119)         align-items: center;
+df4eb8d3 (wessoms    2024-10-30 20:23:11 -0400 120)         margin: auto;
+df4eb8d3 (wessoms    2024-10-30 20:23:11 -0400 121)         text-align: center;
+df4eb8d3 (wessoms    2024-10-30 20:23:11 -0400 122)         vertical-align: center;
+df4eb8d3 (wessoms    2024-10-30 20:23:11 -0400 123)         height: 100vh;
+5fc001d2 (wessoms    2024-10-29 18:50:33 -0400 124)     }
+5fc001d2 (wessoms    2024-10-29 18:50:33 -0400 125) 
+5fc001d2 (wessoms    2024-10-29 18:50:33 -0400 126) 
+5fc001d2 (wessoms    2024-10-29 18:50:33 -0400 127)     .loading-text {
+5fc001d2 (wessoms    2024-10-29 18:50:33 -0400 128)         font-size: 50px;
+5fc001d2 (wessoms    2024-10-29 18:50:33 -0400 129)         display: flex;
+5fc001d2 (wessoms    2024-10-29 18:50:33 -0400 130)         text-align: center;
+5fc001d2 (wessoms    2024-10-29 18:50:33 -0400 131)         padding: auto;
+5fc001d2 (wessoms    2024-10-29 18:50:33 -0400 132)     }
+5fc001d2 (wessoms    2024-10-29 18:50:33 -0400 133) 
+486c7490 (wessoms    2024-10-31 16:54:53 -0400 134)     @media (max-width: 1300px) {
+486c7490 (wessoms    2024-10-31 16:54:53 -0400 135) 
+486c7490 (wessoms    2024-10-31 16:54:53 -0400 136)         .layout {
+486c7490 (wessoms    2024-10-31 16:54:53 -0400 137)             display: flex;
+486c7490 (wessoms    2024-10-31 16:54:53 -0400 138)             flex-direction: column;
+486c7490 (wessoms    2024-10-31 16:54:53 -0400 139)             justify-content: center;
+486c7490 (wessoms    2024-10-31 16:54:53 -0400 140)         }
+486c7490 (wessoms    2024-10-31 16:54:53 -0400 141) 
+486c7490 (wessoms    2024-10-31 16:54:53 -0400 142)         .top-songs {
+486c7490 (wessoms    2024-10-31 16:54:53 -0400 143)             position: relative;
+486c7490 (wessoms    2024-10-31 16:54:53 -0400 144)             left: 50vw;
+486c7490 (wessoms    2024-10-31 16:54:53 -0400 145)             top: 0%;
+486c7490 (wessoms    2024-10-31 16:54:53 -0400 146)             padding-right: auto;
+486c7490 (wessoms    2024-10-31 16:54:53 -0400 147)             transform: translate(-50%, 0%);
+486c7490 (wessoms    2024-10-31 16:54:53 -0400 148)             padding-bottom: 50px;
+486c7490 (wessoms    2024-10-31 16:54:53 -0400 149)             padding-top: 50px;
+486c7490 (wessoms    2024-10-31 16:54:53 -0400 150)         }
+486c7490 (wessoms    2024-10-31 16:54:53 -0400 151)     }
+486c7490 (wessoms    2024-10-31 16:54:53 -0400 152) 
+
+src/lib/topSongs.svelte:
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400   2)     import { onMount } from "svelte";
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400   3)     import { getPlaylist } from "$lib/utils";
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400   4)   
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400   5)     let isDropdownOpen = false; // State to control dropdown visibility
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400   6)     let countryList = [];
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400   8)     let region = "Global";
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400   9) 
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  10)     function toggleDropdown() {
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  11)         isDropdownOpen = !isDropdownOpen;
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  12)     }
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  13) 
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  14)     function handleCountrySelect(country) {
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  15)         isDropdownOpen = false;
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  16)         processCountry(country);
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  17)     }
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  18)   
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  19)     async function processCountry(countryName) {
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  20)         region = countryName;
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  21)         const id = countryList.find(c => c.name === countryName).playlistId;
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  22)         let topSongs = await getPlaylist(id);
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  23)         tracklist = topSongs.data.tracks.items;
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  24)     }
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  25)   
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  26)     onMount(() => {
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  27)         // list of valid countries and their id's
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  28)         countryList = [
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  29)             {name: "Global",         playlistId: "37i9dQZEVXbMDoHDwVN2tF"},
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  30)             {name: "Argentina",      playlistId: "37i9dQZEVXbMMy2roB9myp"},
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  31)             {name: "Australia",      playlistId: "37i9dQZEVXbJPcfkRz0wJ0"},
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  32)             {name: "Brazil",         playlistId: "37i9dQZEVXbMXbN3EUUhlg"},
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  33)             {name: "Canada",         playlistId: "37i9dQZEVXbKj23U1GF4IR"},
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  34)             {name: "France",         playlistId: "37i9dQZEVXbIPWwFssbupI"},
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  35)             {name: "Germany",        playlistId: "37i9dQZEVXbJiZcmkrIHGU"},
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  36)             {name: "India",          playlistId: "37i9dQZEVXbLZ52XmnySJg"},
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  37)             {name: "Indonesia",      playlistId: "37i9dQZEVXbObFQZ3JLcXt"},
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  38)             {name: "Italy",          playlistId: "37i9dQZEVXbIQnj7RRhdSX"},
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  39)             {name: "Japan",          playlistId: "37i9dQZEVXbKXQ4mDTEBXq"},
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  40)             {name: "Mexico",         playlistId: "37i9dQZEVXbO3qyFxbkOE1"},
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  41)             {name: "Netherlands",    playlistId: "37i9dQZEVXbKCF6dqVpDkS"},
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  42)             {name: "New Zealand",    playlistId: "37i9dQZEVXbM8SIrkERIYl"},
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  43)             {name: "South Africa",   playlistId: "37i9dQZEVXbMH2jvi6jvjk"},
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  44)             {name: "South Korea",    playlistId: "37i9dQZEVXbNxXF4SkHj9F"},
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  45)             {name: "Spain",          playlistId: "37i9dQZEVXbNFJfN1Vw8d9"},
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  46)             {name: "Sweden",         playlistId: "37i9dQZEVXbLoATJ81JYXz"},
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  47)             {name: "United Kingdom", playlistId: "37i9dQZEVXbLnolsZ8PSNw"},
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  48)             {name: "United States",  playlistId: "37i9dQZEVXbLRQDuF5jeBp"},
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  49)         ];
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  50)     });
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  55)     <div class="top-bar">
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  56)         <button on:click={toggleDropdown} class="set-country-button"><i class="fa-solid fa-flag"></i></button>
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  57)         <div class="dropdown-content {isDropdownOpen ? 'show' : ''}">
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  58)             {#each countryList as country}
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  59)               <div on:click={() => handleCountrySelect(country.name)} aria-hidden="true">
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  60)                 {country.name}
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  61)               </div>
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  62)             {/each}
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  63)           </div>
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  64)         <p class="title">Top Songs - {region}</p>
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400  65)     </div>
+486c7490 (wessoms    2024-10-31 16:54:53 -0400  95)         width: 30vw;
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 100)         white-space: nowrap;
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 101)         text-overflow: ellipsis;
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 102)     }
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 103) 
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 104)     .dropdown-content {
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 105)         display: none;
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 106)         position: absolute;
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 107)         background-color: #1d1f25;
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 108)         width: 200px;
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 109)         box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 110)         z-index: 1;
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 111)         color: #f3f1f1;
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 112)         border-width: 1px;
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 113)         border-style: solid;
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 114)         border-color: #000000;
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 115)         max-height: 30vh;
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 116)         overflow-y: scroll;
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 117)         overflow-x: hidden;
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 118)     }
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 119) 
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 120)     .dropdown-content.show {
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 121)         display: block;
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 122)     }
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 123) 
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 124)     .dropdown-content div {
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 125)         padding: 3px;
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 126)         cursor: pointer;
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 127)         text-overflow: ellipsis;
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 128)         overflow: hidden;
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 129)         white-space: nowrap;
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 130)     }
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 131) 
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 132)     .dropdown-content div:hover {
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 133)         background-color: #434343;
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 134)     }
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 135) 
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 136)     .top-bar {
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 137)         width: 100%;
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 143)         justify-content: center;
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 144)         margin-top: 0px;
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 145)     }
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 146) 
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 147)     .set-country-button {
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 148)         display: flex;
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 149)         background-color: transparent;
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 150)         color: #f3f1f1;
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 151)         font-size: 20px;
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 152)         cursor: pointer;
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 153)         border-radius: 50%;
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 154)         height: 36px;
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 155)         width: 36px;
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 156)         border-style: none;
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 157)         padding-top: 10px;
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 158)         padding-left: 10px;
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 159)         margin-right: auto;
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 160)         transition: background-color 0.2s;
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 161)     }
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 162)     
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 163)     .set-country-button:hover {
+61d715c7 (wessoms    2024-10-31 22:43:17 -0400 164)         background-color: #434343;
+486c7490 (wessoms    2024-10-31 16:54:53 -0400 261)     @media (max-width: 1300px) {
+486c7490 (wessoms    2024-10-31 16:54:53 -0400 262)         .wrapper {
+486c7490 (wessoms    2024-10-31 16:54:53 -0400 263)             width: 80vw;
+486c7490 (wessoms    2024-10-31 16:54:53 -0400 264)             margin: 0px;
+486c7490 (wessoms    2024-10-31 16:54:53 -0400 265)         }
+486c7490 (wessoms    2024-10-31 16:54:53 -0400 266) 
+486c7490 (wessoms    2024-10-31 16:54:53 -0400 267)     }
+486c7490 (wessoms    2024-10-31 16:54:53 -0400 268) 
