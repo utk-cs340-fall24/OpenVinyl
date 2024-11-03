@@ -8,7 +8,7 @@
 
 - Fix bugs from previous sprint
 - Improve mobile styling
-- alter the styling on pages where the sidebar is now present
+- add games section
 
 ### What problems you encountered
 
