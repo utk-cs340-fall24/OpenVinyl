@@ -22,7 +22,6 @@
             total_likes: topUsers[index].total_likes
         }));
         postCounts = await fetchUserPostCounts(topIds);
-        console.log(postCounts);
         topUserData = topUserData.map((profile, index) => ({
             ...profile,
             post_count: postCounts[index].post_count
@@ -92,12 +91,14 @@
 
 <style>
     .layout {
-        display: flex;
-        height: auto; /* temporary, add popular posts to fill page later */
+        display: grid;
+        grid-template-columns: 68vw 32vw;
+        height: auto;
     }
 
     .podium {
-        width: 100%;
+        display: flex;
+        justify-content: center;
         padding-top: 0vh;
     }
 
@@ -110,7 +111,7 @@
         top: 50%;
         left: 90vw;
         transform: translate(-50%, -50%);
-        padding-right: 5vw;
+        padding-right: 12vw;
     }
 
     .loading-wrapper {
@@ -128,6 +129,25 @@
         display: flex;
         text-align: center;
         padding: auto;
+    }
+
+    @media (max-width: 1300px) {
+
+        .layout {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .top-songs {
+            position: relative;
+            left: 50vw;
+            top: 0%;
+            padding-right: auto;
+            transform: translate(-50%, 0%);
+            padding-bottom: 50px;
+            padding-top: 50px;
+        }
     }
 
 </style>

@@ -5,7 +5,7 @@
   let engine, world, render, runner;
   let dropBall;
   let multiplierSlots = [];
-  let balance = 50; 
+  let balance = 50;
   let message = '';
   const ballCost = 1;
   let graph = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
@@ -21,8 +21,11 @@
   const defaultCategory = 0x0001;
   const ballCategory = 0x0002;
 
+  let scoreSound;
+
   onMount(() => {
     createScene();
+    scoreSound = new Audio('path_to_your_score_sound.mp3'); // Replace with your sound file path
   });
 
   function createScene() {
@@ -39,7 +42,7 @@
       options: {
         width: 600,
         height: 600,
-        background: '#333333', 
+        background: '#333333',
         wireframes: false,
       },
     });
@@ -82,7 +85,6 @@
     ]);
 
     createPegs();
-
     createMultiplierSlots();
 
     dropBall = () => {
@@ -90,23 +92,22 @@
         message = "You don't have enough vinyls!";
         return;
       }
-      balance -= ballCost; 
+      balance -= ballCost;
 
-      const randomOffset =
-        (Math.random() + Math.random() + Math.random() - 1.5) * 20;
-      const xPosition = 300 + randomOffset; 
+      const randomOffset = (Math.random() + Math.random() + Math.random() - 1.5) * 20;
+      const xPosition = 300 + randomOffset;
 
       const ball = Bodies.circle(xPosition, 50, 14, {
         collisionFilter: {
           group: -1,
           category: ballCategory,
-          mask: defaultCategory, 
+          mask: defaultCategory,
         },
         restitution: 0.5,
         label: 'Ball',
         render: {
           strokeStyle: '#ffffff',
-          lineWidth: 3, 
+          lineWidth: 3,
           fillStyle: 'transparent',
           sprite: {
             texture: 'logo.svg',
@@ -144,14 +145,18 @@
 
           if (slotIndex >= 0 && slotIndex < multiplierSlots.length) {
             var multiplier = multiplierSlots[slotIndex];
+<<<<<<< HEAD
             graph[slotIndex]++;
             printOdds();
+=======
+>>>>>>> 5ac1b9b52ddb0eb2f22389802f76878cc2e0263e
             var winnings = ballCost * multiplier;
             balance += winnings;
 
             balance = parseFloat(balance.toFixed(2));
-
             message = `You won ${winnings.toFixed(2)} Vinyls!`;
+
+            scoreSound.play(); // Play sound on scoring
           } else {
             message = `No winnings. Try again!`;
           }
@@ -161,6 +166,7 @@
       });
     });
   }
+<<<<<<< HEAD
 
   function printOdds(){
     let s = "";
@@ -174,6 +180,8 @@
     }
   }
 
+=======
+>>>>>>> 5ac1b9b52ddb0eb2f22389802f76878cc2e0263e
   function createPegs() {
     const rows = 12;
     const pegSpacingX = 45; 

@@ -38,14 +38,16 @@
     </div>
     <hr class="hr-text" data-content="Or continue with">
     <div class="oauthbuttons">
-      <button class="google" on:click={signInWithGoogle}>
+      <button class="google oauth-button" on:click={signInWithGoogle}>
         <i class="fa-brands fa-google"></i> Google
       </button>
-      <button class="spotify" on:click={signInWithSpotify}>
+      <button class="spotify oauth-button" on:click={signInWithSpotify}>
         <i class="fa-brands fa-spotify"></i> Spotify
       </button>
       <a href="\auth\signup">
-        <button class="inputbox"><i class="fa-solid fa-envelope"></i> Email</button>
+        <button class="email oauth-button">
+          <i class="fa-solid fa-envelope"></i> Email
+        </button>
       </a>
     </div>
   </div>
@@ -55,6 +57,10 @@
   * {
     box-sizing: border-box;
     font-family: Arial, Helvetica, sans-serif;
+  }
+
+  button {
+    white-space: nowrap;
   }
 
   .container {
@@ -177,6 +183,15 @@
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   }
 
+  .email {
+    background-color: #4b4f56;
+    border: none;
+    color: #b9b9b9;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
   .hr-text {
     line-height: 1em;
     position: relative;
@@ -215,22 +230,37 @@
     background-color: #1D1F25;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 1200px) {
     .container .login-window {
-      max-height: 80vh;
-      height: auto;
-      overflow-y: auto;
       max-width: 40vw;
-      background-color: #1D1F25;
-      box-shadow: 0px 10px 15px -3px rgba(0,0,0,0.1);
-      border-radius: 8px;
-      padding: 2.5em;
-      text-align: center;
+    }
+  }
+
+  @media (max-width: 850px) {
+    .container .login-window {
+      max-width: 50vw;
+    }
+
+    .oauthbuttons {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .oauth-button {
+      width: 100% !important;
+      margin: 0 0 10px 0;
     }
   }
 
   @media (max-width: 480px) {
-
+    .container {
+      display: block;
+    }
+    .container .login-window {
+      max-width: 100vw;
+      height: 100vh;
+      max-height: none;
+    }
   }
 </style>
 
