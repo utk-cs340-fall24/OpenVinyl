@@ -145,11 +145,8 @@
 
           if (slotIndex >= 0 && slotIndex < multiplierSlots.length) {
             var multiplier = multiplierSlots[slotIndex];
-<<<<<<< HEAD
             graph[slotIndex]++;
             printOdds();
-=======
->>>>>>> 5ac1b9b52ddb0eb2f22389802f76878cc2e0263e
             var winnings = ballCost * multiplier;
             balance += winnings;
 
@@ -166,7 +163,6 @@
       });
     });
   }
-<<<<<<< HEAD
 
   function printOdds(){
     let s = "";
@@ -180,8 +176,7 @@
     }
   }
 
-=======
->>>>>>> 5ac1b9b52ddb0eb2f22389802f76878cc2e0263e
+
   function createPegs() {
     const rows = 12;
     const pegSpacingX = 45; 
