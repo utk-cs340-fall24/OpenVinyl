@@ -8,6 +8,7 @@
   let balance = 50;
   let message = '';
   const ballCost = 1;
+  let graph = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 
   const Engine = Matter.Engine;
   const Render = Matter.Render;
@@ -144,6 +145,8 @@
 
           if (slotIndex >= 0 && slotIndex < multiplierSlots.length) {
             var multiplier = multiplierSlots[slotIndex];
+            graph[slotIndex]++;
+            printOdds();
             var winnings = ballCost * multiplier;
             balance += winnings;
 
@@ -160,6 +163,20 @@
       });
     });
   }
+
+  function printOdds(){
+    let s = "";
+    console.log("printing odds");
+    for(let i = 0; i < graph.length; i++){
+      for(let j = 0; j < graph[i]; j++){
+        s += "=";
+      } 
+      console.log(s);
+      s = "";
+    }
+  }
+
+
   function createPegs() {
     const rows = 12;
     const pegSpacingX = 45; 

@@ -1,6 +1,6 @@
 <script>
   import Plinko from "$lib/Plinko.svelte";
-//   import VideoEmbed from "$lib/VideoEmbed.svelte";
+  import VideoEmbed from "$lib/VideoEmbed.svelte";
 </script>
 
 <div class="main-content">
@@ -9,9 +9,9 @@
   <div class="center-content">
     <Plinko />
   </div>
-  <!-- <div class="right-side">
+  <div class="right-side">
     <VideoEmbed />
-  </div> -->
+  </div>
 </div>
 
 <style>
