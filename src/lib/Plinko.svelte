@@ -319,7 +319,7 @@
   function getMultiplier(index, totalSlots) {
     const middle = Math.floor(totalSlots / 2);
 
-    const multipliers = [0.5, 1.0, 1.1, 1.3, 1.4, 1.9, 4.0, 7.1];
+    const multipliers = [0.2, 0.5, 0.8, 1.1, 1.3, 2.2, 3.0, 10.0];
 
     const fullMultipliers = [...multipliers.slice(), ...multipliers];
 

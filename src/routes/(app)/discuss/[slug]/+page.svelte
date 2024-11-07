@@ -5,6 +5,7 @@
   import { supabase } from '$lib/supabaseClient';
   import "@fortawesome/fontawesome-free/css/all.css";
   import "@fortawesome/fontawesome-free/js/all.js";
+  import { sidebarHidden } from '$lib/stores';
 
   export let data;
   let { reviews, song_id } = data;
@@ -191,7 +192,7 @@
   }
 </script>
 
-<div class="wrapper">
+<div class="wrapper { $sidebarHidden ? '' : 'sidebarHidden' }">
   {#if loading}
     <p>Loading song details...</p>
   {:else if error}
@@ -277,8 +278,16 @@
 <style>
   .wrapper{
     margin: 0;
+    transition: width 0.5s ease-in-out, transform 0.5s ease-in-out;
+    transform: translate(15%, 0);
+    width: 70%;
   }
-  /* Add your styles here */
+
+  .wrapper.sidebarHidden {
+    width: 80%;
+    transform: translate(0, 0);
+  }
+
   .song-details {
     display: flex;
     align-items: center;
