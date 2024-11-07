@@ -153,12 +153,18 @@
         <h1 class="profile-username">{profile.username}</h1>
         <p class="profile-bio">{profile.bio || 'No bio available.'}</p>
         <div class="profile-actions">
-          {#if profile.id !== $user?.id} Prevent users from following themselves
+          {#if profile.id !== $user?.id}
             {#if isFriend}
               <button class="unfollow-button" on:click={unfollow}>Unfollow</button>
             {:else}
               <button class="follow-button" on:click={follow}>Follow</button>
             {/if}
+          {/if}
+
+          {#if profile.id == $user?.id} 
+            <a href="/account">
+              <button class="settings">Settings</button>
+            </a>
           {/if}
         </div>
       </div>
@@ -265,6 +271,7 @@
     gap: 10px;
   }
 
+  .settings,
   .follow-button,
   .unfollow-button {
     padding: 10px 20px;
@@ -275,6 +282,7 @@
     transition: background-color 0.3s;
   }
 
+  .settings,
   .follow-button {
     background-color: #007bff;
     color: #ffffff;
