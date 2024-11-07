@@ -4,6 +4,7 @@
   import logo from '$lib/logo.svg';
   import { page } from '$app/stores';
   import { getValidSpotifyAccessToken } from '$lib/utils';
+  import { vinylBalance, fetchVinylBalance, addVinyls } from '$lib/vinylsStore.js';
 
   let user = null;
   let showSpotifyButton = true; // Default state to show the Spotify button
@@ -21,6 +22,8 @@
       user = sessionData?.session?.user;
 
       if (user) {
+        await fetchVinylBalance(user.id);
+
         const { data } = await supabase
           .from('profiles')
           .select('username, spotify_access_token, avatar_url, vinyls')
@@ -29,8 +32,10 @@
 
         if (data) {
           // Update user data
-          vinyls = data.vinyls ?? 0; // Use nullish coalescing to default to 0
-          avatar_url = data.avatar_url;
+          vinylBalance.subscribe(value => {
+                vinyls = value;
+            });
+            avatar_url = data.avatar_url;
 
           // Update login button if necessary
           const loginButton = document.getElementById('login-button');
