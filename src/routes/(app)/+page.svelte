@@ -124,7 +124,7 @@
 
     loading = true;
     try {
-      const response = await fetch(`/api/posts?page=${data.nextPage}&filter=${filterOption}&sort=${sortOption}`);
+      const response = await fetch(`/api/posts?page=1&filter=${filterOption}&sort=${sortOption}&user_id=${session_uuid}`);
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -190,7 +190,7 @@
     posts = [];
     loading = true;
     try {
-      const response = await fetch(`/api/posts?page=1&filter=${filterOption}&sort=${sortOption}`);
+      const response = await fetch(`/api/posts?page=1&filter=${filterOption}&sort=${sortOption}&user_id=${session_uuid}`);
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
