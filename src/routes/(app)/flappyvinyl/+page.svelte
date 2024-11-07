@@ -1,6 +1,7 @@
 <script>
     import { onMount, onDestroy } from 'svelte';
     import { supabase } from '$lib/supabaseClient.js'; // Ensure this path is correct
+    import { vinylBalance, fetchVinylBalance, addVinyls } from '$lib/vinylsStore.js';
 
     let user = null;
     let balance = 0;
@@ -49,21 +50,9 @@
         console.log('User fetched:', user);
 
         if (user) {
-            console.log(`Fetching vinyl balance for user ID: ${user.id}`);
-            // Fetch user's vinyl balance
-            const { data, error } = await supabase
-                .from('profiles')
-                .select('vinyls')
-                .eq('id', user.id)
-                .single();
-
-            if (error) {
-                console.error('Error fetching vinyl balance:', error);
-                message = 'Error fetching your balance.';
-            } else {
-                balance = data.vinyls ?? 0;
-                console.log(`User balance fetched: ${balance} Vinyls`);
-            }
+            vinylBalance.subscribe(value => {
+                balance = value;
+            });
         } else {
             message = 'Please log in to play the game.';
             console.log('No user logged in.');
@@ -89,13 +78,16 @@
     }
 
     // Function to award a vinyl
-    async function awardVinyl() {
+    async function awardVinyl(amount = 1) {
         if (!user) return;
-        balance += 1;
-        runVinylCount += 1; 
-        console.log(`Awarding 1 Vinyl. New balance: ${balance}`);
-        await updateBalance(balance);
-        message = 'You earned 1 Vinyl!';
+
+        const success = await addVinyls(user.id, amount);
+        if (success) {
+            message = `You earned ${amount} Vinyl${amount > 1 ? 's' : ''}!`;
+            // Optionally, show a toast or animation
+        } else {
+            message = 'Failed to award Vinyls.';
+        }
     }
 
     // Function to start the game loop
@@ -344,6 +336,8 @@
     onMount(async () => {
         console.log('Component mounted. Fetching user.');
         await fetchUser();
+
+        await fetchVinylBalance(user.id);
 
         // Initialize sound
         // Uncomment and replace with your sound file path if you have one

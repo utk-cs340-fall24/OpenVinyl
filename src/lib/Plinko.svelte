@@ -2,6 +2,7 @@
   import Matter from 'matter-js';
   import { onMount } from 'svelte';
   import { supabase } from '$lib/supabaseClient'; // Ensure this path is correct in your project
+  import { vinylBalance, fetchVinylBalance, addVinyls } from '$lib/vinylsStore.js';
 
   let engine, world, render, runner;
   let dropBall;
@@ -28,21 +29,14 @@
     // Fetch user session
     const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
     user = sessionData?.session?.user;
-
     if (user) {
-      // Fetch user's vinyl balance
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('vinyls')
-        .eq('id', user.id)
-        .single();
+      await fetchVinylBalance(user.id)
 
-      if (error) {
-        console.error('Error fetching vinyl balance:', error);
-        message = 'Error fetching your balance.';
-      } else {
-        balance = data.vinyls ?? 0;
-      }
+      // Fetch user's vinyl balance
+      vinylBalance.subscribe(value => {
+                balance = value;
+            });
+      
     } else {
       message = 'Please log in to play the game.';
     }
@@ -53,21 +47,21 @@
   });
 
   // Update balance in the database whenever it changes
-  $: if (user && balance !== undefined) {
-    updateBalanceInDatabase();
-  }
+  // $: if (user && balance !== undefined) {
+  //   updateBalanceInDatabase();
+  // }
 
-  async function updateBalanceInDatabase() {
-    const { error } = await supabase
-      .from('profiles')
-      .update({ vinyls: balance })
-      .eq('id', user.id);
+  // async function updateBalanceInDatabase() {
+  //   const { error } = await supabase
+  //     .from('profiles')
+  //     .update({ vinyls: balance })
+  //     .eq('id', user.id);
 
-    if (error) {
-      console.error('Error updating vinyl balance:', error);
-      message = 'Error updating balance. Please try again.';
-    }
-  }
+  //   if (error) {
+  //     console.error('Error updating vinyl balance:', error);
+  //     message = 'Error updating balance. Please try again.';
+  //   }
+  // }
 
   function createScene() {
     engine = Engine.create();
@@ -145,6 +139,7 @@
       }
 
       balance -= ballCost;
+      addVinyls(user.id, -ballCost)
       message = ''; // Clear any previous messages
 
       const randomOffset = (Math.random() + Math.random() + Math.random() - 1.5) * 20;
@@ -201,9 +196,10 @@
             graph[slotIndex]++;
             printOdds();
             var winnings = ballCost * multiplier;
-            balance += winnings;
+            // balance += winnings;
 
-            balance = parseFloat(balance.toFixed(2));
+            // balance = parseFloat(balance.toFixed(2));
+            addVinyls(user.id, winnings)
             message = `You won ${winnings.toFixed(2)} Vinyls!`;
 
             // Play sound on scoring if you have one
