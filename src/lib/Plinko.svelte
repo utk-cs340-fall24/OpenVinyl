@@ -258,7 +258,7 @@
   }
 
   function createMultiplierSlots() {
-    const slotCount = 15;
+    const slotCount = 13;
     const slotWidth = 600 / slotCount;
 
     const slotYPosition = 80 + 12 * 40 + 80;
@@ -319,7 +319,7 @@
   function getMultiplier(index, totalSlots) {
     const middle = Math.floor(totalSlots / 2);
 
-    const multipliers = [0.2, 0.5, 0.8, 1.1, 1.3, 2.2, 3.0, 10.0];
+    const multipliers = [0.2, 0.4, 0.6, 0.8, 1.2, 1.5, 7, 99.0];
 
     const fullMultipliers = [...multipliers.slice(), ...multipliers];
 
