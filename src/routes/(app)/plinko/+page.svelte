@@ -9,9 +9,9 @@
   <div class="center-content">
     <Plinko />
   </div>
-  <div class="right-side">
+  <!-- <div class="right-side">
     <VideoEmbed />
-  </div>
+  </div> -->
 </div>
 
 <style>
