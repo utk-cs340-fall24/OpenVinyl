@@ -10,7 +10,7 @@ export async function GET({ url }) {
   const filter = url.searchParams.get("filter") || "all"; // e.g., "all" or "following"
   const sort = url.searchParams.get("sort") || "recent";
   const userId = url.searchParams.get("user_id") || null; // User ID passed as a query parameter
-
+  
   // Initialize data and totalCount variables
   let data = [];
   let totalCount = 0;
@@ -36,7 +36,7 @@ export async function GET({ url }) {
     try {
       // Fetch the list of followed user IDs for the specified user_id
       const { data: followingData, error: followingError } = await supabase
-        .from("following")
+        .from("follows") // Ensure this matches your actual table name
         .select("followed_id")
         .eq("owner_id", userId);
 
@@ -93,7 +93,7 @@ export async function GET({ url }) {
         .range(from, to);
 
       if (filter === "following" && followedUserIds.length > 0) {
-        query = query.in("user_id", followedUserIds);
+        query = query.in("profile_id", followedUserIds); // Ensure "profile_id" is the correct field for author
       }
 
       const { data: recentPosts, error, count } = await query;
@@ -134,7 +134,7 @@ export async function GET({ url }) {
         .select(`*, likes (profile_id, isLiked)`, { count: "exact" });
 
       if (filter === "following" && followedUserIds.length > 0) {
-        query = query.in("user_id", followedUserIds);
+        query = query.in("profile_id", followedUserIds); // Ensure "profile_id" is the correct field for author
       }
 
       // Execute the query without pagination
@@ -191,6 +191,53 @@ export async function GET({ url }) {
         { status: 500, headers: { "Content-Type": "application/json" } }
       );
     }
+  } else if (sort === "asc" || sort === "desc") {
+    // Handling "rating" sort: Fetch paginated posts sorted by rating ascending or descending
+    const sortOrder = sort === "asc" ? "asc" : "desc";
+
+    const from = (page - 1) * PAGE_SIZE;
+    const to = page * PAGE_SIZE - 1;
+
+    try {
+      let query = supabase
+        .from("posts")
+        .select(`*, likes (profile_id, isLiked)`, { count: "exact" })
+        .order("rating", { ascending: sortOrder === "asc" })
+        .range(from, to);
+
+      if (filter === "following" && followedUserIds.length > 0) {
+        query = query.in("profile_id", followedUserIds); // Ensure "profile_id" is the correct field for author
+      }
+
+      const { data: ratingSortedPosts, error, count } = await query;
+
+      if (error) {
+        console.error("Error fetching rating-sorted posts and likes:", error);
+        return new Response(
+          JSON.stringify({
+            success: false,
+            message: "Error fetching rating-sorted posts.",
+            posts: [],
+            nextPage: null,
+          }),
+          { status: 500, headers: { "Content-Type": "application/json" } }
+        );
+      }
+
+      data = ratingSortedPosts;
+      totalCount = count;
+    } catch (exception) {
+      console.error("Unexpected error fetching rating-sorted posts:", exception);
+      return new Response(
+        JSON.stringify({
+          success: false,
+          message: "Unexpected error fetching rating-sorted posts.",
+          posts: [],
+          nextPage: null,
+        }),
+        { status: 500, headers: { "Content-Type": "application/json" } }
+      );
+    }
   } else {
     // Handle other sorting options if necessary
     console.warn(`Unknown sort option: ${sort}. Defaulting to recent.`);
@@ -207,7 +254,7 @@ export async function GET({ url }) {
         .range(from, to);
 
       if (filter === "following" && followedUserIds.length > 0) {
-        query = query.in("user_id", followedUserIds);
+        query = query.in("profile_id", followedUserIds); // Ensure "profile_id" is the correct field for author
       }
 
       const { data: unknownSortPosts, error, count } = await query;
@@ -257,6 +304,9 @@ export async function GET({ url }) {
 
   if (sort === "popular") {
     // For popular sort, totalCount is the total number of filtered and sorted posts
+    hasNextPage = page * PAGE_SIZE < totalCount;
+  } else if (sort === "asc" || sort === "desc") {
+    // For rating sort, totalCount is the total number of filtered posts
     hasNextPage = page * PAGE_SIZE < totalCount;
   } else {
     // For recent sort, totalCount is the total number of filtered posts

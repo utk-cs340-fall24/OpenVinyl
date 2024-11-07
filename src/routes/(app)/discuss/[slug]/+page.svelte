@@ -6,6 +6,7 @@
   import "@fortawesome/fontawesome-free/css/all.css";
   import "@fortawesome/fontawesome-free/js/all.js";
   import { sidebarHidden } from '$lib/stores';
+  import Post from "$lib/post.svelte";
 
   export let data;
   let { reviews, song_id } = data;
@@ -206,69 +207,21 @@
       </div>
     </div>
 
-    <h2>Reviews</h2>
-
     {#if reviews.length > 0}
     {#each reviews as review}
-      <div class="inner-wrapper">
-        <div class="top-bar">
-          <div class="user-info">
-            <img class="profile-pic" src={review.profiles.avatar_url || 'https://placehold.co/30'} alt="profile" />
-            <span class="username">
-              <a class="username-link" href="/profiles/{review.profiles.username}">{review.profiles.username}</a>
-            </span>
-          </div>
-        </div>
-
-        <div class="content-wrapper">
-          <div class="album-cover-container">
-            <img
-              class="album-cover"
-              src={songDetails.image_url}
-              alt="{songDetails.title} album cover"
-            />
-            <a href="/discover/{song_id}" class="play-button" aria-label="Play Song">
-              <i class="fa-solid fa-play"></i>
-            </a>
-          </div>
-
-          <div class="song-info-wrapper">
-            <p class="song-name">{songDetails.title}</p>
-            <p class="artist-name">by {songDetails.artist}</p>
-            <p class="review-preview">{review.content}</p>
-          </div>
-
-          <div>
-            <div class="rating-wrapper">
-              <p>{@html renderStars(review.rating)}</p>
-            </div>
-
-            <div class="vote-section">
-              <button
-                on:click={() => toggleVote('upvote', review.id)}
-                disabled={!logged_in_user_uuid || processingVote}
-                class="vote-button upvote-button"
-                aria-label="Upvote"
-                class:selected={userVotes[review.id] === 'upvote'}
-              >
-                <i class="fa-solid fa-arrow-up"></i>
-              </button>
-
-              <span class="net-vote-count">{netVotes[review.id]}</span>
-
-              <button
-                on:click={() => toggleVote('downvote', review.id)}
-                disabled={!logged_in_user_uuid || processingVote}
-                class="vote-button downvote-button"
-                aria-label="Downvote"
-                class:selected={userVotes[review.id] === 'downvote'}
-              >
-                <i class="fa-solid fa-arrow-down"></i>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+    <Post
+    logged_in_user_uuid={logged_in_user_uuid}
+    uuid={review.profile_id}
+    rating={review.rating}
+    desc={review.content}
+    song_id={review.song_id}
+    song_title={songDetails.title}
+    song_artist={songDetails.artist}
+    song_image={songDetails.image_url}
+    likes_cnt={review.likes_count}
+    post_id={review.id}
+    created_at={review.created_at}
+  ></Post>
     {/each}
   {:else}
     <p>No reviews yet. Be the first to review!</p>
@@ -279,8 +232,8 @@
   .wrapper{
     margin: 0;
     transition: width 0.5s ease-in-out, transform 0.5s ease-in-out;
-    transform: translate(15%, 0);
-    width: 70%;
+    transform: translate(0%, 0);
+    width: 80%;
   }
 
   .wrapper.sidebarHidden {
@@ -291,15 +244,21 @@
   .song-details {
     display: flex;
     align-items: center;
+    justify-content: center; /* Center horizontally */
     margin-bottom: 20px;
+    text-align: center; /* Center text */
   }
 
   .song-details img {
-    width: 200px;
-    height: 200px;
+    width: 300px;
+    height: 300px;
     object-fit: cover;
     border-radius: 8px;
     margin-right: 20px;
+  }
+
+  .song-info {
+    text-align: center; /* Center text */
   }
 
   .song-info h1 {
@@ -311,6 +270,10 @@
     margin: 5px 0;
     font-size: 1.2rem;
     color: #888;
+  }
+
+  h2 {
+    text-align: center; /* Center the h2 reviews text */
   }
 
   .reviews-list {
@@ -349,12 +312,12 @@
   .wrapper {
     display: flex;
     flex-direction: column;
-    background-color: #1d1f25;
+    background-color: #121212;
     width: 70%;
     margin: 20px auto;
     padding: 10px;
     color: #f3f1f1;
-    border: 1px solid #26282c;
+    border: none;
     
     min-height: 150px;
     border-radius: 8px;

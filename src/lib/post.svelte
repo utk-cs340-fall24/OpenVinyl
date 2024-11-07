@@ -9,6 +9,7 @@
   export let song_artist;
   export let song_title;
   export let song_image;
+  export let created_at;
 
   import { onMount } from "svelte";
   import { supabase } from "$lib/supabaseClient";
@@ -88,6 +89,31 @@
     } else {
       userVote = null;
     }
+  }
+  function timeSince(date) {
+    const seconds = Math.floor((new Date() - new Date(date)) / 1000);
+    let interval = seconds / 31536000;
+
+    if (interval > 1) {
+      return Math.floor(interval) + " years ago";
+    }
+    interval = seconds / 2592000;
+    if (interval > 1) {
+      return Math.floor(interval) + " months ago";
+    }
+    interval = seconds / 86400;
+    if (interval > 1) {
+      return Math.floor(interval) + " days ago";
+    }
+    interval = seconds / 3600;
+    if (interval > 1) {
+      return Math.floor(interval) + " hours ago";
+    }
+    interval = seconds / 60;
+    if (interval > 1) {
+      return Math.floor(interval) + " minutes ago";
+    }
+    return Math.floor(seconds) + " seconds ago";
   }
 
   async function toggleVote(voteType) {
@@ -204,21 +230,32 @@
     userVote = null;
   }
 
-  // Convert 10 scale to 5 for display purposes only (maybe fix later)
-  function renderStars() {
-    const stars = [];
-    const ratingOutOfFive = rating / 2;
-
-    for (let i = 1; i <= 5; i++) {
-      if (ratingOutOfFive >= i) {
-        stars.push('<i class="fa-solid fa-star"></i>');
-      } else if (ratingOutOfFive >= i - 0.5) {
-        stars.push('<i class="fa-regular fa-star-half-stroke"></i>');
-      } else {
-        stars.push('<i class="fa-regular fa-star"></i>');
-      }
-    }
-    return stars.join("");
+  function getBarColor(index, filled) {
+    const colors = [
+      "#023E0000", // muted green
+      "#15420000",
+      "#27450000",
+      "#3A490000",
+      "#4C4C0000", // muted yellow
+      "#4C3D0000",
+      "#4B2E0000",
+      "#4B1E0000",
+      "#4A0F0000",
+      "#4A000000"  // muted red
+    ];
+    const activeColors = [
+      "#0AFF00", // bright green
+      "#47FF00",
+      "#85FF00",
+      "#C2FF00",
+      "#FFFF00", // bright yellow
+      "#FFCC00",
+      "#FF9900",
+      "#FF6600",
+      "#FF3300",
+      "#FF0000"  // bright red
+    ];
+    return filled ? activeColors[index] : colors[index];
   }
 </script>
 
@@ -230,6 +267,7 @@
       <span class="username">
         <a class="username-link" href="/profiles/{username}">{username}</a>
       </span>
+      <p class="time-since-created">{timeSince(created_at) || ""}</p>
     </div>
 
     <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -260,7 +298,11 @@
     <!-- svelte-ignore a11y-no-static-element-interactions -->
     <div>
       <div class="rating-wrapper" on:click={() => window.location.href = `/posts/${post_id}`} style="cursor: pointer;">
-        <p>{@html renderStars()}</p>
+        <div class="bar-rating" style="width: 100%;">
+          {#each Array(10) as _, i}
+            <span id={`bar-${i}`} class="bar" style="background-color: {getBarColor(i, rating > i)};"></span>
+          {/each}
+        </div>
       </div>
     
 
@@ -296,6 +338,25 @@
   *::before,
   *::after {
     box-sizing: border-box;
+  }
+
+  .time-since-created {
+    font-size: 0.6rem;
+    color: #b9b9b9;
+    margin-left: 10px;
+  }
+
+  .bar-rating {
+    display: flex;
+    gap: 4px;
+    height: 35px;
+  }
+
+  .bar-rating .bar {
+    display: inline-block;
+    width: 6px;
+    height: 22px;
+    background-color: transparent;
   }
 
   .vote-section {
@@ -365,6 +426,7 @@
   .user-info {
     display: flex;
     align-items: center;
+    width: 80%;
   }
 
   .profile-pic {
