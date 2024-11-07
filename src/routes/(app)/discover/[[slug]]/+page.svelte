@@ -7,7 +7,7 @@
   import { selectedSong } from "$lib/stores";
   import TutorialOverlay from "$lib/tutorialOverlay.svelte";
   import { writable } from "svelte/store";
-  import { getValidSpotifyAccessToken } from "$lib/utils";
+  import { getValidSpotifyAccessToken, getPlaylist } from "$lib/utils";
   import { user } from "$lib/stores";
   import { derived } from 'svelte/store';
   import { sidebarHidden } from "$lib/stores";
@@ -89,17 +89,17 @@
     },
   ];
   let centerSongId;
-
   if ($page.params.slug) {
     centerSongId = $page.params.slug;
     boxes[4].songId = $page.params.slug;
   } else {
-    centerSongId = "6ebkx7Q5tTxrCxKq4GYj0Y";
-    //random song
+    centerSongId = "";
+    //random song from top 50
   }
+  
   const showTutorial = writable(false);
   const userReady = derived(user, $user => $user); 
-
+  
   let error;
   let accessToken = null;
   let cache = [];
@@ -115,12 +115,20 @@
 
 
   onMount(async () => {
-  let unsubscribeUser;
-  let currentUser;
-  if ($page.params.slug) {
-    centerSongId = $page.params.slug;
-    boxes[4].songId = $page.params.slug;
-  }
+    await authenticateClientCredentials();
+    
+    let unsubscribeUser;
+    let currentUser;
+    if ($page.params.slug) {
+      centerSongId = $page.params.slug;
+      boxes[4].songId = $page.params.slug;
+    } else {
+      let topSongs = await getPlaylist("37i9dQZEVXbMDoHDwVN2tF");
+      let tracklist = topSongs.data.tracks.items;
+      const random = Math.floor(Math.random() * 50);
+      centerSongId = tracklist[random].track.id;
+      boxes[4].songId = tracklist[random].track.id
+    }
 
   
   
@@ -181,9 +189,6 @@
     } else {
       console.log("User not logged in.");
     }
-
-  
-  await authenticateClientCredentials();
     fetchCenterSong();
     await cacheRecommendations();
     initializeGridWithCache();
