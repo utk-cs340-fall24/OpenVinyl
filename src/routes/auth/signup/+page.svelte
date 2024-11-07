@@ -29,7 +29,9 @@
   
     <input type="email" name="" id="email" placeholder="email" bind:value={email}>
     <input type="password" name="" id="pass" placeholder="password" bind:value={pass}>
-    <button class="inputbox" on:click={signUp}>Sign up with email</button>
+    <button class="inputbox" on:click={signUp}>
+      <i class="fa-solid fa-envelope"></i> Sign up
+    </button>
   </div>
 </div>
 
