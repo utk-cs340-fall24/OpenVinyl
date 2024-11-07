@@ -289,7 +289,7 @@ function updateRecentSongs(track) {
       <p class="small-text">
         You need a Spotify Premium account to use the player.
       </p>
-      <button on:click={hidePremiumMessage} class="small-button">Dismiss</button>
+      <!-- <button on:click={hidePremiumMessage} class="small-button">Dismiss</button> -->
     </div>
   {/if}
 

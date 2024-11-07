@@ -149,6 +149,9 @@
     }
   }
 
+  let filterOption = 'all';
+  let sortOption = 'recent';
+
   onMount(async () => {
     setTimeout(() => {
       loadingPage = false;
@@ -182,6 +185,35 @@
       }
     }
   });
+
+  async function reloadPosts(){
+    posts = [];
+    loading = true;
+    try {
+      const response = await fetch(`/api/posts?page=1&filter=${filterOption}&sort=${sortOption}`);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const newPostsData = await response.json();
+
+      if (!newPostsData.success) {
+        throw new Error("Failed to load posts");
+      }
+
+      posts = [...posts, ...newPostsData.posts];
+      data.nextPage = newPostsData.nextPage;
+
+      hasMorePosts = newPostsData.nextPage !== null;
+
+      await fetchSongData(); // Fetch additional song data if necessary
+    } catch (error) {
+      console.error("Error loading next page:", error);
+    } finally {
+      loading = false;
+    }
+  }
 </script>
 
 <div class="loading-screen" style="display:{loadingPage ? 'block' : 'none'}">
@@ -196,6 +228,16 @@
 >
   <div class="posts-wrapper {isDragOver ? 'drag-over' : ''} {isSidebarHidden ? '' : 'sidebarHidden'}">
     <AddPost on:reviewSubmitted={handleReviewSubmitted} />
+    <div class="filter-dropdowns-wrapper">
+      <select bind:value={filterOption} on:change={reloadPosts}>
+        <option value="all">All</option>
+        <option value="following">Following</option>
+      </select>
+      <select bind:value={sortOption} on:change={reloadPosts}>
+        <option value="recent">Recent</option>
+        <option value="popular">Popular</option>
+      </select>
+    </div>
 
     {#each posts as post (post.id)}
       <Post
@@ -346,5 +388,31 @@
     width:100vw;
     height:150vh;
     background-color: #121212;
+  }
+
+  .filter-dropdowns-wrapper {
+    width: 70%;
+    margin-left:auto;
+    margin-right:auto;
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+    justify-content: left;
+    align-items: center;
+  }
+
+  .filter-dropdowns-wrapper select {
+    padding: 5px;
+    font-size: 16px;
+    border-radius: 5px;
+    background-color: #1d1f2500;
+    color: white;
+    border: none;
+    text-align: center;
+  }
+
+  .filter-dropdowns-wrapper select:focus {
+    outline: none;
+    border-color: #007bff;
   }
 </style>
