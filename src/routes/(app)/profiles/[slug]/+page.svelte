@@ -3,22 +3,36 @@
   import { supabase } from "$lib/supabaseClient";
   import { followUser, unfollowUser } from "$lib/utils.js"; 
   import { page } from '$app/stores'; 
-  import {user } from "$lib/stores"
-  let currentUser = null;
-    const unsubscribe = user.subscribe(value => {
-      currentUser = value;
-      // if (currentUser) {
-        // checkIfLiked();
-      // }
-    });
+  import { user } from "$lib/stores"
+  import Post from "$lib/post.svelte";
+  import { spotify } from "$lib/spotifyClient.js";
+  import { authenticateClientCredentials } from "$lib/utils";
   
-    onDestroy(() => {
-      unsubscribe();
-    });
+  let currentUser = null;
+  let unsubscribe;
   let profile = null;
   let isFriend = false;
   let slug = $page.params.slug; 
-  
+  let posts = [];
+  let songError = null;
+  let session_uuid;
+  let songData = {};
+  let loading = true;
+  let follower_count = 0;
+  let following_count = 0;
+
+  $: {
+    unsubscribe = user.subscribe(value => {
+      currentUser = value;
+      session_uuid = currentUser?.id;
+      console.log(session_uuid);
+    });
+  }
+
+  onDestroy(() => {
+    unsubscribe();
+  });
+
   onMount(async () => {
     const { data, error } = await supabase
       .from('profiles')
@@ -31,7 +45,7 @@
     } else {
       profile = data;
     }
-    console.log("current user", currentUser)
+    
     if (currentUser && currentUser.id) {
       const { data: followData, error: followError } = await supabase
         .from('follows')
@@ -43,6 +57,46 @@
         console.error('Error fetching follow data:', followError);
       } else if (followData && followData.length > 0) {
         isFriend = true;
+      }
+      posts = await getUserPosts(profile.id);
+    }
+    try {
+      await authenticateClientCredentials();
+      const songIds = posts.map((post) => post.song_id);
+  
+      const songResponse = await spotify.getTracks(songIds);
+  
+      if (songResponse && songResponse.tracks) {
+        songResponse.tracks.forEach((track) => {
+          if (track) {
+            songData[track.id] = {
+              title: track.name,
+              artist: track.artists.map((artist) => artist.name).join(", "),
+              image_url:
+                track.album.images[0]?.url || "https://placehold.co/300",
+            };
+          }
+        });
+      } else {
+        console.log("No tracks found for the given IDs.");
+      }
+    } catch (err) {
+      console.error("Error fetching song details:", err);
+      songError = err.message;
+    } finally {
+      loading = false;
+    }
+    if(profile && profile.id) {
+      const { data: followData, error: followError } = await supabase
+      .from('follows')
+      .select('*')
+      
+      if (followError) {
+        console.error('Error fetching follow data:', followError);
+      } else if (followData && followData.length > 0) {
+        console.log(followData);
+        follower_count = followData.filter((follow) => follow.followed_id === profile.id).length;
+        following_count = followData.filter((follow) => follow.owner_id === profile.id).length;
       }
     }
   });
@@ -74,6 +128,20 @@
       }
     }
   }
+
+  async function getUserPosts(userId) {
+    const { data, error } = await supabase
+      .from('posts')
+      .select('*')
+      .eq('profile_id', userId)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching user posts:', error);
+      return [];
+    }
+    return data;
+  }
 </script>
 
 {#if profile}
@@ -97,15 +165,15 @@
 
     <div class="profile-stats">
       <div class="stat">
-        <span class="stat-number">{profile.posts_count || 0}</span>
+        <span class="stat-number">{posts.length || 0}</span>
         <span class="stat-label">Posts</span>
       </div>
       <div class="stat">
-        <span class="stat-number">{profile.followers_count || 0}</span>
+        <span class="stat-number">{follower_count || 0}</span>
         <span class="stat-label">Followers</span>
       </div>
       <div class="stat">
-        <span class="stat-number">{profile.following_count || 0}</span>
+        <span class="stat-number">{following_count || 0}</span>
         <span class="stat-label">Following</span>
       </div>
     </div>
@@ -113,23 +181,22 @@
     <!-- Optional: Display User's Posts -->
     <div class="user-posts">
       <h2>Recent Posts</h2>
-      <!-- {#each profile.posts as post (post.id)}
+      {#each posts as post (post.id)}
         <Post
-          logged_in_user_uuid={currentUser?.id}
-          uuid={post.profile_id}
-          rating={post.rating}
-          desc={post.content}
-          song_id={post.song_id}
-          song_title={post.song?.title}
-          song_artist={post.song?.artist}
-          song_image={post.song?.image}
-          likes_cnt={post.likes_count}
-          post_id={post.id}
+        logged_in_user_uuid={session_uuid}
+        uuid={post.profile_id}
+        rating={post.rating}
+        desc={post.content}
+        song_id={post.song_id}
+        song_title={songData[post.song_id]?.title}
+        song_artist={songData[post.song_id]?.artist}
+        song_image={songData[post.song_id]?.image_url}
+        post_id={post.id}
         />
       {/each}
-      {#if profile.posts.length === 0}
+      {#if posts.length === 0}
         <p class="no-posts">This user hasn't made any posts yet.</p>
-      {/if} -->
+      {/if}
     </div>
   </div>
 {:else}
@@ -151,7 +218,7 @@
   }
 
   .profile-container {
-    max-width: 1000px;
+    width: 80%;
     margin: 40px auto;
     padding: 20px;
     background-color: #1d1f25;
