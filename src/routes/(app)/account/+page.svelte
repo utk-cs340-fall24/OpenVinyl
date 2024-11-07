@@ -180,6 +180,10 @@
   async function logout() {
     const { error } = await supabase.auth.signOut();
   }
+
+  async function fileClick() {
+    document.getElementById("fupload").click();
+  }
 </script>
 
 
@@ -195,6 +199,7 @@
       <img class="img-preview" src={avatar_url || 'https://placehold.co/150'} alt={`user's avatar`} id="">
       <div class="overlay">
         <input type="file" name="" id="fupload" on:change={fileUpload}>
+        <button on:click={fileClick}>Choose File</button>
       </div>
     </div>
     
@@ -439,10 +444,20 @@
     position: absolute;
     top: 50%;
     left: 50%;
+    opacity: 0;
     -webkit-transform: translate(-50%, -50%);
     -ms-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
     text-align: center;
+  }
+
+  .image-container .overlay button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
   }
 
   @media (max-width: 480px) {

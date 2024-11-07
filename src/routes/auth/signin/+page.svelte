@@ -36,6 +36,11 @@
     <div class="emailbuttons">
       <button class="inputbox" on:click={signIn}>Sign In</button>
     </div>
+    <a href="\auth\signup">
+      <button class="email oauth-button">
+        <i class="fa-solid fa-envelope"></i> Sign up with email
+      </button>
+    </a>
     <hr class="hr-text" data-content="Or continue with">
     <div class="oauthbuttons">
       <button class="google oauth-button" on:click={signInWithGoogle}>
@@ -44,11 +49,6 @@
       <button class="spotify oauth-button" on:click={signInWithSpotify}>
         <i class="fa-brands fa-spotify"></i> Spotify
       </button>
-      <a href="\auth\signup">
-        <button class="email oauth-button">
-          <i class="fa-solid fa-envelope"></i> Email
-        </button>
-      </a>
     </div>
   </div>
 </div>
@@ -120,7 +120,7 @@
 
   .login-window .emailbuttons .inputbox {
     width: 100%;
-    margin-top: 8px;
+    margin: 8px 0px;
     height: 2.5em;
     font-size: 18px;
     align-items: center;
@@ -155,7 +155,8 @@
   }
 
   .login-window .oauthbuttons button {
-    width: 32%;
+    width: 49%;
+    border-radius: 8px;
     height: 3em;
   }
 
@@ -188,7 +189,11 @@
     border: none;
     color: #b9b9b9;
     padding: 5px 10px;
-    border-radius: 5px;
+    border-radius: 8px;
+    margin: 8px 0;
+    width: 100%;
+    height: 2.5em;
+    font-size: 18px;
     cursor: pointer;
   }
 
