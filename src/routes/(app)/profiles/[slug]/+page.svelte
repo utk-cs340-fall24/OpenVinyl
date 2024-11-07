@@ -7,6 +7,7 @@
   import Post from "$lib/post.svelte";
   import { spotify } from "$lib/spotifyClient.js";
   import { authenticateClientCredentials } from "$lib/utils";
+  import { sidebarHidden } from "$lib/stores";
   
   let currentUser = null;
   let unsubscribe;
@@ -145,20 +146,20 @@
 </script>
 
 {#if profile}
-  <div class="profile-container">
+  <div class="profile-container { $sidebarHidden ? '' : 'sidebarHidden' }">
     <div class="profile-header">
       <img class="profile-avatar" src={profile.avatar_url || 'https://placehold.co/150'} alt={`${profile.username}'s avatar`} />
       <div class="profile-info">
         <h1 class="profile-username">{profile.username}</h1>
         <p class="profile-bio">{profile.bio || 'No bio available.'}</p>
         <div class="profile-actions">
-          <!-- {#if profile.id !== $user?.id} Prevent users from following themselves -->
+          {#if profile.id !== $user?.id} Prevent users from following themselves
             {#if isFriend}
               <button class="unfollow-button" on:click={unfollow}>Unfollow</button>
             {:else}
               <button class="follow-button" on:click={follow}>Follow</button>
             {/if}
-          <!-- {/if} -->
+          {/if}
         </div>
       </div>
     </div>
@@ -211,20 +212,21 @@
     box-sizing: border-box;
   }
 
-  body {
-    background-color: #121212; /* Dark background consistent with main page */
-    color: #f3f1f1;
-    font-family: 'Concert One', sans-serif;
-  }
-
   .profile-container {
-    width: 80%;
+    width: 70%;
     margin: 40px auto;
     padding: 20px;
     background-color: #1d1f25;
     color: #f3f1f1;
     border: 1px solid #26282c;
     border-radius: 8px;
+    transition: width 0.5s ease-in-out, transform 0.5s ease-in-out;
+    transform: translate(15%, 0); 
+  }
+
+  .profile-container.sidebarHidden {
+    width: 80%; 
+    transform: translate(0, 0); 
   }
 
   .profile-header {
