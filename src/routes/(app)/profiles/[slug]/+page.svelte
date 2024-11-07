@@ -160,6 +160,12 @@
               <button class="follow-button" on:click={follow}>Follow</button>
             {/if}
           {/if}
+
+          {#if profile.id == $user?.id} 
+            <a href="/account">
+              <button class="settings">Settings</button>
+            </a>
+          {/if}
         </div>
       </div>
     </div>
@@ -265,6 +271,7 @@
     gap: 10px;
   }
 
+  .settings,
   .follow-button,
   .unfollow-button {
     padding: 10px 20px;
@@ -275,6 +282,7 @@
     transition: background-color 0.3s;
   }
 
+  .settings,
   .follow-button {
     background-color: #007bff;
     color: #ffffff;
