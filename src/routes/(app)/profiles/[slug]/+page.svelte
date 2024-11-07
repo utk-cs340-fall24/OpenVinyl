@@ -151,9 +151,9 @@
       <img class="profile-avatar" src={profile.avatar_url || 'https://placehold.co/150'} alt={`${profile.username}'s avatar`} />
       <div class="profile-info">
         <h1 class="profile-username">{profile.username}</h1>
-        <p class="profile-bio">{profile.bio || 'No bio available.'}</p>
+        <!-- <p class="profile-bio">{profile.bio || 'No bio available.'}</p> -->
         <div class="profile-actions">
-          {#if profile.id !== $user?.id}
+          {#if profile.id !== $user?.id} <!-- Prevent users from following themselves -->
             {#if isFriend}
               <button class="unfollow-button" on:click={unfollow}>Unfollow</button>
             {:else}
