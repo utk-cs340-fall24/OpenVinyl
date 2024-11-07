@@ -124,7 +124,7 @@
 
     loading = true;
     try {
-      const response = await fetch(`/api/posts?page=${data.nextPage}`);
+      const response = await fetch(`/api/posts?page=${data.nextPage}&filter=${filterOption}&sort=${sortOption}`);
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
