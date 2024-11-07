@@ -82,6 +82,7 @@
         if (!user) return;
 
         const success = await addVinyls(user.id, amount);
+        runVinylCount += amount;
         if (success) {
             message = `You earned ${amount} Vinyl${amount > 1 ? 's' : ''}!`;
             // Optionally, show a toast or animation
