@@ -444,6 +444,8 @@ nav {
 
   .hamburger {
     display: block;
+    width: 20px;
+    height: 20px;
   }
 
   .hamburger .line {
@@ -455,7 +457,7 @@ nav {
   }
 
   .hamburger.is-active .line:nth-child(2) {
-    opacity: 0;
+    opacity: 1;
   }
 
   .hamburger.is-active .line:nth-child(1) {
