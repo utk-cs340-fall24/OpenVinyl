@@ -432,6 +432,12 @@
               <div class="game-title">Flappy Vinyl</div>
           </a>
       </div>
+      <div class="game-card">
+        <a href="/opensnake">
+            <img src="/flappyvinyl.png" alt="Open Snake Game" class="game-image" />
+            <div class="game-title">Open Snake</div>
+        </a>
+    </div>
       <!-- Add more game cards here when you have more games -->
   </div>
 </div>
