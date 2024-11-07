@@ -121,8 +121,8 @@
     searchBarOpen = false;
   }
 
-  function updateRating(starID){
-    rating = (starID+1)*2;
+  function updateRating(barID){
+    rating = (barID+1);
     // console.log(rating);
   }
 
@@ -176,6 +176,74 @@
     } catch (err) {
       console.error("Error creating post:", err);
       errorMessage = "An error occurred while submitting your review.";
+    }
+  }
+
+  function getBarColor(index, filled) {
+    const colors = [
+      "#023E00", // muted green
+      "#154200",
+      "#274500",
+      "#3A4900",
+      "#4C4C00", // muted yellow
+      "#4C3D00",
+      "#4B2E00",
+      "#4B1E00",
+      "#4A0F00",
+      "#4A0000"  // muted red
+    ];
+    const activeColors = [
+      "#0AFF00", // bright green
+      "#47FF00",
+      "#85FF00",
+      "#C2FF00",
+      "#FFFF00", // bright yellow
+      "#FFCC00",
+      "#FF9900",
+      "#FF6600",
+      "#FF3300",
+      "#FF0000"  // bright red
+    ];
+    return filled ? activeColors[index] : colors[index];
+  }
+
+  function getHoverColor(index, filled) {
+    const hoverColors = [
+      "#069F00", // slightly darker muted green
+      "#34A700",
+      "#63AF00",
+      "#91B700",
+      "#BFBF00", // slightly darker muted yellow
+      "#B79900",
+      "#AF7300",
+      "#A64C00",
+      "#9E2600",
+      "#960000"  // slightly darker muted red
+    ];
+    const activeHoverColors = [
+      "#0AFF00", // bright green
+      "#47FF00",
+      "#85FF00",
+      "#C2FF00",
+      "#FFFF00", // bright yellow
+      "#FFCC00",
+      "#FF9900",
+      "#FF6600",
+      "#FF3300",
+      "#FF0000"  // bright red
+    ];
+    return filled ? activeHoverColors[index] : hoverColors[index];
+  }
+
+  function handleMouseOver(index) {
+    for (let i = 0; i <= index; i++) {
+      document.getElementById(`bar-${i}`).style.backgroundColor = getHoverColor(i, rating > i);
+    }
+  }
+
+  function handleMouseOut(index) {
+    for (let i = 0; i <= index; i++) {
+      document.getElementById(`bar-${i}`).style.backgroundColor = getBarColor(i, rating > i);
     }
   }
 </script>
@@ -244,15 +312,9 @@
 
           <div class="rating-wrapper">
             <label for="rating">Rating:</label>
-            <div class="star-rating">
-              {#each Array(5) as _, i}
-                <button class="star-button" on:click={() => updateRating(i)} class:filled={rating > (i*2)+1}>
-                  {#if rating > i*2}
-                    ★
-                  {:else}
-                    ☆
-                  {/if}
-                </button>
+            <div class="bar-rating">
+              {#each Array(10) as _, i}
+                <span id={`bar-${i}`} class="bar" on:click={() => updateRating(i)} class:filled={rating > i} style="background-color: {getBarColor(i, rating > i)};" on:mouseover={() => handleMouseOver(i)} on:mouseout={() => handleMouseOut(i)}></span>
               {/each}
             </div>
           </div>
@@ -484,24 +546,27 @@
     border-radius: 5px;
   }
 
-  .star-rating {
+  .bar-rating {
     display: flex;
     gap: 5px;
+    height: 35px;
   }
 
-  .star-rating button{
-    background-color: #00000000;
-    border: none;
-  }
-
-  .star-button {
-    font-size: 1.9rem;
+  .bar {
+    display: inline-block;
+    width: 15px;
+    height: 35px;
+    background-color: transparent;
     cursor: pointer;
-    color:#ccc;
+    transition: background-color 0.2s;
   }
 
-  .filled {
-    color: #ffcc00;
+  .bar.filled {
+    background-color: currentColor;
+  }
+
+  .bar:hover {
+    background-color: var(--hover-color);
   }
 
   .description-wrapper textarea {

@@ -124,7 +124,7 @@
 
     loading = true;
     try {
-      const response = await fetch(`/api/posts?page=1&filter=${filterOption}&sort=${sortOption}&user_id=${session_uuid}`);
+      const response = await fetch(`/api/posts?page=${data.nextPage}&filter=${filterOption}&sort=${sortOption}&user_id=${session_uuid}`);
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -236,6 +236,8 @@
       <select bind:value={sortOption} on:change={reloadPosts}>
         <option value="recent">Recent</option>
         <option value="popular">Popular</option>
+        <option value="asc">Rating (Descending)</option>
+        <option value="desc">Rating (Ascending)</option>
       </select>
     </div>
 
@@ -251,6 +253,7 @@
         song_image={songData[post.song_id]?.image}
         likes_cnt={post.likes_count}
         post_id={post.id}
+        created_at={post.created_at}
       ></Post>
     {/each}
 

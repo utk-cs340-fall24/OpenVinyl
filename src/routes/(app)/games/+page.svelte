@@ -433,9 +433,9 @@
           </a>
       </div>
       <div class="game-card">
-        <a href="/opensnake">
-            <img src="/flappyvinyl.png" alt="Open Snake Game" class="game-image" />
-            <div class="game-title">Open Snake</div>
+        <a href="/vinylsweeper">
+            <img src="/vinylsweeper.png" alt="Vinyl Sweeper Game" class="game-image" />
+            <div class="game-title">Vinylsweeper</div>
         </a>
     </div>
       <!-- Add more game cards here when you have more games -->

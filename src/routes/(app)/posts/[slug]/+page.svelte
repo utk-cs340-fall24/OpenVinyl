@@ -334,6 +334,33 @@
       userVote = "downvote";
     }
   }
+  function getBarColor(index, filled) {
+    const colors = [
+      "#023E0000", // muted green
+      "#15420000",
+      "#27450000",
+      "#3A490000",
+      "#4C4C0000", // muted yellow
+      "#4C3D0000",
+      "#4B2E0000",
+      "#4B1E0000",
+      "#4A0F0000",
+      "#4A000000"  // muted red
+    ];
+    const activeColors = [
+      "#0AFF00", // bright green
+      "#47FF00",
+      "#85FF00",
+      "#C2FF00",
+      "#FFFF00", // bright yellow
+      "#FFCC00",
+      "#FF9900",
+      "#FF6600",
+      "#FF3300",
+      "#FF0000"  // bright red
+    ];
+    return filled ? activeColors[index] : colors[index];
+  }
 
   async function updateVote(voteId, isUpvote, wasUpvote) {
     const { data, error } = await supabase
@@ -408,7 +435,11 @@
     </div>
   
     <div class="post-rating">
-      <p>{@html renderStars(post.rating)}</p>
+      <div class="bar-rating" style="width: 100%;">
+        {#each Array(10) as _, i}
+          <span id={`bar-${i}`} class="bar" style="background-color: {getBarColor(i, post.rating > i)};"></span>
+        {/each}
+      </div>
     </div>
   
     <div class="post-content-section">
@@ -476,6 +507,18 @@
     align-items: start;
     margin-top: 10px;
     justify-content: start;
+  }
+  .bar-rating {
+    display: flex;
+    gap: 7px;
+    height: 35px;
+  }
+
+  .bar-rating .bar {
+    display: inline-block;
+    width: 14px;
+    height: 34px;
+    background-color: transparent;
   }
 
   .vote-button {
