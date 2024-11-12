@@ -348,8 +348,11 @@
 
   .bar-rating {
     display: flex;
+    align-items: center;
+    justify-content: center;
     gap: 4px;
     height: 35px;
+    margin: 0px 0;
   }
 
   .bar-rating .bar {
@@ -377,12 +380,19 @@
   }
 
   .vote-button:hover {
-    color: #1db954;
+    color: #0AFF00;
   }
 
+
   .vote-button.selected {
-    color: #1db954;
+    color: #0AFF00;
     transform: translateY(2px);
+  }
+  .downvote-button.selected {
+    color: #FF0000;
+  }
+  .downvote-button:hover{
+    color: #FF0000;
   }
 
   .net-vote-count {
@@ -404,7 +414,7 @@
     background-color: #1d1f25;
     width: 70%;
     margin: 20px auto;
-    padding: 5px;
+    padding: 8px;
     color: #f3f1f1;
     border: 1px solid #26282c;
     
@@ -552,6 +562,12 @@
     flex-direction: column;
     align-items: center;
     margin-top: 10px;
+    padding: 0px 6px;
+    background-color: #323232;
+    border-radius: 5px;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   /* .like-section {
