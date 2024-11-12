@@ -1,6 +1,6 @@
 <script>
   import { onMount, onDestroy } from "svelte";
-  import { selectedSong, sidebarHidden } from "$lib/stores";
+  import {  sidebarHidden } from "$lib/stores";
   import { getValidSpotifyAccessToken } from "$lib/utils";
   import { user } from "$lib/stores";
   import { derived } from 'svelte/store';
@@ -249,21 +249,7 @@ function updateRecentSongs(track) {
     }
   };
 
-  function handleDragStart(event, song) {
-    console.log(song);
-    event.dataTransfer.setData("application/json", JSON.stringify(song));
-    event.dataTransfer.effectAllowed = "copy";
-  }
 
-  function handleDrop(event) {
-    event.preventDefault();
-    const data = event.dataTransfer.getData("application/json");
-    if (data) {
-      const song = JSON.parse(data);
-      updateRecentSongs(song);
-      selectedSong.set(song); 
-    }
-  }
 
   function hidePremiumMessage() {
     showPremiumMessage = false;
@@ -279,7 +265,7 @@ function updateRecentSongs(track) {
 </head>
 <!-- svelte-ignore missing-declaration -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<div class="sidebar {pinnedSidebar ? 'pinned' : ''} {isSidebarHidden ? '' : 'sidebarHidden'}" on:drop={handleDrop} on:dragover|preventDefault>
+<div class="sidebar {pinnedSidebar ? 'pinned' : ''} {isSidebarHidden ? '' : 'sidebarHidden'}">
   <div class="button-wrapper">
     <button class="pin-button" on:click={() => pinnedSidebar = !pinnedSidebar}><i class="fa fa-thumb-tack" aria-hidden="true"></i></button>
     <button class="close-button {isSidebarHidden ? '' : 'rotated'}" on:click={toggleSidebar}><i class="fa-solid fa-chevron-left"></i></button>
@@ -339,8 +325,6 @@ function updateRecentSongs(track) {
         {#each recentSongs as song (song.id + '-' + song.title)}
           <div
             class="recent-song"
-            draggable="true"
-            on:dragstart={(e) => handleDragStart(e, song)}
           >
             <img src={song.cover} alt="Album Cover" class="recent-song-image" />
             <div class="recent-song-info">
@@ -547,11 +531,11 @@ function updateRecentSongs(track) {
     padding: 5px;
     border-radius: 5px;
     transition: background-color 0.2s;
-    cursor: grab;
+    /* cursor: grab; */
   }
 
   .recent-song:active {
-    cursor: grabbing;
+    /* cursor: grabbing; */
   }
 
   .recent-song:hover {

@@ -37,8 +37,11 @@
         if (data) {
           // Update login button with username
           const loginButton = document.getElementById("login-button");
+          const loginButtonMobile = document.getElementById("login-mobile");
           loginButton.innerHTML = data.username;
+          loginButtonMobile.innerHTML = "Account Settings";
           loginButton.href = "/account";
+          loginButtonMobile.href = "/account";
 
           avatar_url = data.avatar_url;
          
@@ -171,11 +174,12 @@
     Games
     </a>
     <a 
-      href="/account"
+      href="/auth/signin"
       class="nav-link account-link" 
+      id="login-mobile"
       class:active={$page.url.pathname.startsWith("/account")}
     >
-    Account Settings
+    Login
     </a>
   </div>
 </div>

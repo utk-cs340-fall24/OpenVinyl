@@ -21,8 +21,16 @@
         const { data, error } = await supabase.from("profiles").select("username, first_name, last_name, avatar_url, spotify_access_token").eq("id", user.id).single();
         if (data) {
           document.getElementById("username").placeholder = data.username;
-          document.getElementById("fname").placeholder = data.first_name;
-          document.getElementById("lname").placeholder = data.last_name;
+          if (data.first_name == null) {
+            document.getElementById("fname").placeholder = "No first name";
+          } else {
+            document.getElementById("fname").placeholder = data.first_name;
+          }
+          if (data.last_name == null) {
+            document.getElementById("lname").placeholder = "No last name";
+          } else {
+            document.getElementById("lname").placeholder = data.last_name;
+          }
           avatar_url = data.avatar_url;
           if (data.spotify_access_token != null) {
             document.getElementById("updatespotify").innerHTML = "<i class=\"fa-solid fa-link-slash\"></i> Unlink";
