@@ -167,12 +167,9 @@
         }
 
         .top-songs {
-            position: relative;
-            left: 50vw;
-            top: 0%;
-            transform: translate(-50%, 0%);
-            padding-bottom: 50px;
-            padding-top: 50px;
+            display: flex;
+            justify-content: center;
+            
         }
     }
 

@@ -126,6 +126,7 @@
         font-size: 35px;
         font-weight: bold;
         padding-bottom: 10px;
+        padding-top: 10px;
     }
 
     .header-divider {

@@ -261,9 +261,15 @@
     @media (max-width: 1300px) {
         .wrapper {
             width: 80vw;
-            margin: 0px;
+            margin-left: 17vw;
         }
 
+    }
+    @media (max-width: 768px) {
+        .wrapper {
+            width: 90vw;
+            margin-left: 17vw;
+        }
     }
 
 </style>
