@@ -202,6 +202,7 @@
         song_artist={songData[post.song_id]?.artist}
         song_image={songData[post.song_id]?.image_url}
         post_id={post.id}
+        created_at={post.created_at}
         />
       {/each}
       {#if posts.length === 0}
