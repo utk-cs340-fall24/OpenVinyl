@@ -3,7 +3,7 @@
     import { supabase } from '$lib/supabaseClient.js';
     import { spotify } from '$lib/spotifyClient';
     import Post from "$lib/post.svelte";
-    import { getSongs, authenticateClientCredentials } from "$lib/utils.js";
+    import { authenticateClientCredentials } from "$lib/utils.js";
     let user;
     let songData = {};
     let postData = [];
@@ -50,6 +50,9 @@
         }
 
         // Return the liked posts data
+        // if (data.length == 0) {
+
+        // }
         return data;
     }
 
@@ -74,23 +77,31 @@
 
 
 <div class="page-wrapper">
-    <span class="header-text">Liked Posts</span>
-    <div class="header-divider"></div>
-    {#each postData as post}
-        <Post
-            logged_in_user_uuid={user}
-            uuid={post.profile_id}
-            rating={post.rating}
-            desc={post.content}
-            song_id={post.song_id}
-            song_title={songData[post.song_id]?.title}
-            song_artist={songData[post.song_id]?.artist}
-            song_image={songData[post.song_id]?.image_url}
-            likes_cnt={post.likes_count}
-            post_id={post.id}
-        ></Post>
-    {/each}
-    
+    {#if postData.length > 0}
+        <!-- {#if postData[0]} -->
+            <span class="header-text">Liked Posts</span>
+            <div class="header-divider"></div>
+            {#each postData as post}
+                <Post
+                logged_in_user_uuid={user}
+                uuid={post.profile_id}
+                rating={post.rating}
+                desc={post.content}
+                song_id={post.song_id}
+                song_title={songData[post.song_id]?.title}
+                song_artist={songData[post.song_id]?.artist}
+                song_image={songData[post.song_id]?.image_url}
+                likes_cnt={post.likes_count}
+                post_id={post.id}
+                ></Post>
+            {/each}
+            <div class="disliked-posts-divider"></div>
+            <span class="header-text">Disliked Posts</span>
+            <div class="header-divider"></div>
+        <!-- {:else}
+            <span class="header-text">No posts liked</span>
+        {/if} -->
+    {/if}
 
 </div>
 
@@ -122,6 +133,14 @@
         background-color: #FFFFFF;
         height: 2px;
         margin: 0 auto;
+    }
+
+    .disliked-posts-divider {
+        width: 250px;
+        background-color: #FFFFFF;
+        height: 2px;
+        margin: 0 auto;
+        margin-top: 20px;
     }
 
 

@@ -165,6 +165,9 @@
             <a href="/account">
               <button class="settings">Settings</button>
             </a>
+            <a href="/liked-posts">
+              <button class="settings">View Liked Posts</button>
+            </a>
           {/if}
         </div>
       </div>
