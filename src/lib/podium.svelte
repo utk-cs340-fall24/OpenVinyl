@@ -42,16 +42,18 @@
         <div class="leaderboard-header">
             <span></span>
             <span>User</span>
-            <span>Likes</span>
-            <span>Posts</span>
+            <span class="user-info">Vinyls</span>
+            <span class="user-info">Likes</span>
+            <span class="user-info">Posts</span>
         </div>
         <div class="leaderboard-divider"></div>
         {#each data as user, index}
         <div class="user">
             <img class="small-profile-pic" src={user.avatar_url} alt="profile-pic">
             <span>{user.username}</span>
-            <span>{user.total_likes}</span>
-            <span>{user.post_count}</span>
+            <span class="user-info">{user.vinyls}</span>
+            <span class="user-info">{user.total_likes}</span>
+            <span class="user-info">{user.post_count}</span>
         </div>
         {#if index < data.length - 1}
             <div class="user-divider"></div>
@@ -70,6 +72,7 @@
         flex-direction: column;
         align-items: center;
         padding-bottom: 20px;
+        width: 768px;
     }
 
     .header {
@@ -171,7 +174,7 @@
 
     .leaderboard-header, .user {
         display: grid;
-        grid-template-columns: 1fr 11fr 1fr 1fr;
+        grid-template-columns: 1fr 10fr 1fr 1fr 1fr;
         gap: 1rem;
         padding-left:30px;
         padding-right:30px;
@@ -207,6 +210,10 @@
         width: 30px;
         height: 30px;
         border-radius: 50%;
+    }
+
+    .user-info {
+        text-align: center;
     }
 
 </style>

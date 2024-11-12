@@ -19,7 +19,7 @@
         topUserData = await fetchMultipleUsers(topIds);
         topUserData = topUserData.map((profile, index) => ({
             ...profile,
-            total_likes: topUsers[index].total_likes
+            total_likes: topUsers[index].total_likes,
         }));
         postCounts = await fetchUserPostCounts(topIds);
         topUserData = topUserData.map((profile, index) => ({
@@ -27,6 +27,7 @@
             post_count: postCounts[index].post_count
         }));
     });
+
     
     async function fetchTopUsers() {
         const { data, error } = await supabase.rpc("get_top_users_likes");
@@ -38,13 +39,13 @@
             total_likes: item.total_likes
         }));
         return topUsers;
-        }
+    }
     }
 
     async function fetchMultipleUsers(userIds) {
         const { data, error } = await supabase
         .from('profiles')
-        .select('id, username, avatar_url')
+        .select('id, username, avatar_url, vinyls')
         .in('id', userIds);
         
         if (error) {
@@ -71,7 +72,9 @@
                 post_count: dataLookup[userId] || 0  // Default to 0 if user_id is not in the data
             }));
         }
+
     }
+
 </script>
 
 <div class="layout">
@@ -111,7 +114,7 @@
         top: 50%;
         left: 90vw;
         transform: translate(-50%, -50%);
-        padding-right: 12vw;
+        padding-right: 15vw;
     }
 
     .loading-wrapper {
@@ -144,6 +147,29 @@
             left: 50vw;
             top: 0%;
             padding-right: auto;
+            transform: translate(-50%, 0%);
+            padding-bottom: 50px;
+            padding-top: 50px;
+        }
+    }
+
+    @media (max-width: 768px) { /* may be redundant */
+        .layout {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .podium {
+            display: flex;
+            justify-content: center;
+            padding-top: 0vh;
+        }
+
+        .top-songs {
+            position: relative;
+            left: 50vw;
+            top: 0%;
             transform: translate(-50%, 0%);
             padding-bottom: 50px;
             padding-top: 50px;
