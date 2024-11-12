@@ -8,6 +8,7 @@
 
 
   let user = null;
+  let username = null;
   let showSpotifyButton = true; // Default state to show the Spotify button
   let avatar_url = '';
   let vinyls = 0;
@@ -39,9 +40,10 @@
           const loginButton = document.getElementById("login-button");
           const loginButtonMobile = document.getElementById("login-mobile");
           loginButton.innerHTML = data.username;
-          loginButtonMobile.innerHTML = "Account Settings";
-          loginButton.href = "/account";
-          loginButtonMobile.href = "/account";
+          loginButtonMobile.innerHTML = "Profile";
+          loginButton.href = "/profiles/" + data.username;
+          loginButtonMobile.href = "/profiles/" + data.username;
+          username = data.username;
 
           avatar_url = data.avatar_url;
          
@@ -126,8 +128,10 @@
       <div class="login-wrapper">
         <a class="login-href" href="/auth/signin" id="login-button">Login</a>
         <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-        <img style="display:{user ? 'block' : 'none'}" src={avatar_url || 'https://placehold.co/150'} class="avatar" alt="" on:click={() => window.location.href = `/account`}>
-
+        <a href="/profiles/{username}">
+          <img style="display:{user ? 'block' : 'none'}" src={avatar_url || 'https://placehold.co/150'} class="avatar" alt="">
+        </a>
+        
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <!-- svelte-ignore a11y-no-static-element-interactions -->
         <div class="hamburger {active === 1 ? "is-active" : ""}" id="hamburger" on:click={hamburgerMenu}>
