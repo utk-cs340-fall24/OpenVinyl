@@ -4,12 +4,10 @@
   import { onMount } from 'svelte';
 
   let fname = '';
-  let fnametracker = 0;
   let lname = '';
-  let lnametracker = 0;
   let username = '';
   let avatar_url = '';
-  let usernametracker = 0;
+  let editTracker = 0;
   let spotifytracker = 0;
 
   onMount(async () => {
@@ -49,30 +47,30 @@
     }
   });
 
-  async function editFirstName() {
-    if (fnametracker == 0) {
-      fnametracker = 1;
+  // async function editFirstName() {
+  //   if (fnametracker == 0) {
+  //     fnametracker = 1;
 
-      document.getElementById("fname-wrapper").classList.toggle("not-active");
-      document.getElementById("fname").style.pointerEvents = "auto";
-      document.getElementById("updatefname").innerHTML = "Submit";
-    } else if (fnametracker == 1) {
-      const user = await supabase.auth.getUser();
+  //     document.getElementById("fname-wrapper").classList.toggle("not-active");
+  //     document.getElementById("fname").style.pointerEvents = "auto";
+  //     document.getElementById("updatefname").innerHTML = "Submit";
+  //   } else if (fnametracker == 1) {
+  //     const user = await supabase.auth.getUser();
 
-      try {
-        const {data, error} = await updateFirstName(user.data.user.id, fname);
+  //     try {
+  //       const {data, error} = await updateFirstName(user.data.user.id, fname);
 
-        fnametracker = 0;
+  //       fnametracker = 0;
 
-        document.getElementById("fname-wrapper").classList.toggle("not-active");
-        document.getElementById("fname").style.pointerEvents = "none";
-        document.getElementById("updatefname").innerHTML = "Edit";
-      } catch (error) {
-        console.error("Error updating first name:", error);
-        document.getElementById('fname-alert').innerHTML = "<i class=\"fa-solid fa-xmark\"></i>Error updating first name. Please try again";
-      }
-    }
-  }
+  //       document.getElementById("fname-wrapper").classList.toggle("not-active");
+  //       document.getElementById("fname").style.pointerEvents = "none";
+  //       document.getElementById("updatefname").innerHTML = "Edit";
+  //     } catch (error) {
+  //       console.error("Error updating first name:", error);
+  //       document.getElementById('fname-alert').innerHTML = "<i class=\"fa-solid fa-xmark\"></i>Error updating first name. Please try again";
+  //     }
+  //   }
+  // }
 
   async function manageSpotify() {
     if (!spotifytracker) {
@@ -90,49 +88,95 @@
     return;
   }
 
-  async function editLastName() {
-    if (lnametracker == 0) {
-      lnametracker = 1;
+  // async function editLastName() {
+  //   if (lnametracker == 0) {
+  //     lnametracker = 1;
 
-      document.getElementById("lname-wrapper").classList.toggle("not-active");
-      document.getElementById("lname").style.pointerEvents = "auto";
-      document.getElementById("updatelname").innerHTML = "Submit";
-    } else if (lnametracker == 1) {
+  //     document.getElementById("lname-wrapper").classList.toggle("not-active");
+  //     document.getElementById("lname").style.pointerEvents = "auto";
+  //     document.getElementById("updatelname").innerHTML = "Submit";
+  //   } else if (lnametracker == 1) {
+  //     const user = await supabase.auth.getUser();
+
+  //     try {
+  //       const {data, error} = await updateLastName(user.data.user.id, lname);
+
+  //       lnametracker = 0;
+
+  //       document.getElementById("lname-wrapper").classList.toggle("not-active");
+  //       document.getElementById("lname").style.pointerEvents = "none";
+  //       document.getElementById("updatelname").innerHTML = "Edit";
+  //     } catch (error) {
+  //       console.error("Error updating last name:", error);
+  //       document.getElementById('lname-alert').innerHTML = "<i class=\"fa-solid fa-xmark\"></i>Error updating last name. Please try again";
+  //     }
+  //   }
+  // }
+
+  
+  // async function editUsername() {
+  //   if (usernametracker == 0) {
+  //     usernametracker = 1;
+
+  //     document.getElementById("uname-wrapper").classList.toggle("not-active");
+  //     document.getElementById("username").style.pointerEvents = "auto";
+  //     document.getElementById("updateuname").innerHTML = "Submit";
+  //   } else if (usernametracker == 1) {
+  //     const user = await supabase.auth.getUser();
+
+  //     try {
+  //       const {data, error} = await updateUsername(user.data.user.id, username);
+
+  //       usernametracker = 0;
+
+  //       document.getElementById("uname-wrapper").classList.toggle("not-active");
+  //       document.getElementById("username").style.pointerEvents = "none";
+  //       document.getElementById("updateuname").innerHTML = "Edit";
+  //     } catch (error) {
+  //       console.error("Error updating user name:", error);
+  //       document.getElementById('username-alert').innerHTML = "<i class=\"fa-solid fa-xmark\"></i>Error updating user name. Please try again";
+  //     }
+  //   }
+  // }
+
+  async function editInfo() {
+    if (editTracker == 0) {
+      editTracker = 1;
+
+      document.getElementById("input-wrapper").classList.toggle("not-active");
+      document.getElementById("updateinfo").innerHTML = "Save Changes";
+      document.getElementById("fname").style.pointerEvents = "all";
+      document.getElementById("lname").style.pointerEvents = "all";
+      document.getElementById("username").style.pointerEvents = "all";
+    } else if (editTracker == 1) {
       const user = await supabase.auth.getUser();
 
       try {
-        const {data, error} = await updateLastName(user.data.user.id, lname);
+        // await updateLastName(user.data.user.id, lname);
 
-        lnametracker = 0;
+        editTracker = 0;
 
-        document.getElementById("lname-wrapper").classList.toggle("not-active");
+        if (fname != "") {
+          await updateFirstName(user.data.user.id, fname);
+          document.getElementById("fname").placeholder = fname;
+          fname = "";
+        }
+        if (lname != "") {
+          await updateLastName(user.data.user.id, lname);
+          document.getElementById("lname").placeholder = lname;
+          lname = "";
+        }
+        if (username != "") {
+          await updateUsername(user.data.user.id, username);
+          document.getElementById("username").placeholder = username;
+          username = "";
+        }
+
+        document.getElementById("input-wrapper").classList.toggle("not-active");
+        document.getElementById("updateinfo").innerHTML = "Edit";
+        document.getElementById("fname").style.pointerEvents = "none";
         document.getElementById("lname").style.pointerEvents = "none";
-        document.getElementById("updatelname").innerHTML = "Edit";
-      } catch (error) {
-        console.error("Error updating last name:", error);
-        document.getElementById('lname-alert').innerHTML = "<i class=\"fa-solid fa-xmark\"></i>Error updating last name. Please try again";
-      }
-    }
-  }
-
-  async function editUsername() {
-    if (usernametracker == 0) {
-      usernametracker = 1;
-
-      document.getElementById("uname-wrapper").classList.toggle("not-active");
-      document.getElementById("username").style.pointerEvents = "auto";
-      document.getElementById("updateuname").innerHTML = "Submit";
-    } else if (usernametracker == 1) {
-      const user = await supabase.auth.getUser();
-
-      try {
-        const {data, error} = await updateUsername(user.data.user.id, username);
-
-        usernametracker = 0;
-
-        document.getElementById("uname-wrapper").classList.toggle("not-active");
         document.getElementById("username").style.pointerEvents = "none";
-        document.getElementById("updateuname").innerHTML = "Edit";
       } catch (error) {
         console.error("Error updating user name:", error);
         document.getElementById('username-alert').innerHTML = "<i class=\"fa-solid fa-xmark\"></i>Error updating user name. Please try again";
@@ -201,30 +245,31 @@
 
     <h1>Account Settings</h1>
 
-    <p>Update your information below</p>
+    <h2>User information</h2>
+    <div class="profile-settings-wrapper" id="input-wrapper">
+      <div class="input-group">
+        <input class="profile-user-input" type="text" name="" id="fname" placeholder="first name" bind:value={fname}>
+        <p class="user-alert" id="fname-alert"></p>
+      </div>
+      <div class="input-group">
+        <input class="profile-user-input" type="text" name="" id="lname" placeholder="last name" bind:value={lname}>
+        <p class="user-alert" id="lname-alert"></p>
+      </div>
+      <div class="input-group">
+        <input class="profile-user-input" type="text" name="" id="username" placeholder="username" bind:value={username}>
+        <p class="user-alert" id="username-alert"></p>
+      </div>
+    </div>
 
+    <button class="update" id="updateinfo" on:click={editInfo}>Edit</button>
+
+    <h2>Profile Photo Preview</h2>
     <div class="image-container">
       <img class="img-preview" src={avatar_url || 'https://placehold.co/150'} alt={`user's avatar`} id="">
       <div class="overlay">
         <input type="file" name="" id="fupload" on:change={fileUpload}>
         <button on:click={fileClick}>Choose File</button>
       </div>
-    </div>
-    
-    <div class="input-group">
-      <div class="input-wrapper" id="fname-wrapper"><input type="text" name="" id="fname" placeholder="first name" bind:value={fname}></div>
-      <button class="update" id="updatefname" on:click={editFirstName}>Edit</button>
-      <p class="user-alert" id="fname-alert"></p>
-    </div>
-    <div class="input-group">
-      <div class="input-wrapper" id="lname-wrapper"><input type="text" name="" id="lname" placeholder="last name" bind:value={lname}></div>
-      <button class="update" id="updatelname" on:click={editLastName}>Edit</button>
-      <p class="user-alert" id="lname-alert"></p>
-    </div>
-    <div class="input-group">
-      <div class="input-wrapper" id="uname-wrapper"><input type="text" name="" id="username" placeholder="username" bind:value={username}></div>
-      <button class="update" id="updateuname" on:click={editUsername}>Edit</button>
-      <p class="user-alert" id="username-alert"></p>
     </div>
 
     <h2>Account Integrations</h2>
@@ -283,15 +328,6 @@
     pointer-events: none;
   }
 
-  .wrapper .account-settings .input-group .input-wrapper {
-    cursor: not-allowed;
-    display: inline-block;
-  }
-
-  .wrapper .account-settings .input-group .input-wrapper.not-active {
-    cursor: text;
-  }
-
   .wrapper .account-settings .int-wrapper {
     display: flex;
     flex-direction: row;
@@ -303,6 +339,18 @@
     padding: 1rem;
     border-radius: 5px;
     margin-bottom: 20px;
+  }
+  .wrapper .account-settings .profile-settings-wrapper {
+    border: 2px solid #26282c;
+    padding: 1rem;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    width: fit-content;
+    cursor: not-allowed;
+  }
+
+  .wrapper .account-settings .profile-settings-wrapper.not-active {
+    cursor: auto;
   }
 
   .int-wrapper .link {
