@@ -449,7 +449,7 @@
           <h2>🎉 Daily Bonus!</h2>
           <p>You've received 100 Vinyls!</p>
           <!-- <img src="/bonus.gif" class="bonus-animation" /> -->
-          <button on:click={() => showBonusAnimation = false} class="close-button">Close</button>
+          <button on:click={() => showBonusAnimation = false} class="close-button">Collect</button>
       </div>
   </div>
 {/if}
@@ -557,8 +557,8 @@
   }
 
   .bonus-content {
-      background: #fe67c4;
-      color: #121212;
+      background: #3a3a3a;
+      color: white;
       padding: 40px;
       border-radius: 15px;
       text-align: center;
@@ -586,7 +586,7 @@
 
   .close-button {
       padding: 10px 20px;
-      background-color: #1db954;
+      background: linear-gradient(to right, #fe67c4, #5371fe);
       color: #fff;
       font-size: 1em;
       border: none;
@@ -596,6 +596,6 @@
   }
 
   .close-button:hover {
-      background-color: #17a44d;
+      background: linear-gradient(to right, #fe67c4, #5371fe);
   }
 </style>
