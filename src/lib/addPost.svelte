@@ -3,7 +3,7 @@
   import { supabase } from "$lib/supabaseClient.js";
   import { onMount, onDestroy } from "svelte";
   import { createEventDispatcher } from "svelte";
-  import { selectedSong } from "$lib/stores";
+  // import { selectedSong } from "$lib/stores";
   import { spotify } from "$lib/spotifyClient.js";
 
   const dispatch = createEventDispatcher();
@@ -22,20 +22,18 @@
   let showAddPost = false;
   let localSelectedTrack = null;
 
-  const unsubscribe = selectedSong.subscribe((song) => {
-    if (song) {
-      localSelectedTrack = {
-        id: song.id,
-        title: song.title,
-        artist: song.artist,
-        cover: song.cover,
-      };
-    }
-  });
+  // const unsubscribe = selectedSong.subscribe((song) => {
+  //   if (song) {
+  //     localSelectedTrack = {
+  //       id: song.id,
+  //       title: song.title,
+  //       artist: song.artist,
+  //       cover: song.cover,
+  //     };
+  //   }
+  // });
 
-  onDestroy(() => {
-    unsubscribe();
-  });
+ 
   onMount( () => {
     localSelectedTrack = null;
   } );

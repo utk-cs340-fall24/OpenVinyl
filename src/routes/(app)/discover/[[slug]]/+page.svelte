@@ -4,7 +4,7 @@
   import { authenticateClientCredentials } from "$lib/utils";
   import { page } from "$app/stores";
   import { supabase } from "$lib/supabaseClient";
-  import { selectedSong } from "$lib/stores";
+  // import { selectedSong } from "$lib/stores";
   import TutorialOverlay from "$lib/tutorialOverlay.svelte";
   import { writable } from "svelte/store";
   import { getValidSpotifyAccessToken, getPlaylist } from "$lib/utils";
@@ -260,7 +260,7 @@
       cover: boxes[4].imageUrl,
     };
 
-    selectedSong.set(middleSong);
+    // selectedSong.set(middleSong);
 
     goto("/");
   }

@@ -6,7 +6,7 @@
   import { goto } from "$app/navigation";
   import AddPost from "$lib/addPost.svelte";
   import { createEventDispatcher } from "svelte";
-  import { selectedSong } from "$lib/stores";
+  // import { selectedSong } from "$lib/stores";
   import { getSongs, authenticateClientCredentials } from "$lib/utils.js";
   import { sidebarHidden } from "$lib/stores";
 
@@ -17,7 +17,7 @@
 
   onDestroy(() => {
     unsubscribeSidebar();
-    unsubscribe();
+    // unsubscribe();
   });
 
   export let data;
@@ -33,25 +33,23 @@
   let hasMorePosts = data.nextPage !== null;
   let loadingPage = true;
   const dispatch = createEventDispatcher();
-  const unsubscribe = selectedSong.subscribe((song) => {
-    if (song) {
-      localSelectedTrack = {
-        id: song.id,
-        title: song.title,
-        artist: song.artist,
-        cover: song.cover,
-      };
-    }
-  });
-  onDestroy(() => {
-    unsubscribe();
-  });
+  // const unsubscribe = selectedSong.subscribe((song) => {
+  //   if (song) {
+  //     localSelectedTrack = {
+  //       id: song.id,
+  //       title: song.title,
+  //       artist: song.artist,
+  //       cover: song.cover,
+  //     };
+  //   }
+  // });
+  
   function handleDrop(event) {
     event.preventDefault();
     const data = event.dataTransfer.getData("application/json");
     if (data && isDroppableArea) {
       const song = JSON.parse(data);
-      selectedSong.set(song);
+      // selectedSong.set(song);
     }
     isDragOver = false;
   }
@@ -287,8 +285,8 @@
   }
 
   .wrapper.drag-over {
-    border: 2px dashed #007bff;
-    background-color: rgba(0, 123, 255, 0.1);
+    /* border: 2px dashed #007bff;
+    background-color: rgba(0, 123, 255, 0.1); */
   }
 
   .add-post-wrapper {
@@ -351,8 +349,8 @@
   }
 
   .posts-wrapper.drag-over {
-    border: 2px dashed #007bff;
-    background-color: rgba(0, 123, 255, 0.1);
+    /* border: 2px dashed #007bff;
+    background-color: rgba(0, 123, 255, 0.1); */
   }
 
   .loading-spinner {
