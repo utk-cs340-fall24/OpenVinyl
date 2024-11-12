@@ -6,7 +6,8 @@
     import { authenticateClientCredentials } from "$lib/utils.js";
     let user;
     let songData = {};
-    let postData = [];
+    let likedPostData = [];
+    let dislikedPostData = [];
 
 
     onMount(async () => {
@@ -15,12 +16,32 @@
         user = session?.data?.session?.user?.id;
         
         const likedPosts = await fetchLikedPosts(user);
-        const postIds = likedPosts.map(post => post.post_id);
-        postData = await fetchPostData(postIds);
-        const songIds = postData.map(post => post.song_id);
-        const tracklist = await spotify.getTracks(songIds);
-        if (tracklist && tracklist.tracks) {
-        tracklist.tracks.forEach((track) => {
+        const likedPostIds = likedPosts.map(post => post.post_id);
+        likedPostData = await fetchPostData(likedPostIds);
+        const likedSongIds = likedPostData.map(post => post.song_id);
+        const likedTracklist = await spotify.getTracks(likedSongIds);
+        if (likedTracklist && likedTracklist.tracks) {
+        likedTracklist.tracks.forEach((track) => {
+          if (track) {
+            songData[track.id] = {
+              title: track.name,
+              artist: track.artists.map((artist) => artist.name).join(", "),
+              image_url:
+                track.album.images[0]?.url || "https://placehold.co/300",
+            };
+          }
+        });
+      } else {
+        console.log("No tracks found for the given IDs.");
+      }
+
+      const dislikedPosts = await fetchDislikedPosts(user);
+      const dislikedPostIds = dislikedPosts.map(post => post.post_id);
+      dislikedPostData = await fetchPostData(dislikedPostIds);
+      const dislikedSongIds = dislikedPostData.map(post => post.song_id);
+      const dislikedTracklist = await spotify.getTracks(dislikedSongIds);
+      if (dislikedTracklist && dislikedTracklist.tracks) {
+      dislikedTracklist.tracks.forEach((track) => {
           if (track) {
             songData[track.id] = {
               title: track.name,
@@ -56,6 +77,26 @@
         return data;
     }
 
+    async function fetchDislikedPosts (userId) {
+        const { data, error } = await supabase
+            .from('likes')
+            .select('post_id, created_at') // Select the post ID and liked timestamp
+            .eq('profile_id', userId) // Filter by the provided user ID
+            .eq('isLiked', false)
+            .order('created_at', { ascending: false }); // Sort in chronological order
+        
+        // Error handling
+        if (error) {
+            console.error('Error fetching liked posts:', error);
+            return null;
+        }
+
+        // Return the liked posts data
+        // if (data.length == 0) {
+
+        // }
+        return data;
+    }
     
 
     async function fetchPostData(postIds) {
@@ -77,27 +118,48 @@
 
 
 <div class="page-wrapper">
-    {#if postData.length > 0}
-        <!-- {#if postData[0]} -->
-            <span class="header-text">Liked Posts</span>
-            <div class="header-divider"></div>
-            {#each postData as post}
-                <Post
-                logged_in_user_uuid={user}
-                uuid={post.profile_id}
-                rating={post.rating}
-                desc={post.content}
-                song_id={post.song_id}
-                song_title={songData[post.song_id]?.title}
-                song_artist={songData[post.song_id]?.artist}
-                song_image={songData[post.song_id]?.image_url}
-                likes_cnt={post.likes_count}
-                post_id={post.id}
-                ></Post>
-            {/each}
-            <div class="disliked-posts-divider"></div>
-            <span class="header-text">Disliked Posts</span>
-            <div class="header-divider"></div>
+    {#if likedPostData.length > 0}
+    <div class="disliked-posts-divider"></div>
+        <span class="header-text">Liked Posts</span>
+        <div class="header-divider"></div>
+        {#each likedPostData as post}
+            <Post
+            logged_in_user_uuid={user}
+            uuid={post.profile_id}
+            rating={post.rating}
+            desc={post.content}
+            song_id={post.song_id}
+            song_title={songData[post.song_id]?.title}
+            song_artist={songData[post.song_id]?.artist}
+            song_image={songData[post.song_id]?.image_url}
+            likes_cnt={post.likes_count}
+            post_id={post.id}
+            created_at={post.created_at}
+            ></Post>
+        {/each}
+    {:else}
+    {/if}
+    <div class="disliked-posts-divider"></div>
+    <span class="header-text">Disliked Posts</span>
+    <div class="header-divider"></div>
+    {#if dislikedPostData.length > 0}
+        {#each dislikedPostData as post}
+            <Post
+            logged_in_user_uuid={user}
+            uuid={post.profile_id}
+            rating={post.rating}
+            desc={post.content}
+            song_id={post.song_id}
+            song_title={songData[post.song_id]?.title}
+            song_artist={songData[post.song_id]?.artist}
+            song_image={songData[post.song_id]?.image_url}
+            likes_cnt={post.likes_count}
+            post_id={post.id}
+            created_at={post.created_at}
+            ></Post>
+        {/each}
+    {:else}
+
         <!-- {:else}
             <span class="header-text">No posts liked</span>
         {/if} -->
@@ -115,7 +177,6 @@
         border-radius: 30px;
         justify-content: center;
         margin: 0 auto;
-        margin-top: 3vh;
         margin-bottom: 3vh;
         padding-bottom: 20px;
         padding-top: 10px;
