@@ -81,7 +81,7 @@
     <div class="leaderboard-wrapper">
         <div class="leaderboard-header">
             <span></span>
-            <span>User</span>
+            <span class="username-header">User</span>
             <span
                 class="user-info {sortingKey === 'vinyls' ? 'selected' : ''}"
                 on:click={() => handleSortChange('vinyls')}
@@ -218,6 +218,7 @@
     }
 
     .leaderboard-header {
+        font-weight: bold;
         font-size: 20px;
         display: grid;
         grid-template-columns: 1fr 10fr 1fr 1fr 1fr;
@@ -243,6 +244,10 @@
         height: 3px;
     }
 
+    .username-header {
+        padding-left: 10px;
+    }
+
     .user-divider {
         width: 740px;
         background-color: #2c2f34;
@@ -253,7 +258,7 @@
     .user {
         font-size: 16px;
         display: grid;
-        grid-template-columns: 1fr 10fr 1fr 1fr 1fr;
+        grid-template-columns: 1fr 8fr 1fr 1fr 1fr;
         gap: 1rem;
         padding-left: 30px;
         padding-right: 30px;
@@ -272,4 +277,50 @@
         text-align: center;
         cursor: pointer;
     }
+
+    @media (max-width: 768px) {
+        .podium-position {
+            width: 25vw;
+        }
+
+        .podium-wrapper {
+            gap: 10px;
+        }
+
+        .username {
+            color: transparent;
+        }
+
+        .likes-wrapper {
+            padding-top: 0px;
+        }
+
+        .leaderboard-header {
+            padding-left: 10px;
+            padding-right: 30px;
+            grid-template-columns: 1fr 3fr 1fr 1fr 1fr;
+            gap: 0rem;
+
+        }
+
+        .leaderboard-wrapper {
+            width: 100vw;
+        }
+        .leaderboard-divider {
+            width: 100vw;
+        }
+
+        .user-divider {
+            width: 90vw;
+        }
+
+        .user {
+            grid-template-columns: 1fr 3fr 1fr 1fr 1fr;
+            gap: 0rem;
+        }
+        
+
+    }
+
+
 </style>

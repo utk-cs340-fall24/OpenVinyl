@@ -138,6 +138,7 @@
             ></Post>
         {/each}
     {:else}
+        <span class="no-posts">No liked posts...</span>
     {/if}
     <div class="disliked-posts-divider"></div>
     <span class="header-text">Disliked Posts</span>
@@ -159,6 +160,7 @@
             ></Post>
         {/each}
     {:else}
+        <span class="no-posts">No disliked posts...</span>
 
         <!-- {:else}
             <span class="header-text">No posts liked</span>
@@ -203,6 +205,14 @@
         height: 2px;
         margin: 0 auto;
         margin-top: 20px;
+    }
+
+    .no-posts {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 20px;
+        padding-bottom: 10px;
+        padding-top: 10px;
     }
 
 
