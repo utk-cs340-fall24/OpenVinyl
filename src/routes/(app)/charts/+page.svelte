@@ -153,24 +153,4 @@
         }
     }
 
-    @media (max-width: 768px) { /* may be redundant */
-        .layout {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .podium {
-            display: flex;
-            justify-content: center;
-            padding-top: 0vh;
-        }
-
-        .top-songs {
-            display: flex;
-            justify-content: center;
-            
-        }
-    }
-
 </style>
