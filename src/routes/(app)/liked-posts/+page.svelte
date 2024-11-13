@@ -138,7 +138,7 @@
             ></Post>
         {/each}
     {:else}
-        <span class="no-posts">Test</span>
+        <span class="no-posts">No liked posts...</span>
     {/if}
     <div class="disliked-posts-divider"></div>
     <span class="header-text">Disliked Posts</span>
