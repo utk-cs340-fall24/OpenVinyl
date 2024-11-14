@@ -1,0 +1,204 @@
+post.svelte  (weston49 on 11/12/2024 at 11:13):     align-items: center;
+post.svelte  (weston49 on 11/12/2024 at 11:13):     justify-content: center;
+post.svelte  (weston49 on 11/12/2024 at 11:13):     margin: 0px 0;
+post.svelte  (weston49 on 11/12/2024 at 11:13):     color: #0AFF00;
+post.svelte  (weston49 on 11/12/2024 at 11:13):     color: #0AFF00;
+post.svelte  (weston49 on 11/12/2024 at 11:13):   .downvote-button.selected {
+post.svelte  (weston49 on 11/12/2024 at 11:13):     color: #FF0000;
+post.svelte  (weston49 on 11/12/2024 at 11:13):   }
+post.svelte  (weston49 on 11/12/2024 at 11:13):   .downvote-button:hover{
+post.svelte  (weston49 on 11/12/2024 at 11:13):     color: #FF0000;
+post.svelte  (weston49 on 11/12/2024 at 11:13):   }
+post.svelte  (weston49 on 11/12/2024 at 11:13):     padding: 8px;
+post.svelte  (weston49 on 11/12/2024 at 11:13):     padding: 0px 6px;
+post.svelte  (weston49 on 11/12/2024 at 11:13):     background-color: #323232;
+post.svelte  (weston49 on 11/12/2024 at 11:13):     border-radius: 5px;
+post.svelte  (weston49 on 11/12/2024 at 11:13):     width: fit-content;
+post.svelte  (weston49 on 11/12/2024 at 11:13):     margin-left: auto;
+post.svelte  (weston49 on 11/12/2024 at 11:13):     margin-right: auto;
++page.svelte (weston49 on 11/06/2024 at 22:07):   import { sidebarHidden } from '$lib/stores';
++page.svelte (weston49 on 11/06/2024 at 22:07): <div class="wrapper { $sidebarHidden ? '' : 'sidebarHidden' }">
++page.svelte (weston49 on 11/06/2024 at 22:07):     transition: width 0.5s ease-in-out, transform 0.5s ease-in-out;
++page.svelte (weston49 on 11/06/2024 at 22:07):   .wrapper.sidebarHidden {
++page.svelte (weston49 on 11/06/2024 at 22:07):     width: 80%;
++page.svelte (weston49 on 11/06/2024 at 22:07):     transform: translate(0, 0);
++page.svelte (weston49 on 11/06/2024 at 22:07):   }
+Plinko.svelte (weston49 on 11/06/2024 at 13:46):             graph[slotIndex]++;
+Plinko.svelte (weston49 on 11/06/2024 at 21:43):             printOdds();
+Plinko.svelte (weston49 on 11/06/2024 at 21:43):   function printOdds(){
+Plinko.svelte (weston49 on 11/06/2024 at 21:43):     let s = "";
+Plinko.svelte (weston49 on 11/06/2024 at 21:43):     console.log("printing odds");
+Plinko.svelte (weston49 on 11/06/2024 at 21:43):     for(let i = 0; i < graph.length; i++){
+Plinko.svelte (weston49 on 11/06/2024 at 21:43):       for(let j = 0; j < graph[i]; j++){
+Plinko.svelte (weston49 on 11/06/2024 at 21:43):         s += "=";
+Plinko.svelte (weston49 on 11/06/2024 at 21:43):       } 
+Plinko.svelte (weston49 on 11/06/2024 at 21:43):       console.log(s);
+Plinko.svelte (weston49 on 11/06/2024 at 21:43):       s = "";
+Plinko.svelte (weston49 on 11/06/2024 at 21:43):     }
+Plinko.svelte (weston49 on 11/06/2024 at 21:43):   }
+Plinko.svelte (weston49 on 11/07/2024 at 15:17):     const slotCount = 13;
+Plinko.svelte (weston49 on 11/07/2024 at 15:17):     const multipliers = [0.2, 0.4, 0.6, 0.8, 1.2, 1.5, 7, 99.0];
++page.svelte (weston49 on 11/07/2024 at 15:17):   let filterOption = 'all';
++page.svelte (weston49 on 11/07/2024 at 15:17):   let sortOption = 'recent';
++page.svelte (weston49 on 11/07/2024 at 15:17):   async function reloadPosts(){
++page.svelte (weston49 on 11/07/2024 at 15:17):     posts = [];
++page.svelte (weston49 on 11/07/2024 at 15:17):     loading = true;
++page.svelte (weston49 on 11/07/2024 at 15:17):     try {
++page.svelte (weston49 on 11/07/2024 at 15:35):       const response = await fetch(`/api/posts?page=1&filter=${filterOption}&sort=${sortOption}&user_id=${session_uuid}`);
++page.svelte (weston49 on 11/07/2024 at 15:17):       if (!response.ok) {
++page.svelte (weston49 on 11/07/2024 at 15:17):         throw new Error(`HTTP error! status: ${response.status}`);
++page.svelte (weston49 on 11/07/2024 at 15:17):       }
++page.svelte (weston49 on 11/07/2024 at 15:17):       const newPostsData = await response.json();
++page.svelte (weston49 on 11/07/2024 at 15:17):       if (!newPostsData.success) {
++page.svelte (weston49 on 11/07/2024 at 15:17):         throw new Error("Failed to load posts");
++page.svelte (weston49 on 11/07/2024 at 15:17):       }
++page.svelte (weston49 on 11/07/2024 at 15:17):       posts = [...posts, ...newPostsData.posts];
++page.svelte (weston49 on 11/07/2024 at 15:17):       data.nextPage = newPostsData.nextPage;
++page.svelte (weston49 on 11/07/2024 at 15:17):       hasMorePosts = newPostsData.nextPage !== null;
++page.svelte (weston49 on 11/07/2024 at 15:17):       await fetchSongData(); // Fetch additional song data if necessary
++page.svelte (weston49 on 11/07/2024 at 15:17):     } catch (error) {
++page.svelte (weston49 on 11/07/2024 at 15:17):       console.error("Error loading next page:", error);
++page.svelte (weston49 on 11/07/2024 at 15:17):     } finally {
++page.svelte (weston49 on 11/07/2024 at 15:17):       loading = false;
++page.svelte (weston49 on 11/07/2024 at 15:17):     }
++page.svelte (weston49 on 11/07/2024 at 15:17):   }
++page.svelte (weston49 on 11/07/2024 at 15:17):     <div class="filter-dropdowns-wrapper">
++page.svelte (weston49 on 11/07/2024 at 15:17):       <select bind:value={filterOption} on:change={reloadPosts}>
++page.svelte (weston49 on 11/07/2024 at 15:17):         <option value="all">All</option>
++page.svelte (weston49 on 11/07/2024 at 15:17):         <option value="following">Following</option>
++page.svelte (weston49 on 11/07/2024 at 15:17):       </select>
++page.svelte (weston49 on 11/07/2024 at 15:17):       <select bind:value={sortOption} on:change={reloadPosts}>
++page.svelte (weston49 on 11/07/2024 at 15:17):         <option value="recent">Recent</option>
++page.svelte (weston49 on 11/07/2024 at 15:17):         <option value="popular">Popular</option>
++page.svelte (weston49 on 11/07/2024 at 15:17):       </select>
++page.svelte (weston49 on 11/07/2024 at 15:17):     </div>
++page.svelte (weston49 on 11/07/2024 at 15:17):   .filter-dropdowns-wrapper {
++page.svelte (weston49 on 11/07/2024 at 15:17):     width: 70%;
++page.svelte (weston49 on 11/07/2024 at 15:17):     margin-left:auto;
++page.svelte (weston49 on 11/07/2024 at 15:17):     margin-right:auto;
++page.svelte (weston49 on 11/07/2024 at 15:17):     display: flex;
++page.svelte (weston49 on 11/07/2024 at 15:17):     gap: 20px;
++page.svelte (weston49 on 11/07/2024 at 15:17):     margin-bottom: 20px;
++page.svelte (weston49 on 11/07/2024 at 15:17):     justify-content: left;
++page.svelte (weston49 on 11/07/2024 at 15:17):     align-items: center;
++page.svelte (weston49 on 11/07/2024 at 15:17):   }
++page.svelte (weston49 on 11/07/2024 at 15:17):   .filter-dropdowns-wrapper select {
++page.svelte (weston49 on 11/07/2024 at 15:17):     padding: 5px;
++page.svelte (weston49 on 11/07/2024 at 15:17):     font-size: 16px;
++page.svelte (weston49 on 11/07/2024 at 15:17):     border-radius: 5px;
++page.svelte (weston49 on 11/07/2024 at 15:17):     background-color: #1d1f2500;
++page.svelte (weston49 on 11/07/2024 at 15:17):     color: white;
++page.svelte (weston49 on 11/07/2024 at 15:17):     border: none;
++page.svelte (weston49 on 11/07/2024 at 15:17):     text-align: center;
++page.svelte (weston49 on 11/07/2024 at 15:17):   }
++page.svelte (weston49 on 11/07/2024 at 15:17):   .filter-dropdowns-wrapper select:focus {
++page.svelte (weston49 on 11/07/2024 at 15:17):     outline: none;
++page.svelte (weston49 on 11/07/2024 at 15:17):     border-color: #007bff;
++page.svelte (weston49 on 11/07/2024 at 15:17):   }
++page.svelte (weston49 on 11/12/2024 at 12:43):           <button on:click={() => showBonusAnimation = false} class="close-button">Collect</button>
++page.svelte (weston49 on 11/12/2024 at 12:43):       background: #3a3a3a;
++page.svelte (weston49 on 11/12/2024 at 12:43):       color: white;
++page.svelte (weston49 on 11/12/2024 at 12:43):       background: linear-gradient(to right, #fe67c4, #5371fe);
++page.svelte (weston49 on 11/12/2024 at 12:43):       background: linear-gradient(to right, #fe67c4, #5371fe);
+stores.js    (weston49 on 11/06/2024 at 21:43): export const sidebarHidden = writable(null); // Initialize with false indicating sidebar is shown
++page.svelte (weston49 on 11/06/2024 at 19:14):   import { user } from "$lib/stores"
++page.svelte (weston49 on 11/06/2024 at 19:14):   import Post from "$lib/post.svelte";
++page.svelte (weston49 on 11/06/2024 at 19:14):   import { spotify } from "$lib/spotifyClient.js";
++page.svelte (weston49 on 11/06/2024 at 19:14):   import { authenticateClientCredentials } from "$lib/utils";
++page.svelte (weston49 on 11/06/2024 at 21:43):   import { sidebarHidden } from "$lib/stores";
++page.svelte (weston49 on 11/06/2024 at 19:14):   let currentUser = null;
++page.svelte (weston49 on 11/06/2024 at 19:14):   let unsubscribe;
++page.svelte (weston49 on 11/06/2024 at 19:14):   let posts = [];
++page.svelte (weston49 on 11/06/2024 at 19:14):   let songError = null;
++page.svelte (weston49 on 11/06/2024 at 19:14):   let session_uuid;
++page.svelte (weston49 on 11/06/2024 at 19:14):   let songData = {};
++page.svelte (weston49 on 11/06/2024 at 19:14):   let loading = true;
++page.svelte (weston49 on 11/06/2024 at 19:14):   let follower_count = 0;
++page.svelte (weston49 on 11/06/2024 at 19:14):   let following_count = 0;
++page.svelte (weston49 on 11/06/2024 at 19:14):   $: {
++page.svelte (weston49 on 11/06/2024 at 19:14):     unsubscribe = user.subscribe(value => {
++page.svelte (weston49 on 11/06/2024 at 19:14):       currentUser = value;
++page.svelte (weston49 on 11/06/2024 at 19:14):       session_uuid = currentUser?.id;
++page.svelte (weston49 on 11/06/2024 at 19:14):       console.log(session_uuid);
++page.svelte (weston49 on 11/06/2024 at 19:14):     });
++page.svelte (weston49 on 11/06/2024 at 19:14):   }
++page.svelte (weston49 on 11/06/2024 at 19:14):   onDestroy(() => {
++page.svelte (weston49 on 11/06/2024 at 19:14):     unsubscribe();
++page.svelte (weston49 on 11/06/2024 at 19:14):   });
++page.svelte (weston49 on 11/06/2024 at 19:14):       posts = await getUserPosts(profile.id);
++page.svelte (weston49 on 11/06/2024 at 19:14):     }
++page.svelte (weston49 on 11/06/2024 at 19:14):     try {
++page.svelte (weston49 on 11/06/2024 at 19:14):       await authenticateClientCredentials();
++page.svelte (weston49 on 11/06/2024 at 19:14):       const songIds = posts.map((post) => post.song_id);
++page.svelte (weston49 on 11/06/2024 at 19:14):       const songResponse = await spotify.getTracks(songIds);
++page.svelte (weston49 on 11/06/2024 at 19:14):       if (songResponse && songResponse.tracks) {
++page.svelte (weston49 on 11/06/2024 at 19:14):         songResponse.tracks.forEach((track) => {
++page.svelte (weston49 on 11/06/2024 at 19:14):           if (track) {
++page.svelte (weston49 on 11/06/2024 at 19:14):             songData[track.id] = {
++page.svelte (weston49 on 11/06/2024 at 19:14):               title: track.name,
++page.svelte (weston49 on 11/06/2024 at 19:14):               artist: track.artists.map((artist) => artist.name).join(", "),
++page.svelte (weston49 on 11/06/2024 at 19:14):               image_url:
++page.svelte (weston49 on 11/06/2024 at 19:14):                 track.album.images[0]?.url || "https://placehold.co/300",
++page.svelte (weston49 on 11/06/2024 at 19:14):             };
++page.svelte (weston49 on 11/06/2024 at 19:14):           }
++page.svelte (weston49 on 11/06/2024 at 19:14):         });
++page.svelte (weston49 on 11/06/2024 at 19:14):       } else {
++page.svelte (weston49 on 11/06/2024 at 19:14):         console.log("No tracks found for the given IDs.");
++page.svelte (weston49 on 11/06/2024 at 19:14):       }
++page.svelte (weston49 on 11/06/2024 at 19:14):     } catch (err) {
++page.svelte (weston49 on 11/06/2024 at 19:14):       console.error("Error fetching song details:", err);
++page.svelte (weston49 on 11/06/2024 at 19:14):       songError = err.message;
++page.svelte (weston49 on 11/06/2024 at 19:14):     } finally {
++page.svelte (weston49 on 11/06/2024 at 19:14):       loading = false;
++page.svelte (weston49 on 11/06/2024 at 19:14):     }
++page.svelte (weston49 on 11/06/2024 at 19:14):     if(profile && profile.id) {
++page.svelte (weston49 on 11/06/2024 at 19:14):       const { data: followData, error: followError } = await supabase
++page.svelte (weston49 on 11/06/2024 at 19:14):       .from('follows')
++page.svelte (weston49 on 11/06/2024 at 19:14):       .select('*')
++page.svelte (weston49 on 11/06/2024 at 19:14):       if (followError) {
++page.svelte (weston49 on 11/06/2024 at 19:14):         console.error('Error fetching follow data:', followError);
++page.svelte (weston49 on 11/06/2024 at 19:14):       } else if (followData && followData.length > 0) {
++page.svelte (weston49 on 11/06/2024 at 19:14):         console.log(followData);
++page.svelte (weston49 on 11/06/2024 at 19:14):         follower_count = followData.filter((follow) => follow.followed_id === profile.id).length;
++page.svelte (weston49 on 11/06/2024 at 19:14):         following_count = followData.filter((follow) => follow.owner_id === profile.id).length;
++page.svelte (weston49 on 11/06/2024 at 19:14):       }
++page.svelte (weston49 on 11/06/2024 at 19:14):   async function getUserPosts(userId) {
++page.svelte (weston49 on 11/06/2024 at 19:14):     const { data, error } = await supabase
++page.svelte (weston49 on 11/06/2024 at 19:14):       .from('posts')
++page.svelte (weston49 on 11/06/2024 at 19:14):       .select('*')
++page.svelte (weston49 on 11/06/2024 at 19:14):       .eq('profile_id', userId)
++page.svelte (weston49 on 11/06/2024 at 19:14):       .order('created_at', { ascending: false });
++page.svelte (weston49 on 11/06/2024 at 19:14):     if (error) {
++page.svelte (weston49 on 11/06/2024 at 19:14):       console.error('Error fetching user posts:', error);
++page.svelte (weston49 on 11/06/2024 at 19:14):       return [];
++page.svelte (weston49 on 11/06/2024 at 19:14):     }
++page.svelte (weston49 on 11/06/2024 at 19:14):     return data;
++page.svelte (weston49 on 11/06/2024 at 19:14):   }
++page.svelte (weston49 on 11/06/2024 at 21:43):   <div class="profile-container { $sidebarHidden ? '' : 'sidebarHidden' }">
++page.svelte (weston49 on 11/06/2024 at 22:07):         <!-- <p class="profile-bio">{profile.bio || 'No bio available.'}</p> -->
++page.svelte (weston49 on 11/06/2024 at 22:07):           {#if profile.id !== $user?.id} <!-- Prevent users from following themselves -->
++page.svelte (weston49 on 11/06/2024 at 21:43):           {/if}
++page.svelte (weston49 on 11/06/2024 at 19:14):         <span class="stat-number">{posts.length || 0}</span>
++page.svelte (weston49 on 11/06/2024 at 19:14):         <span class="stat-number">{follower_count || 0}</span>
++page.svelte (weston49 on 11/06/2024 at 19:14):         <span class="stat-number">{following_count || 0}</span>
++page.svelte (weston49 on 11/06/2024 at 19:14):       {#each posts as post (post.id)}
++page.svelte (weston49 on 11/06/2024 at 19:14):         logged_in_user_uuid={session_uuid}
++page.svelte (weston49 on 11/06/2024 at 19:14):         uuid={post.profile_id}
++page.svelte (weston49 on 11/06/2024 at 19:14):         rating={post.rating}
++page.svelte (weston49 on 11/06/2024 at 19:14):         desc={post.content}
++page.svelte (weston49 on 11/06/2024 at 19:14):         song_id={post.song_id}
++page.svelte (weston49 on 11/06/2024 at 19:14):         song_title={songData[post.song_id]?.title}
++page.svelte (weston49 on 11/06/2024 at 19:14):         song_artist={songData[post.song_id]?.artist}
++page.svelte (weston49 on 11/06/2024 at 19:14):         song_image={songData[post.song_id]?.image_url}
++page.svelte (weston49 on 11/06/2024 at 19:14):         post_id={post.id}
++page.svelte (weston49 on 11/06/2024 at 19:14):       {#if posts.length === 0}
++page.svelte (weston49 on 11/06/2024 at 19:14):       {/if}
++page.svelte (weston49 on 11/06/2024 at 21:43):     width: 70%;
++page.svelte (weston49 on 11/06/2024 at 21:43):     transition: width 0.5s ease-in-out, transform 0.5s ease-in-out;
++page.svelte (weston49 on 11/06/2024 at 21:43):     transform: translate(15%, 0); 
++page.svelte (weston49 on 11/06/2024 at 21:43):   }
++page.svelte (weston49 on 11/06/2024 at 21:43):   .profile-container.sidebarHidden {
++page.svelte (weston49 on 11/06/2024 at 21:43):     width: 80%; 
++page.svelte (weston49 on 11/06/2024 at 21:43):     transform: translate(0, 0); 
++page.svelte (weston49 on 11/06/2024 at 13:51):   import VideoEmbed from "$lib/VideoEmbed.svelte";
+sidebar.svelte (weston49 on 11/07/2024 at 15:17):       <!-- <button on:click={hidePremiumMessage} class="small-button">Dismiss</button> -->
