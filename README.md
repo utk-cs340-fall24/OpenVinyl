@@ -1,6 +1,6 @@
 # OpenVinyl
 
-OpenVinyl is a project aimed at creating an open-source platform for vinyl record enthusiasts. This platform allows users to catalog their collections, discover new records, and connect with other vinyl lovers.
+OpenVinyl is a music based social platform where you can discover, rate, and share your music with your friends!
 
 ## Features
 
