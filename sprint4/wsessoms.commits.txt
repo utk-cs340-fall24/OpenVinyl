@@ -1,0 +1,265 @@
++page.svelte (wessoms on 11/12/2024 at 11:57):             total_likes: topUsers[index].total_likes,
++page.svelte (wessoms on 11/12/2024 at 11:57):     }
++page.svelte (wessoms on 11/12/2024 at 11:57):         .select('id, username, avatar_url, vinyls')
++page.svelte (wessoms on 11/12/2024 at 11:57):         padding-right: 15vw;
+topSongs.svelte (wessoms on 11/12/2024 at 13:03):             margin-left: 17vw;
+topSongs.svelte (wessoms on 11/12/2024 at 13:03):     @media (max-width: 768px) {
+topSongs.svelte (wessoms on 11/12/2024 at 13:03):         .wrapper {
+topSongs.svelte (wessoms on 11/12/2024 at 13:03):             width: 90vw;
+topSongs.svelte (wessoms on 11/12/2024 at 13:03):             margin-left: 17vw;
+topSongs.svelte (wessoms on 11/12/2024 at 13:03):         }
+topSongs.svelte (wessoms on 11/12/2024 at 13:03):     }
++page.svelte (wessoms on 11/06/2024 at 18:14):   import { getValidSpotifyAccessToken, getPlaylist } from "$lib/utils";
++page.svelte (wessoms on 11/06/2024 at 18:14):     centerSongId = "";
++page.svelte (wessoms on 11/06/2024 at 18:14):     //random song from top 50
++page.svelte (wessoms on 11/06/2024 at 18:14):     await authenticateClientCredentials();
++page.svelte (wessoms on 11/06/2024 at 18:14):     let unsubscribeUser;
++page.svelte (wessoms on 11/06/2024 at 18:14):     let currentUser;
++page.svelte (wessoms on 11/06/2024 at 18:14):     if ($page.params.slug) {
++page.svelte (wessoms on 11/06/2024 at 18:14):       centerSongId = $page.params.slug;
++page.svelte (wessoms on 11/06/2024 at 18:14):       boxes[4].songId = $page.params.slug;
++page.svelte (wessoms on 11/06/2024 at 18:14):     } else {
++page.svelte (wessoms on 11/06/2024 at 18:14):       let topSongs = await getPlaylist("37i9dQZEVXbMDoHDwVN2tF");
++page.svelte (wessoms on 11/06/2024 at 18:14):       let tracklist = topSongs.data.tracks.items;
++page.svelte (wessoms on 11/06/2024 at 18:14):       const random = Math.floor(Math.random() * 50);
++page.svelte (wessoms on 11/06/2024 at 18:14):       centerSongId = tracklist[random].track.id;
++page.svelte (wessoms on 11/06/2024 at 18:14):       boxes[4].songId = tracklist[random].track.id
++page.svelte (wessoms on 11/06/2024 at 18:14):     }
++page.svelte (wessoms on 11/12/2024 at 11:57):             <a href="/liked-posts">
++page.svelte (wessoms on 11/12/2024 at 11:57):               <button class="settings">View Liked Posts</button>
++page.svelte (wessoms on 11/12/2024 at 11:57):             </a>
++page.svelte (wessoms on 11/12/2024 at 14:53):         created_at={post.created_at}
+podium.svelte (wessoms on 11/12/2024 at 20:51):             <span class="username-header">User</span>
+podium.svelte (wessoms on 11/12/2024 at 11:57):         width: 768px;
+podium.svelte (wessoms on 11/12/2024 at 20:51):         font-weight: bold;
+podium.svelte (wessoms on 11/12/2024 at 11:57):         grid-template-columns: 1fr 10fr 1fr 1fr 1fr;
+podium.svelte (wessoms on 11/12/2024 at 20:51):     .username-header {
+podium.svelte (wessoms on 11/12/2024 at 20:51):         padding-left: 10px;
+podium.svelte (wessoms on 11/12/2024 at 20:51):     }
+podium.svelte (wessoms on 11/12/2024 at 20:51):         grid-template-columns: 1fr 8fr 1fr 1fr 1fr;
+podium.svelte (wessoms on 11/12/2024 at 11:57):     .user-info {
+podium.svelte (wessoms on 11/12/2024 at 11:57):         text-align: center;
+podium.svelte (wessoms on 11/12/2024 at 11:57):     }
+podium.svelte (wessoms on 11/12/2024 at 20:51):     @media (max-width: 768px) {
+podium.svelte (wessoms on 11/12/2024 at 20:51):         .podium-position {
+podium.svelte (wessoms on 11/12/2024 at 20:51):             width: 25vw;
+podium.svelte (wessoms on 11/12/2024 at 20:51):         }
+podium.svelte (wessoms on 11/12/2024 at 20:51):         .podium-wrapper {
+podium.svelte (wessoms on 11/12/2024 at 20:51):             gap: 10px;
+podium.svelte (wessoms on 11/12/2024 at 20:51):         }
+podium.svelte (wessoms on 11/12/2024 at 20:51):         .username {
+podium.svelte (wessoms on 11/12/2024 at 20:51):             color: transparent;
+podium.svelte (wessoms on 11/12/2024 at 20:51):         }
+podium.svelte (wessoms on 11/12/2024 at 20:51):         .likes-wrapper {
+podium.svelte (wessoms on 11/12/2024 at 20:51):             padding-top: 0px;
+podium.svelte (wessoms on 11/12/2024 at 20:51):         }
+podium.svelte (wessoms on 11/12/2024 at 20:51):         .leaderboard-header {
+podium.svelte (wessoms on 11/12/2024 at 20:51):             padding-left: 10px;
+podium.svelte (wessoms on 11/12/2024 at 20:51):             padding-right: 30px;
+podium.svelte (wessoms on 11/12/2024 at 20:51):             grid-template-columns: 1fr 3fr 1fr 1fr 1fr;
+podium.svelte (wessoms on 11/12/2024 at 20:51):             gap: 0rem;
+podium.svelte (wessoms on 11/12/2024 at 20:51):         }
+podium.svelte (wessoms on 11/12/2024 at 20:51):         .leaderboard-wrapper {
+podium.svelte (wessoms on 11/12/2024 at 20:51):             width: 100vw;
+podium.svelte (wessoms on 11/12/2024 at 20:51):         }
+podium.svelte (wessoms on 11/12/2024 at 20:51):         .leaderboard-divider {
+podium.svelte (wessoms on 11/12/2024 at 20:51):             width: 100vw;
+podium.svelte (wessoms on 11/12/2024 at 20:51):         }
+podium.svelte (wessoms on 11/12/2024 at 20:51):         .user-divider {
+podium.svelte (wessoms on 11/12/2024 at 20:51):             width: 90vw;
+podium.svelte (wessoms on 11/12/2024 at 20:51):         }
+podium.svelte (wessoms on 11/12/2024 at 20:51):         .user {
+podium.svelte (wessoms on 11/12/2024 at 20:51):             grid-template-columns: 1fr 3fr 1fr 1fr 1fr;
+podium.svelte (wessoms on 11/12/2024 at 20:51):             gap: 0rem;
+podium.svelte (wessoms on 11/12/2024 at 20:51):         }
+podium.svelte (wessoms on 11/12/2024 at 20:51):     }
++page.svelte (wessoms on 11/06/2024 at 22:44): <script>
++page.svelte (wessoms on 11/06/2024 at 22:44):     import { onMount } from 'svelte';
++page.svelte (wessoms on 11/06/2024 at 22:44):     import { supabase } from '$lib/supabaseClient.js';
++page.svelte (wessoms on 11/06/2024 at 22:44):     import { spotify } from '$lib/spotifyClient';
++page.svelte (wessoms on 11/06/2024 at 22:44):     import Post from "$lib/post.svelte";
++page.svelte (wessoms on 11/12/2024 at 11:57):     import { authenticateClientCredentials } from "$lib/utils.js";
++page.svelte (wessoms on 11/06/2024 at 22:44):     let user;
++page.svelte (wessoms on 11/06/2024 at 22:44):     let songData = {};
++page.svelte (wessoms on 11/12/2024 at 13:35):     let likedPostData = [];
++page.svelte (wessoms on 11/12/2024 at 13:35):     let dislikedPostData = [];
++page.svelte (wessoms on 11/06/2024 at 22:44):     onMount(async () => {
++page.svelte (wessoms on 11/06/2024 at 22:44):         await authenticateClientCredentials();
++page.svelte (wessoms on 11/06/2024 at 22:44):         const session = await supabase.auth.getSession();
++page.svelte (wessoms on 11/06/2024 at 22:44):         user = session?.data?.session?.user?.id;
++page.svelte (wessoms on 11/06/2024 at 22:44):         const likedPosts = await fetchLikedPosts(user);
++page.svelte (wessoms on 11/12/2024 at 13:35):         const likedPostIds = likedPosts.map(post => post.post_id);
++page.svelte (wessoms on 11/12/2024 at 13:35):         likedPostData = await fetchPostData(likedPostIds);
++page.svelte (wessoms on 11/12/2024 at 13:35):         const likedSongIds = likedPostData.map(post => post.song_id);
++page.svelte (wessoms on 11/12/2024 at 13:35):         const likedTracklist = await spotify.getTracks(likedSongIds);
++page.svelte (wessoms on 11/12/2024 at 13:35):         if (likedTracklist && likedTracklist.tracks) {
++page.svelte (wessoms on 11/12/2024 at 13:35):         likedTracklist.tracks.forEach((track) => {
++page.svelte (wessoms on 11/12/2024 at 13:35):           if (track) {
++page.svelte (wessoms on 11/12/2024 at 13:35):             songData[track.id] = {
++page.svelte (wessoms on 11/12/2024 at 13:35):               title: track.name,
++page.svelte (wessoms on 11/12/2024 at 13:35):               artist: track.artists.map((artist) => artist.name).join(", "),
++page.svelte (wessoms on 11/12/2024 at 13:35):               image_url:
++page.svelte (wessoms on 11/12/2024 at 13:35):                 track.album.images[0]?.url || "https://placehold.co/300",
++page.svelte (wessoms on 11/12/2024 at 13:35):             };
++page.svelte (wessoms on 11/12/2024 at 13:35):           }
++page.svelte (wessoms on 11/12/2024 at 13:35):         });
++page.svelte (wessoms on 11/12/2024 at 13:35):       } else {
++page.svelte (wessoms on 11/12/2024 at 13:35):         console.log("No tracks found for the given IDs.");
++page.svelte (wessoms on 11/12/2024 at 13:35):       }
++page.svelte (wessoms on 11/12/2024 at 13:35):       const dislikedPosts = await fetchDislikedPosts(user);
++page.svelte (wessoms on 11/12/2024 at 13:35):       const dislikedPostIds = dislikedPosts.map(post => post.post_id);
++page.svelte (wessoms on 11/12/2024 at 13:35):       dislikedPostData = await fetchPostData(dislikedPostIds);
++page.svelte (wessoms on 11/12/2024 at 13:35):       const dislikedSongIds = dislikedPostData.map(post => post.song_id);
++page.svelte (wessoms on 11/12/2024 at 13:35):       const dislikedTracklist = await spotify.getTracks(dislikedSongIds);
++page.svelte (wessoms on 11/12/2024 at 13:35):       if (dislikedTracklist && dislikedTracklist.tracks) {
++page.svelte (wessoms on 11/12/2024 at 13:35):       dislikedTracklist.tracks.forEach((track) => {
++page.svelte (wessoms on 11/06/2024 at 22:44):           if (track) {
++page.svelte (wessoms on 11/06/2024 at 22:44):             songData[track.id] = {
++page.svelte (wessoms on 11/06/2024 at 22:44):               title: track.name,
++page.svelte (wessoms on 11/06/2024 at 22:44):               artist: track.artists.map((artist) => artist.name).join(", "),
++page.svelte (wessoms on 11/06/2024 at 22:44):               image_url:
++page.svelte (wessoms on 11/06/2024 at 22:44):                 track.album.images[0]?.url || "https://placehold.co/300",
++page.svelte (wessoms on 11/06/2024 at 22:44):             };
++page.svelte (wessoms on 11/06/2024 at 22:44):           }
++page.svelte (wessoms on 11/06/2024 at 22:44):         });
++page.svelte (wessoms on 11/06/2024 at 22:44):       } else {
++page.svelte (wessoms on 11/06/2024 at 22:44):         console.log("No tracks found for the given IDs.");
++page.svelte (wessoms on 11/06/2024 at 22:44):       }
++page.svelte (wessoms on 11/06/2024 at 22:44):     });
++page.svelte (wessoms on 11/06/2024 at 22:44):     async function fetchLikedPosts (userId) {
++page.svelte (wessoms on 11/06/2024 at 22:44):         const { data, error } = await supabase
++page.svelte (wessoms on 11/06/2024 at 22:44):             .from('likes')
++page.svelte (wessoms on 11/06/2024 at 22:44):             .select('post_id, created_at') // Select the post ID and liked timestamp
++page.svelte (wessoms on 11/06/2024 at 22:44):             .eq('profile_id', userId) // Filter by the provided user ID
++page.svelte (wessoms on 11/06/2024 at 22:44):             .eq('isLiked', true)
++page.svelte (wessoms on 11/06/2024 at 22:44):             .order('created_at', { ascending: false }); // Sort in chronological order
++page.svelte (wessoms on 11/06/2024 at 22:44):         // Error handling
++page.svelte (wessoms on 11/06/2024 at 22:44):         if (error) {
++page.svelte (wessoms on 11/06/2024 at 22:44):             console.error('Error fetching liked posts:', error);
++page.svelte (wessoms on 11/06/2024 at 22:44):             return null;
++page.svelte (wessoms on 11/06/2024 at 22:44):         }
++page.svelte (wessoms on 11/06/2024 at 22:44):         // Return the liked posts data
++page.svelte (wessoms on 11/12/2024 at 11:57):         // if (data.length == 0) {
++page.svelte (wessoms on 11/12/2024 at 11:57):         // }
++page.svelte (wessoms on 11/06/2024 at 22:44):         return data;
++page.svelte (wessoms on 11/06/2024 at 22:44):     }
++page.svelte (wessoms on 11/12/2024 at 13:35):     async function fetchDislikedPosts (userId) {
++page.svelte (wessoms on 11/12/2024 at 13:35):         const { data, error } = await supabase
++page.svelte (wessoms on 11/12/2024 at 13:35):             .from('likes')
++page.svelte (wessoms on 11/12/2024 at 13:35):             .select('post_id, created_at') // Select the post ID and liked timestamp
++page.svelte (wessoms on 11/12/2024 at 13:35):             .eq('profile_id', userId) // Filter by the provided user ID
++page.svelte (wessoms on 11/12/2024 at 13:35):             .eq('isLiked', false)
++page.svelte (wessoms on 11/12/2024 at 13:35):             .order('created_at', { ascending: false }); // Sort in chronological order
++page.svelte (wessoms on 11/12/2024 at 13:35):         // Error handling
++page.svelte (wessoms on 11/12/2024 at 13:35):         if (error) {
++page.svelte (wessoms on 11/12/2024 at 13:35):             console.error('Error fetching liked posts:', error);
++page.svelte (wessoms on 11/12/2024 at 13:35):             return null;
++page.svelte (wessoms on 11/12/2024 at 13:35):         }
++page.svelte (wessoms on 11/12/2024 at 13:35):         // Return the liked posts data
++page.svelte (wessoms on 11/12/2024 at 13:35):         // if (data.length == 0) {
++page.svelte (wessoms on 11/12/2024 at 13:35):         // }
++page.svelte (wessoms on 11/12/2024 at 13:35):         return data;
++page.svelte (wessoms on 11/12/2024 at 13:35):     }
++page.svelte (wessoms on 11/06/2024 at 22:44):     async function fetchPostData(postIds) {
++page.svelte (wessoms on 11/06/2024 at 22:44):         const { data, error } = await supabase
++page.svelte (wessoms on 11/06/2024 at 22:44):         .from('posts')
++page.svelte (wessoms on 11/06/2024 at 22:44):         .select('*')
++page.svelte (wessoms on 11/06/2024 at 22:44):         .in('id', postIds)
++page.svelte (wessoms on 11/06/2024 at 22:44):         .order('created_at', { ascending: false });
++page.svelte (wessoms on 11/06/2024 at 22:44):         if (error) {
++page.svelte (wessoms on 11/06/2024 at 22:44):             console.error('Error fetching user posts:', error);
++page.svelte (wessoms on 11/06/2024 at 22:44):             return [];
++page.svelte (wessoms on 11/06/2024 at 22:44):         }
++page.svelte (wessoms on 11/06/2024 at 22:44):         return data;
++page.svelte (wessoms on 11/06/2024 at 22:44):     }
++page.svelte (wessoms on 11/06/2024 at 22:44): </script>
++page.svelte (wessoms on 11/06/2024 at 22:44): <div class="page-wrapper">
++page.svelte (wessoms on 11/12/2024 at 13:35):     {#if likedPostData.length > 0}
++page.svelte (wessoms on 11/12/2024 at 13:35):     <div class="disliked-posts-divider"></div>
++page.svelte (wessoms on 11/12/2024 at 13:35):         <span class="header-text">Liked Posts</span>
++page.svelte (wessoms on 11/12/2024 at 13:35):         <div class="header-divider"></div>
++page.svelte (wessoms on 11/12/2024 at 13:35):         {#each likedPostData as post}
++page.svelte (wessoms on 11/12/2024 at 13:35):             <Post
++page.svelte (wessoms on 11/12/2024 at 13:35):             logged_in_user_uuid={user}
++page.svelte (wessoms on 11/12/2024 at 13:35):             uuid={post.profile_id}
++page.svelte (wessoms on 11/12/2024 at 13:35):             rating={post.rating}
++page.svelte (wessoms on 11/12/2024 at 13:35):             desc={post.content}
++page.svelte (wessoms on 11/12/2024 at 13:35):             song_id={post.song_id}
++page.svelte (wessoms on 11/12/2024 at 13:35):             song_title={songData[post.song_id]?.title}
++page.svelte (wessoms on 11/12/2024 at 13:35):             song_artist={songData[post.song_id]?.artist}
++page.svelte (wessoms on 11/12/2024 at 13:35):             song_image={songData[post.song_id]?.image_url}
++page.svelte (wessoms on 11/12/2024 at 13:35):             likes_cnt={post.likes_count}
++page.svelte (wessoms on 11/12/2024 at 13:35):             post_id={post.id}
++page.svelte (wessoms on 11/12/2024 at 13:35):             created_at={post.created_at}
++page.svelte (wessoms on 11/12/2024 at 13:35):             ></Post>
++page.svelte (wessoms on 11/12/2024 at 13:35):         {/each}
++page.svelte (wessoms on 11/12/2024 at 13:35):     {:else}
++page.svelte (wessoms on 11/12/2024 at 19:36):         <span class="no-posts">No liked posts...</span>
++page.svelte (wessoms on 11/12/2024 at 13:35):     {/if}
++page.svelte (wessoms on 11/12/2024 at 13:35):     <div class="disliked-posts-divider"></div>
++page.svelte (wessoms on 11/12/2024 at 13:35):     <span class="header-text">Disliked Posts</span>
++page.svelte (wessoms on 11/12/2024 at 13:35):     <div class="header-divider"></div>
++page.svelte (wessoms on 11/12/2024 at 13:35):     {#if dislikedPostData.length > 0}
++page.svelte (wessoms on 11/12/2024 at 13:35):         {#each dislikedPostData as post}
++page.svelte (wessoms on 11/12/2024 at 13:35):             <Post
++page.svelte (wessoms on 11/12/2024 at 13:35):             logged_in_user_uuid={user}
++page.svelte (wessoms on 11/12/2024 at 13:35):             uuid={post.profile_id}
++page.svelte (wessoms on 11/12/2024 at 13:35):             rating={post.rating}
++page.svelte (wessoms on 11/12/2024 at 13:35):             desc={post.content}
++page.svelte (wessoms on 11/12/2024 at 13:35):             song_id={post.song_id}
++page.svelte (wessoms on 11/12/2024 at 13:35):             song_title={songData[post.song_id]?.title}
++page.svelte (wessoms on 11/12/2024 at 13:35):             song_artist={songData[post.song_id]?.artist}
++page.svelte (wessoms on 11/12/2024 at 13:35):             song_image={songData[post.song_id]?.image_url}
++page.svelte (wessoms on 11/12/2024 at 13:35):             likes_cnt={post.likes_count}
++page.svelte (wessoms on 11/12/2024 at 13:35):             post_id={post.id}
++page.svelte (wessoms on 11/12/2024 at 13:35):             created_at={post.created_at}
++page.svelte (wessoms on 11/12/2024 at 13:35):             ></Post>
++page.svelte (wessoms on 11/12/2024 at 13:35):         {/each}
++page.svelte (wessoms on 11/12/2024 at 13:35):     {:else}
++page.svelte (wessoms on 11/12/2024 at 19:20):         <span class="no-posts">No disliked posts...</span>
++page.svelte (wessoms on 11/12/2024 at 11:57):         <!-- {:else}
++page.svelte (wessoms on 11/12/2024 at 11:57):             <span class="header-text">No posts liked</span>
++page.svelte (wessoms on 11/12/2024 at 11:57):         {/if} -->
++page.svelte (wessoms on 11/12/2024 at 11:57):     {/if}
++page.svelte (wessoms on 11/06/2024 at 22:44): </div>
++page.svelte (wessoms on 11/06/2024 at 22:44): <style>
++page.svelte (wessoms on 11/06/2024 at 22:44):     .page-wrapper {
++page.svelte (wessoms on 11/06/2024 at 22:44):         display: flex;
++page.svelte (wessoms on 11/06/2024 at 22:44):         flex-direction: column;
++page.svelte (wessoms on 11/06/2024 at 22:44):         width: 90%;
++page.svelte (wessoms on 11/06/2024 at 22:44):         background-color: transparent;
++page.svelte (wessoms on 11/06/2024 at 22:44):         border-radius: 30px;
++page.svelte (wessoms on 11/06/2024 at 22:44):         justify-content: center;
++page.svelte (wessoms on 11/06/2024 at 22:44):         margin: 0 auto;
++page.svelte (wessoms on 11/06/2024 at 22:44):         margin-bottom: 3vh;
++page.svelte (wessoms on 11/06/2024 at 22:44):         padding-bottom: 20px;
++page.svelte (wessoms on 11/06/2024 at 22:44):         padding-top: 10px;
++page.svelte (wessoms on 11/06/2024 at 22:44):     }
++page.svelte (wessoms on 11/06/2024 at 22:44):     .header-text {
++page.svelte (wessoms on 11/06/2024 at 22:44):         text-align: center;
++page.svelte (wessoms on 11/06/2024 at 22:44):         font-size: 35px;
++page.svelte (wessoms on 11/06/2024 at 22:44):         font-weight: bold;
++page.svelte (wessoms on 11/06/2024 at 22:44):         padding-bottom: 10px;
++page.svelte (wessoms on 11/12/2024 at 13:03):         padding-top: 10px;
++page.svelte (wessoms on 11/06/2024 at 22:44):     }
++page.svelte (wessoms on 11/06/2024 at 22:44):     .header-divider {
++page.svelte (wessoms on 11/06/2024 at 22:44):         width: 250px;
++page.svelte (wessoms on 11/06/2024 at 22:44):         background-color: #FFFFFF;
++page.svelte (wessoms on 11/06/2024 at 22:44):         height: 2px;
++page.svelte (wessoms on 11/06/2024 at 22:44):         margin: 0 auto;
++page.svelte (wessoms on 11/06/2024 at 22:44):     }
++page.svelte (wessoms on 11/12/2024 at 11:57):     .disliked-posts-divider {
++page.svelte (wessoms on 11/12/2024 at 11:57):         width: 250px;
++page.svelte (wessoms on 11/12/2024 at 11:57):         background-color: #FFFFFF;
++page.svelte (wessoms on 11/12/2024 at 11:57):         height: 2px;
++page.svelte (wessoms on 11/12/2024 at 11:57):         margin: 0 auto;
++page.svelte (wessoms on 11/12/2024 at 11:57):         margin-top: 20px;
++page.svelte (wessoms on 11/12/2024 at 11:57):     }
++page.svelte (wessoms on 11/12/2024 at 19:20):     .no-posts {
++page.svelte (wessoms on 11/12/2024 at 19:20):         text-align: center;
++page.svelte (wessoms on 11/12/2024 at 19:20):         margin-top: 20px;
++page.svelte (wessoms on 11/12/2024 at 19:20):         font-size: 20px;
++page.svelte (wessoms on 11/12/2024 at 19:20):         padding-bottom: 10px;
++page.svelte (wessoms on 11/12/2024 at 19:20):         padding-top: 10px;
++page.svelte (wessoms on 11/12/2024 at 19:20):     }
++page.svelte (wessoms on 11/06/2024 at 22:44): </style>
