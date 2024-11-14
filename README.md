@@ -8,7 +8,7 @@ OpenVinyl is a music based social platform where you can discover, rate, and sha
 - **Community**: Connect with other users, share collections, and discuss music
 
 
-![OpenVinyl Preview](openvinylPreviewImg.png)
+![OpenVinyl Preview](homePage.png)
 
 ## Live Website
 
@@ -35,7 +35,7 @@ To get started with OpenVinyl, follow these steps:
 
 To run the project locally, use the following command:
 ```sh
-npm start
+npm run dev
 ```
 Open your browser and navigate to `http://localhost:3000` to access the application.
 
