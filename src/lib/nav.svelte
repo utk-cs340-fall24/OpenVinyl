@@ -171,13 +171,6 @@
       Charts
     </a>
     <a 
-      href="/network"
-      class="nav-link" 
-      class:active={$page.url.pathname.startsWith("/network")}
-    >
-    Games
-    </a>
-    <a 
       href="/auth/signin"
       class="nav-link account-link" 
       id="login-mobile"
