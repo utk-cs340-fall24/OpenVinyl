@@ -44,3 +44,13 @@ Open your browser and navigate to `http://localhost:3000` to access the applicat
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
+## Group Members
+
+- Dylan Toth
+  - Github ID: dylant1
+- Will Sessoms
+  - Github ID: wessoms
+- Weston Agreda
+  - Github ID: Weston49
+- Grant Johnson
+  - Github ID: grantarg
