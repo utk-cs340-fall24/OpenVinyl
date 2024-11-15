@@ -8,7 +8,7 @@ OpenVinyl is a music based social platform where you can discover, rate, and sha
 - **Community**: Connect with other users, share collections, and discuss music
 
 
-![OpenVinyl Preview](homePage.png)
+![OpenVinyl Preview](/static/homePage.png)
 
 ## Live Website
 
