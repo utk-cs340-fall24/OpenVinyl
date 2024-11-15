@@ -2,6 +2,7 @@
   import { supabase } from '$lib/supabaseClient.js';
   import { updateUsername, updateFirstName, updateLastName, updateAvatar, unlinkSpotify } from '$lib/utils.js';
   import { onMount } from 'svelte';
+  import '@fortawesome/fontawesome-free/css/all.min.css';
 
   let fname = '';
   let lname = '';

@@ -36,18 +36,18 @@
       user.set({ role: 'guest' });
     }
   });
-  // function hideBanner() {
-  //   document.getElementById("banner").style.display = "None";
-  // }
+  function hideBanner() {
+    document.getElementById("banner").style.display = "None";
+  }
 
 </script>
 <head>
   <!-- <link href="./../node_modules/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet"> -->
 </head>
 <div class="wrapper">
-  <!-- <div id="banner" class = "banner" ><div>Note: This app is in beta so spotify auth will not work for non-developers
+  <div id="banner" class = "banner" ><div>Note: This app is in beta so spotify auth will not work for non-developers
     <button class= "warning-button" on:click={hideBanner}>Hide Message</button></div>
-  </div> -->
+  </div>
   <Nav />
   <Sidebar></Sidebar>
   <slot></slot>
@@ -61,9 +61,9 @@
     display: flex;
     flex-direction: column;
   }
-  /*
+  
   .banner {
-    height: 40px;
+    height: min-content;
     display: flex;
     padding-top: 5px;
     padding-bottom: 5px;
@@ -86,5 +86,5 @@
   .warning-button:hover {
     cursor: pointer;
   }
-  */
+ 
 </style>
