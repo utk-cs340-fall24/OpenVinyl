@@ -60,7 +60,7 @@ export async function updateUsername(profile_id, username) {
       console.log("Error updating username: ", error);
       return { success: false, error: error.message };
     }
-    console.log("Username updated successfully:", data);
+    console.log("Username updated successfully");
     return { success: true, data };
   } catch (err) {
     console.error("Unexpected error:", err);

@@ -12,6 +12,10 @@
   });
 
   async function signUp() {
+    if (pass.length < 6) {
+      console.log("Password must be longer than 6 characters");
+      document.getElementById("pass-alert").innerHTML = "<i class=\"fa-solid fa-circle-xmark\"></i> Password must be longer than 6 characters";
+    }
     console.log("email: ", email,"pass: ", pass);
     const { data, error } = await supabase.auth.signUp({
         email: email,
@@ -29,6 +33,7 @@
   
     <input type="email" name="" id="email" placeholder="email" bind:value={email}>
     <input type="password" name="" id="pass" placeholder="password" bind:value={pass}>
+    <p class="user-alert" id="pass-alert"></p>
     <button class="inputbox" on:click={signUp}>
       <i class="fa-solid fa-envelope"></i> Sign up
     </button>
@@ -68,6 +73,14 @@
     display: block;
     text-decoration: none;
     color: #fff;
+  }
+
+  .container .login-window .user-alert {
+    text-align: left;
+    font-size: 12px;
+    color: #FF4742;
+    margin: 0;
+    opacity: 1;
   }
 
   .logo {

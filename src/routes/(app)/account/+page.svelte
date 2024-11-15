@@ -2,6 +2,7 @@
   import { supabase } from '$lib/supabaseClient.js';
   import { updateUsername, updateFirstName, updateLastName, updateAvatar, unlinkSpotify } from '$lib/utils.js';
   import { onMount } from 'svelte';
+  import '@fortawesome/fontawesome-free/css/all.min.css';
 
   let fname = '';
   let lname = '';
@@ -151,36 +152,53 @@
     } else if (editTracker == 1) {
       const user = await supabase.auth.getUser();
 
-      try {
-        // await updateLastName(user.data.user.id, lname);
+      editTracker = 0;
 
-        editTracker = 0;
-
-        if (fname != "") {
-          await updateFirstName(user.data.user.id, fname);
+      if (fname != "") {
+        const {success, error} = await updateFirstName(user.data.user.id, fname);
+        if (!success) {
+          document.getElementById("fname-alert").style.color = " 	#FF0000";
+          document.getElementById("fname-alert").innerHTML = "<i class=\"fa-solid fa-circle-xmark\"></i> Error updating first name.";
+          fname = "";
+        } else {
+          document.getElementById("fname-alert").style.color = "#0FFF50";
+          document.getElementById("fname-alert").innerHTML = "<i class=\"fa-solid fa-circle-check\"></i> Updated!";
           document.getElementById("fname").placeholder = fname;
           fname = "";
         }
-        if (lname != "") {
-          await updateLastName(user.data.user.id, lname);
+      }
+      if (lname != "") {
+        const {success, error} = await updateLastName(user.data.user.id, lname);
+        if (!success) {
+          document.getElementById("lname-alert").style.color = " 	#FF0000";
+          document.getElementById('lname-alert').innerHTML = "<i class=\"fa-solid fa-circle-xmark\"></i> Error updating last name.";
+          lname = "";
+        } else {
+          document.getElementById("lname-alert").style.color = "#0FFF50";
+          document.getElementById('lname-alert').innerHTML = "<i class=\"fa-solid fa-circle-check\"></i> Updated!";
           document.getElementById("lname").placeholder = lname;
           lname = "";
         }
-        if (username != "") {
-          await updateUsername(user.data.user.id, username);
+      }
+      if (username != "") {
+        const {success, error} = await updateUsername(user.data.user.id, username);
+        console.log(success + "," + error);
+        if (!success) {
+          document.getElementById("username-alert").style.color = " 	#FF0000";
+          document.getElementById('username-alert').innerHTML = "<i class=\"fa-solid fa-circle-xmark\"></i> Error updating user name.";
+          username = "";
+        } else {
+          document.getElementById("username-alert").style.color = "#0FFF50";
+          document.getElementById('username-alert').innerHTML = "<i class=\"fa-solid fa-circle-check\"></i> Updated!";
           document.getElementById("username").placeholder = username;
           username = "";
         }
-
-        document.getElementById("input-wrapper").classList.toggle("not-active");
-        document.getElementById("updateinfo").innerHTML = "Edit";
-        document.getElementById("fname").style.pointerEvents = "none";
-        document.getElementById("lname").style.pointerEvents = "none";
-        document.getElementById("username").style.pointerEvents = "none";
-      } catch (error) {
-        console.error("Error updating user name:", error);
-        document.getElementById('username-alert').innerHTML = "<i class=\"fa-solid fa-xmark\"></i>Error updating user name. Please try again";
       }
+      document.getElementById("input-wrapper").classList.toggle("not-active");
+      document.getElementById("updateinfo").innerHTML = "Edit";
+      document.getElementById("fname").style.pointerEvents = "none";
+      document.getElementById("lname").style.pointerEvents = "none";
+      document.getElementById("username").style.pointerEvents = "none";
     }
   }
 
@@ -363,6 +381,8 @@
 
   .wrapper .account-settings .user-alert {
     text-align: left;
+    font-size: 12px;
+    /* color: #FF4742; */
     margin: 0;
   }
 
